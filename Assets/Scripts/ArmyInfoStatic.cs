@@ -23,35 +23,35 @@ public static class ArmyInfoStatic
 
     public static FactionInfo factionUS = new FactionInfo
     {
-        factionColor = Color.green,
+        factionColor = new Color32(93, 159, 117, 255),
         factionID = "us",
         factionName = Faction.UnitedStates
     };
 
     public static FactionInfo factionGermany = new FactionInfo
     {
-        factionColor = Color.black,
+        factionColor = new Color32(134, 141, 151, 255),
         factionID = "ge",
         factionName = Faction.Germany
     };
 
     public static FactionInfo factionUK = new FactionInfo
     {
-        factionColor = Color.yellow,
+        factionColor = new Color32(160, 148, 114, 255),
         factionID = "uk",
         factionName = Faction.UnitedKingdom
     };
 
     public static FactionInfo factionSoviet = new FactionInfo
     {
-        factionColor = Color.red,
+        factionColor = new Color32(145, 102, 89, 255),
         factionID = "sv",
         factionName = Faction.SovietUnion
     };
 
     public static FactionInfo factionItaly = new FactionInfo
     {
-        factionColor = Color.cyan,
+        factionColor = new Color32(129, 176, 75, 255),
         factionID = "it",
         factionName = Faction.Italy
     };

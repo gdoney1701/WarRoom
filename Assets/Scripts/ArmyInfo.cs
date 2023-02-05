@@ -8,7 +8,7 @@ public class ArmyInfo
     public ArmyInfoStatic.Faction FactionName = ArmyInfoStatic.Faction.UnitedStates;
     public StackInfo[] FactionStacks = new StackInfo[1] { new StackInfo() };
 
-    public void LoadOverwrite(string jsonString)
+    private void LoadOverwrite(string jsonString)
     {
         JsonUtility.FromJsonOverwrite(jsonString, this);
     }
@@ -21,22 +21,14 @@ public class ArmyInfo
     public void SaveToFile(string inputName)
     {
         string data = SaveToString();
-        string path = string.Format("{0}/{1}.json", Application.persistentDataPath, inputName);
+        string path = string.Format("{0}/{1}.json", Application.streamingAssetsPath, inputName);
         System.IO.File.WriteAllText(path, data);
-        //try
-        //{
-
-        //}
-        //catch
-        //{
-        //    Debug.LogError("Failed to save to a file");
-        //}
 
     }
 
     public ArmyInfo LoadFromFile(string inputName)
     {
-        string path = string.Format("{0}/{1}.json", Application.persistentDataPath, inputName);
+        string path = string.Format("{0}/{1}.json", Application.streamingAssetsPath, inputName);
         try
         {
             string jsonString = System.IO.File.ReadAllText(path);
