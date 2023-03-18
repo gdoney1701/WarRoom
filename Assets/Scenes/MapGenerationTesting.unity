@@ -437,7 +437,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 9b8661e8fb6ace446a5e4189bb10dc57, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  inputTexture: {fileID: 2800000, guid: 28db9d77025970148889f46cdb86e2c9, type: 3}
+  inputTexture: {fileID: 2800000, guid: da0200793db18d44dac21d86701f232b, type: 3}
   faceMaterial: {fileID: 2100000, guid: 89ac2222d1a682141990643533e838c8, type: 2}
   meshFilter: {fileID: 1826514714}
   a1Color:
