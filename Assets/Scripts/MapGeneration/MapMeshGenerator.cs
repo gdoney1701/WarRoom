@@ -7,7 +7,6 @@ namespace MapMeshGenerator
 
     public class ProvinceData
     {
-
         public ProvinceData(Color32 provinceColor, string tag, Vector2Int[] edgePixels)
         {
             ProvinceColor = provinceColor;
@@ -25,7 +24,6 @@ namespace MapMeshGenerator
         //Continer class for input textures and materials. Could potentially be made redundant
         public Texture2D imageTexture;
         public Material faceMaterial;
-        public MeshFilter meshFilter;
         public Vector2[] vertexPositions = new Vector2[0];
         public Color32[] outlinePixels = new Color32[0];
 
@@ -40,8 +38,6 @@ namespace MapMeshGenerator
         private Texture2D inputTexture;
         [SerializeField]
         private Material faceMaterial;
-        [SerializeField]
-        private MeshFilter meshFilter;
         [SerializeField]
         private Color32 a1Color;
         [SerializeField]
@@ -77,18 +73,11 @@ namespace MapMeshGenerator
             };
 
             FindVertexPixels(data);
-            //for(int d = 0; d < data.provinceList.Length; d++)
-            //{
-                //Find the top left most pixel for each province
-                //int debug = data.provinceList[d].FindTopLeftPoint();
-                //Debug.Log(debug);
-                //data.provinceList[d].VertexOrder.Add(debug);
-                //data.provinceList[d].VertexOrder.Add(0);
-
-                //Add all pixels going clockwise or counterclockwise
-
-            //}
-            FakeDraw(data);
+            //FakeDraw(data);
+            for (int i = 0; i < data.provinceList.Length; i++)
+            {
+                TriangulateVertices(data.provinceList[i]);
+            }
         }
 
         //Iterate through the image and create Province data for each differently colored section
@@ -111,22 +100,12 @@ namespace MapMeshGenerator
                 if (provinceColors.ContainsKey(provCol))
                 {
                     data.provinceList[i].EdgePixels = provinceColors[provCol].ToArray();
-                    //List<Vector2Int> tempList = new List<Vector2Int>();
-                    //foreach (Vector2Int pixel in provinceColors[provCol])
-                    //{
-                    //    if (CheckForColorEdge(pixel, provCol))
-                    //    {
-                    //        tempList.Add(pixel);
-                    //    }
-                    //}
-                    //if (tempList.Count != 0)
-                    //{
-                    //    data.provinceList[i].EdgePixels = tempList.ToArray();
-                    //}
                 }
             }
         }
 
+        //Uses a modified Breadth First Search to find the adjacent edge tile 
+        //Edge pixels are prioritized in N, E, S, W, NE, SE, SW, NW order
         private List<Vector2Int> FindEdgeLoop(Color32 targetColor, Vector2Int start)
         {
             List<Vector2Int> edgeLoop = new List<Vector2Int>();
@@ -173,6 +152,8 @@ namespace MapMeshGenerator
             }
         }
 
+        //Checks to make sure that the UV's can pull useable indices
+        //TODO: Make sure the 4 warnings that come out of this aren't impacting map gen
         private bool ValidUVCheck(Vector2Int start)
         {
             if(start.x < 0 || start.x >= imageScale.x)
@@ -206,14 +187,14 @@ namespace MapMeshGenerator
         {
             Vector2Int[] neighbors = new Vector2Int[8];
 
-            neighbors[0] = new Vector2Int(start.x, start.y + 1);
-            neighbors[1] = new Vector2Int(start.x + 1, start.y);
-            neighbors[2] = new Vector2Int(start.x, start.y - 1);
-            neighbors[3] = new Vector2Int(start.x - 1, start.y);
-            neighbors[4] = new Vector2Int(start.x + 1, start.y + 1);
-            neighbors[5] = new Vector2Int(start.x + 1, start.y - 1);
-            neighbors[6] = new Vector2Int(start.x - 1, start.y - 1);
-            neighbors[7] = new Vector2Int(start.x - 1, start.y + 1);
+            neighbors[0] = new Vector2Int(start.x, start.y + 1); //North
+            neighbors[1] = new Vector2Int(start.x + 1, start.y); //East
+            neighbors[2] = new Vector2Int(start.x, start.y - 1); //South
+            neighbors[3] = new Vector2Int(start.x - 1, start.y); //West
+            neighbors[4] = new Vector2Int(start.x + 1, start.y + 1); //North East
+            neighbors[5] = new Vector2Int(start.x + 1, start.y - 1); //South East
+            neighbors[6] = new Vector2Int(start.x - 1, start.y - 1); //South West
+            neighbors[7] = new Vector2Int(start.x - 1, start.y + 1); //North West
 
             return neighbors;
         }
@@ -250,6 +231,35 @@ namespace MapMeshGenerator
 
             return false;
         }
+
+        private void TriangulateVertices(ProvinceData provinceData)
+        {
+            Vector2[] vertices2D = new Vector2[provinceData.EdgePixels.Length];
+            Vector3[] vertices = new Vector3[provinceData.EdgePixels.Length];
+
+            for(int i = 0; i < provinceData.EdgePixels.Length; i++)
+            {
+                vertices2D[i] = new Vector2(provinceData.EdgePixels[i].x, provinceData.EdgePixels[i].y);
+                vertices[i] = new Vector3(vertices2D[i].x, 0, vertices2D[i].y);
+            }
+
+            Triangulator tr = new Triangulator(vertices2D);
+            int[] indices = tr.Triangulate();
+
+            Mesh msh = new Mesh();
+            msh.vertices = vertices;
+            msh.triangles = indices;
+            msh.RecalculateNormals();
+            msh.RecalculateBounds();
+
+            GameObject newMesh = new GameObject(provinceData.Tag);
+            newMesh.AddComponent(typeof(MeshRenderer));
+            MeshFilter filter = newMesh.AddComponent(typeof(MeshFilter)) as MeshFilter;
+            filter.mesh = msh;
+            newMesh.transform.SetParent(fakeContainer.transform);
+
+        } 
+
     }
 }
 
