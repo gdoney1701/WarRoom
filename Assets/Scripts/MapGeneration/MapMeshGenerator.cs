@@ -52,9 +52,33 @@ namespace MapMeshGenerator
         Color32[] imagePixels = new Color32[0];
         Vector2Int imageScale = Vector2Int.zero;
 
+        private List<Vector3> vertexDebug, normalDebug = new List<Vector3>();
+        private List<Vector4> tangentDebug = new List<Vector4>();
+
+        //for debugging purposes
+        private void OnDrawGizmos()
+        {
+            if (vertexDebug.Count == 0 || normalDebug.Count == 0 || tangentDebug.Count == 0)
+            {
+                return;
+            }
+
+            for(int i = 0; i< vertexDebug.Count; i++)
+            {
+                Vector3 position = vertexDebug[i];
+                Gizmos.color = Color.cyan;
+                Gizmos.DrawSphere(vertexDebug[i], 0.1f);
+                Gizmos.color = Color.green;
+                Gizmos.DrawRay(position, normalDebug[i] * 0.5f);
+                Gizmos.color = Color.red;
+                Gizmos.DrawRay(position, tangentDebug[i] * 0.2f);
+            }
+        }
         [ContextMenu("Test Generation")]
         public void GenerateMesh()
         {
+            vertexDebug.Clear();
+
             MeshGenerationData data = new MeshGenerationData();
             data.imageTexture = inputTexture;
             data.faceMaterial = faceMaterial;
@@ -136,20 +160,6 @@ namespace MapMeshGenerator
                 }
             }
             return edgeLoop;
-        }
-        //For fake purposes
-        public void FakeDraw(MeshGenerationData data)
-        {
-            foreach (ProvinceData entry in data.provinceList)
-            {
-                foreach(Vector2Int position in entry.EdgePixels)
-                {
-                    GameObject point = Instantiate(fakeVertex);
-                    point.transform.position = new Vector3(position.x, 0, position.y);
-                    point.transform.SetParent(fakeContainer.transform);
-                    //point.GetComponent<MeshRenderer>().material.color = entry.ProvinceColor;
-                }
-            }
         }
 
         //Checks to make sure that the UV's can pull useable indices
@@ -237,20 +247,45 @@ namespace MapMeshGenerator
             Vector2[] vertices2D = new Vector2[provinceData.EdgePixels.Length];
             Vector3[] vertices = new Vector3[provinceData.EdgePixels.Length];
 
+            Vector2 uvMin = provinceData.EdgePixels[0];
+            Vector2 uvMax = provinceData.EdgePixels[0];
+
+            float uvMinf = Mathf.Min(provinceData.EdgePixels[0].x, provinceData.EdgePixels[0].y);
+            float uvMaxf = Mathf.Max(provinceData.EdgePixels[0].x, provinceData.EdgePixels[0].y);
+
             for(int i = 0; i < provinceData.EdgePixels.Length; i++)
             {
                 vertices2D[i] = new Vector2(provinceData.EdgePixels[i].x, provinceData.EdgePixels[i].y);
                 vertices[i] = new Vector3(vertices2D[i].x, 0, vertices2D[i].y);
+                Vector2 edgePixel = provinceData.EdgePixels[i];
+
+                uvMaxf = Mathf.Max(uvMaxf, edgePixel.x, edgePixel.y);
+                uvMinf = Mathf.Min(uvMinf, edgePixel.x, edgePixel.y);
+
+                //uvMax.x = edgePixel.x > uvMax.x ? edgePixel.x : uvMax.x;
+                //uvMax.y = edgePixel.y > uvMax.y ? edgePixel.y : uvMax.y;
+                //uvMin.x = edgePixel.x < uvMin.x ? edgePixel.x : uvMin.x;
+                //uvMin.y = edgePixel.y < uvMin.y ? edgePixel.y : uvMin.y;
             }
 
             Triangulator tr = new Triangulator(vertices2D);
             int[] indices = tr.Triangulate();
 
-            Mesh msh = new Mesh();
+            Mesh msh = new Mesh
+            {
+                name = string.Format("Province Mesh {0}", provinceData.Tag)
+            };
+
             msh.vertices = vertices;
             msh.triangles = indices;
             msh.RecalculateNormals();
             msh.RecalculateBounds();
+            msh.RecalculateTangents();
+            msh.uv = GenerateUVs(vertices2D, uvMinf, uvMaxf);
+
+            vertexDebug.AddRange(msh.vertices);
+            normalDebug.AddRange(msh.normals);
+            tangentDebug.AddRange(msh.tangents);
 
             GameObject newMesh = new GameObject(provinceData.Tag);
             newMesh.AddComponent(typeof(MeshRenderer));
@@ -258,7 +293,19 @@ namespace MapMeshGenerator
             filter.mesh = msh;
             newMesh.transform.SetParent(fakeContainer.transform);
 
-        } 
+        }
+        
+        Vector2[] GenerateUVs(Vector2[] vertices2D, float uvMin, float uvMax)
+        {
+            Vector2[] uvs = new Vector2[vertices2D.Length];
+            float uvScale = uvMax - uvMin;
+            for(int i = 0; i < vertices2D.Length; i++)
+            {
+                uvs[i] = new Vector2((vertices2D[i].x - uvMin) / uvScale, (vertices2D[i].y - uvMin) / uvScale);
+            }
+
+            return uvs;
+        }
 
     }
 }
