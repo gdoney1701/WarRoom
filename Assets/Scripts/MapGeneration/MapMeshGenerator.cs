@@ -229,7 +229,7 @@ namespace MapMeshGenerator
             return slopeA == slobeB;
         }
 
-        private bool CheckForMainPoint(Vector2Int startPos, Color32 baseColor, out Vector2 mainPointUV)
+        private bool CheckForMainPoint(Vector2Int startPos, Color32 baseColor, out Vector2 mainPointUV )
         {
             bool isMainPoint = false;
             mainPointUV = Vector2.zero;
@@ -254,41 +254,11 @@ namespace MapMeshGenerator
                             (neighbors[plus].x + neighbors[minus].x) / 2f,
                             (neighbors[plus].y + neighbors[minus].y) / 2f
                             );
-                        Debug.LogWarning(string.Format("New Main Point {0} from Min {1} and Max {2} based on original point {3}, on iterative {4}", mainPointUV, neighbors[minus], neighbors[plus], startPos, corner));
+                        Debug.LogWarning(string.Format("New Main Point {0} from Min {1} and Max {2} based on original point {3}, on iterative {4} for tile {5}", mainPointUV, neighbors[minus], neighbors[plus], startPos, corner, baseColor));
                         break;
                     }
                 }
             }
-
-            //Vector2Int[] neighbors = GetNeighborsOrdered(startPos);
-            //for(int g = 0; g<neighbors.Length; g++)
-            //{
-            //    Color32 neighborColor = imagePixels[ConvertUVToIndex(neighbors[g])];
-
-            //    if (!neighborColor.Equals(baseColor))
-            //    {
-            //        int plus = g + 1 == 8 ? 0 : g + 1;
-            //        int minus = g - 1 == -1 ? 7 : g - 1;
-            //        Color32 plusColor = imagePixels[ConvertUVToIndex(neighbors[plus])];
-            //        Color32 minusColor = imagePixels[ConvertUVToIndex(neighbors[minus])];
-
-            //        if(minusColor.Equals(baseColor) || plusColor.Equals(baseColor))
-            //        {
-            //            continue;
-            //        }
-            //        if (minusColor.Equals(plusColor))
-            //        {
-            //            continue;
-            //        }
-            //        isMainPoint = true;
-            //        mainPointUV = new Vector2(
-            //            (neighbors[plus].x + neighbors[minus].x) / 2f,
-            //            (neighbors[plus].y + neighbors[minus].y) / 2f
-            //            );
-            //        Debug.LogWarning(string.Format("New Main Point {0} from Min {1} and Max {2} based on original point {3}, on iterative {4}", mainPointUV, neighbors[minus], neighbors[plus], startPos, g));
-            //        break;
-            //    }
-            //}
             
             return isMainPoint;
         }
@@ -335,22 +305,6 @@ namespace MapMeshGenerator
             neighbors[4] = new Vector2Int(start.x + 1, start.y + 1); //North East
             neighbors[5] = new Vector2Int(start.x + 1, start.y - 1); //South East
             neighbors[6] = new Vector2Int(start.x - 1, start.y - 1); //South West
-            neighbors[7] = new Vector2Int(start.x - 1, start.y + 1); //North West
-
-            return neighbors;
-        }
-
-        private Vector2Int[] GetNeighborsOrdered(Vector2Int start)
-        {
-            Vector2Int[] neighbors = new Vector2Int[8];
-
-            neighbors[0] = new Vector2Int(start.x, start.y + 1); //North
-            neighbors[1] = new Vector2Int(start.x + 1, start.y + 1); //North East
-            neighbors[2] = new Vector2Int(start.x + 1, start.y); //East
-            neighbors[3] = new Vector2Int(start.x + 1, start.y - 1); //South East
-            neighbors[4] = new Vector2Int(start.x, start.y - 1); //South
-            neighbors[5] = new Vector2Int(start.x - 1, start.y - 1); //South West
-            neighbors[6] = new Vector2Int(start.x - 1, start.y); //West
             neighbors[7] = new Vector2Int(start.x - 1, start.y + 1); //North West
 
             return neighbors;
