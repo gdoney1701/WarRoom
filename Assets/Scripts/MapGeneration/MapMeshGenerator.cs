@@ -167,42 +167,66 @@ namespace MapMeshGenerator
             List<Vector2> result = new List<Vector2>();
             Vector2[] mainPoints = SimplifyEdgeLoop(edgeLoop.ToArray(), targetColor);
             result.AddRange(mainPoints);
-            //GameObject container = new GameObject();
-            //container.transform.position = Vector3.zero;
-            //container.name = string.Format("{0}_Container",targetColor);
+            GameObject container = new GameObject();
+            container.transform.position = Vector3.zero;
+            container.name = string.Format("{0}_Container", targetColor);
 
-            //for(int i = 0; i < mainPoints.Length; i++)
-            //{
-            //    GameObject debugPoint = Instantiate(fakeVertex);
-            //    debugPoint.transform.SetParent(container.transform);
-            //    debugPoint.transform.position = new Vector3(mainPoints[i].x, 0, mainPoints[i].y);
-            //    debugPoint.name = string.Format("{0}_{1}", targetColor, i);
-            //}
-            for(int i = 0; i < edgeLoop.Count; i++)
+            for (int i = 0; i < mainPoints.Length; i++)
             {
-                result.Add(edgeLoop[i]);
+                GameObject debugPoint = Instantiate(fakeVertex);
+                debugPoint.transform.SetParent(container.transform);
+                debugPoint.transform.position = new Vector3(mainPoints[i].x, 0, mainPoints[i].y);
+                debugPoint.name = string.Format("{0}_{1}", targetColor, i);
             }
+            //for(int i = 0; i < edgeLoop.Count; i++)
+            //{
+            //    result.Add(edgeLoop[i]);
+            //}
             return result;
         }
 
         private Vector2[] SimplifyEdgeLoop(Vector2Int[] uvInput, Color32 baseColor)
         {
-            List<Vector2> result = new List<Vector2>();
+            List<Vector2> mainPoints = new List<Vector2>();
             for(int i = 0; i < uvInput.Length; i++)
             {
                 Vector2 newPoint = Vector2.zero;
                 if(CheckForMainPoint(uvInput[i], baseColor, out newPoint))
                 {
-                    if (!result.Contains(newPoint))
+                    if (!mainPoints.Contains(newPoint))
                     {
-                        result.Add(newPoint);
+                        mainPoints.Add(newPoint);
                         mainPointDebug.Add(new Vector3(newPoint.x, 0, newPoint.y));
                     }
 
                 }
             }
+            List<Vector2> result = new List<Vector2>();
+            for(int i = 0; i < mainPoints.Count; i++)
+            {
+                Vector2[] neighbors = new Vector2[3];
+
+                neighbors[0] = i == 0 ? mainPoints[mainPoints.Count - 1] : mainPoints[i - 1];
+                neighbors[1] = mainPoints[i];
+                neighbors[2] = i == mainPoints.Count - 1 ? mainPoints[0] : mainPoints[i + 1];
+
+                if (!IsCollinear(neighbors))
+                {
+                    result.Add(mainPoints[i]);
+                }
+            }
 
             return result.ToArray();
+        }
+        [ContextMenu("Test Rank")]
+        private bool IsCollinear(Vector2[] input)
+        {
+
+            float slopeA = input[0].x == input[1].x ? float.MaxValue : (input[1].y - input[0].y) / (input[1].x - input[0].x);
+            float slobeB = input[0].x == input[2].x ? float.MaxValue : (input[2].y - input[1].y) / (input[2].x - input[1].x);
+
+            Debug.Log(slobeB == slopeA);
+            return slopeA == slobeB;
         }
 
         private bool CheckForMainPoint(Vector2Int startPos, Color32 baseColor, out Vector2 mainPointUV)
