@@ -190,14 +190,18 @@ namespace MapMeshGenerator
             List<Vector2> mainPoints = new List<Vector2>();
             for(int i = 0; i < uvInput.Length; i++)
             {
-                Vector2 newPoint = Vector2.zero;
+                List<Vector2> newPoint = new List<Vector2>();
                 if(CheckForMainPoint(uvInput[i], baseColor, out newPoint))
                 {
-                    if (!mainPoints.Contains(newPoint))
+                    for(int j = 0; j < newPoint.Count; j++)
                     {
-                        mainPoints.Add(newPoint);
-                        mainPointDebug.Add(new Vector3(newPoint.x, 0, newPoint.y));
+                        if (!mainPoints.Contains(newPoint[j]))
+                        {
+                            mainPoints.Add(newPoint[j]);
+                            mainPointDebug.Add(new Vector3(newPoint[j].x, 0, newPoint[j].y));
+                        }
                     }
+
 
                 }
             }
@@ -229,10 +233,10 @@ namespace MapMeshGenerator
             return slopeA == slobeB;
         }
 
-        private bool CheckForMainPoint(Vector2Int startPos, Color32 baseColor, out Vector2 mainPointUV )
+        private bool CheckForMainPoint(Vector2Int startPos, Color32 baseColor, out List<Vector2> mainPointUV )
         {
             bool isMainPoint = false;
-            mainPointUV = Vector2.zero;
+            mainPointUV = new List<Vector2>();
             Vector2Int[] neighbors = GetNeighbors(startPos);
 
             for(int corner = 4; corner < neighbors.Length; corner++)
@@ -250,12 +254,12 @@ namespace MapMeshGenerator
                     if (!plusColor.Equals(cornerColor) || !minusColor.Equals(cornerColor))
                     {
                         isMainPoint = true;
-                        mainPointUV = new Vector2(
+                        mainPointUV.Add( new Vector2(
                             (neighbors[plus].x + neighbors[minus].x) / 2f,
                             (neighbors[plus].y + neighbors[minus].y) / 2f
-                            );
+                            ));
                         Debug.LogWarning(string.Format("New Main Point {0} from Min {1} and Max {2} based on original point {3}, on iterative {4} for tile {5}", mainPointUV, neighbors[minus], neighbors[plus], startPos, corner, baseColor));
-                        break;
+                        //break;
                     }
                 }
             }
@@ -383,6 +387,7 @@ namespace MapMeshGenerator
             newMesh.AddComponent(typeof(MeshRenderer));
             MeshFilter filter = newMesh.AddComponent(typeof(MeshFilter)) as MeshFilter;
             filter.mesh = msh;
+            newMesh.GetComponent<MeshRenderer>().material = faceMaterial;
             newMesh.transform.SetParent(fakeContainer.transform);
         }
         
