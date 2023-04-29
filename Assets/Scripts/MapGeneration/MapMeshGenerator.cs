@@ -54,6 +54,14 @@ namespace MapMeshGenerator
         Color32[] imagePixels = new Color32[0];
         Vector2Int imageScale = Vector2Int.zero;
 
+        [ContextMenu("Print Color32s")]
+        public void TestColor()
+        {
+            Debug.Log(a1Color);
+            Debug.Log(a2Color);
+            Debug.Log(a3Color);
+        }
+
         [ContextMenu("Test Generation")]
         public void GenerateMesh()
         {
@@ -231,7 +239,6 @@ namespace MapMeshGenerator
         }
 
         //Checks to make sure that the UV's can pull useable indices
-        //TODO: Make sure the 4 warnings that come out of this aren't impacting map gen
         private bool ValidUVCheck(Vector2Int start)
         {
             if(start.x < 0 || start.x >= imageScale.x)
