@@ -39,50 +39,26 @@ namespace MapMeshGenerator
         [SerializeField]
         private Material faceMaterial;
         [SerializeField]
-        private Color32 a1Color;
-        [SerializeField]
-        private Color32 a2Color;
-        [SerializeField]
-        private Color32 a3Color;
-        [SerializeField]
-        private Color32 backgroundColor;
-        [SerializeField]
-        private GameObject fakeVertex;
+        private string colorDataPath = "SmallMapDemo";
         [SerializeField]
         private GameObject fakeContainer;
 
         Color32[] imagePixels = new Color32[0];
         Vector2Int imageScale = Vector2Int.zero;
 
-        [ContextMenu("Print Color32s")]
-        public void TestColor()
-        {
-            Debug.Log(a1Color);
-            Debug.Log(a2Color);
-            Debug.Log(a3Color);
-        }
-
         [ContextMenu("Test Generation")]
         public void GenerateMesh()
         {
-
-
             MeshGenerationData data = new MeshGenerationData();
             data.imageTexture = inputTexture;
             data.faceMaterial = faceMaterial;
+
             imageScale.x = data.imageTexture.width;
             imageScale.y = data.imageTexture.height;
-
             imagePixels = data.imageTexture.GetPixels32();
-
-            //TODO: Make a json file where all province tags and colors are listed out manually
-            //Read this input file instead of manually declaring them
-            data.provinceList = new ProvinceData[]
-            {
-                new ProvinceData(a1Color, "A1", new Vector2[0]),
-                new ProvinceData(a2Color, "A2", new Vector2[0]),
-                new ProvinceData(a3Color, "A3", new Vector2[0])
-            };
+            
+            //Read the input data json containing tile tags and tile colors
+            data.provinceList = GetProvinceData();
 
             FindVertexPixels(data);
 
@@ -92,9 +68,33 @@ namespace MapMeshGenerator
             }
         }
 
+        private ProvinceData[] GetProvinceData()
+        {
+            MapData mapData = new MapData();
+            mapData.LoadFromFile(colorDataPath);
+
+            ProvinceData[] newData = new ProvinceData[mapData.TileList.Count];
+            for(int i = 0; i<newData.Length; i++)
+            {
+                newData[i] = TileDataToProvinceData(mapData.TileList[i]);
+            }
+
+            return newData;
+        }
+
+        private ProvinceData TileDataToProvinceData(MapData.TileData tileData)
+        {
+            return new ProvinceData(
+                new Color32((byte)tileData.TileColor.x, (byte)tileData.TileColor.y, (byte)tileData.TileColor.z, 255),
+                tileData.TileTag,
+                new Vector2[0]
+                );
+        }
+
         //Iterate through the image and create Province data for each differently colored section
         public void FindVertexPixels(MeshGenerationData data)
         {
+            Color32 backgroundColor = new Color32(255, 255, 255, 255);
             Dictionary<Color32, List<Vector2>> provinceColors = new Dictionary<Color32, List<Vector2>>();
             for(int i = 0; i< imagePixels.Length; i++)
             {

@@ -5,19 +5,25 @@ using UnityEditor;
 
 public class ProvinceDataGenerator : EditorWindow
 {
-    [System.Serializable]
-    public class TileData
-    {
-        public Vector3Int TileColor = Vector3Int.zero;
-        public string TileTag = "Z100";
-    }
-    [System.Serializable]
-    public class MapData
-    {
-        public List<TileData> TileList = new List<TileData>() { new TileData() };
-    }
+    //[System.Serializable]
+    //public class TileData
+    //{
+    //    public Vector3Int TileColor = Vector3Int.zero;
+    //    public string TileTag = "Z100";
+    //}
+    //[System.Serializable]
+    //public class MapData
+    //{
+    //    public List<TileData> TileList = new List<TileData>() { new TileData() };
+    //}
 
     private MapData currentData = new MapData();
+
+    public MapData CurrentData
+    {
+        get { return currentData; }
+        set { currentData = value; }
+    }
     private Vector2 scrollView = Vector2.zero;
     private string fileName = "newTileData";
 
@@ -45,25 +51,26 @@ public class ProvinceDataGenerator : EditorWindow
         {
             if (!string.IsNullOrEmpty(fileName))
             {
-                LoadFromFile(fileName);
+                CurrentData.LoadFromFile(fileName);
+                //Repaint();
             }
         }
-        EditorGUI.BeginDisabledGroup(currentData == null);
+        EditorGUI.BeginDisabledGroup(CurrentData == null);
         if (GUILayout.Button("Save"))
         {
-            SaveToFile(fileName);
+            CurrentData.SaveToFile(fileName);
         }
         EditorGUI.EndDisabledGroup();
         GUILayout.EndHorizontal();
         GUILayout.BeginVertical(new GUIStyle("GroupBox"));
         scrollView = GUILayout.BeginScrollView(scrollView);
-        for(int i = 0; i < currentData.TileList.Count; i++)
+        for(int i = 0; i < CurrentData.TileList.Count; i++)
         {
             GUILayout.BeginHorizontal();
-            currentData.TileList[i].TileTag = EditorGUILayout.TextField(currentData.TileList[i].TileTag);
-            currentData.TileList[i].TileColor = 
+            CurrentData.TileList[i].TileTag = EditorGUILayout.TextField(CurrentData.TileList[i].TileTag);
+            CurrentData.TileList[i].TileColor = 
                 ColorToVector(EditorGUILayout.ColorField(
-                    VectorToColor(currentData.TileList[i].TileColor))
+                    VectorToColor(CurrentData.TileList[i].TileColor))
                 );
             if (GUILayout.Button("-", new GUIStyle("minibutton")))
             {
@@ -81,7 +88,7 @@ public class ProvinceDataGenerator : EditorWindow
         }
         if (GUILayout.Button("-", new GUIStyle("minibutton")))
         {
-            RemoveTile(currentData.TileList.Count - 1);
+            RemoveTile(CurrentData.TileList.Count - 1);
         }
         GUILayout.EndHorizontal();
         GUILayout.EndVertical();
@@ -89,12 +96,12 @@ public class ProvinceDataGenerator : EditorWindow
 
     private void AddTile()
     {
-        currentData.TileList.Add(new TileData());
+        CurrentData.TileList.Add(new MapData.TileData());
         Repaint();
     }
     private void RemoveTile(int removePoint)
     {
-        currentData.TileList.RemoveAt(removePoint);
+        CurrentData.TileList.RemoveAt(removePoint);
         Repaint();
     }
 
@@ -107,27 +114,5 @@ public class ProvinceDataGenerator : EditorWindow
         return new Vector3Int(entry.r, entry.g, entry.b);
     }
 
-    private void SaveToFile(string inputName)
-    {
-        string data = JsonUtility.ToJson(currentData);
-        string path = string.Format("{0}/{1}/{2}.json", Application.streamingAssetsPath, "MapData", inputName);
-        System.IO.File.WriteAllText(path, data);
-    }
-    private MapData LoadFromFile(string inputName)
-    {
-        MapData result = new MapData();
 
-        string path = string.Format("{0}/{1}/{2}.json", Application.streamingAssetsPath, "MapData", inputName);
-        try
-        {
-            string jsonString = System.IO.File.ReadAllText(path);
-            JsonUtility.FromJsonOverwrite(jsonString, result);
-        }
-        catch
-        {
-            Debug.LogError("Failed to find a file to load");
-        }
-
-        return result;
-    }
 }
