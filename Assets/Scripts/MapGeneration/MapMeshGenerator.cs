@@ -54,34 +54,9 @@ namespace MapMeshGenerator
         Color32[] imagePixels = new Color32[0];
         Vector2Int imageScale = Vector2Int.zero;
 
-        private List<Vector3> vertexDebug, normalDebug = new List<Vector3>();
-        private List<Vector3> mainPointDebug = new List<Vector3>();
-
-        private void OnDrawGizmos()
-        {
-            if(vertexDebug != null)
-            {
-                Gizmos.color = Color.cyan;
-                for (int i = 0; i < vertexDebug.Count; i++)
-                {
-                    Gizmos.DrawSphere(vertexDebug[i], 0.2f);
-                }
-            }
-            if(mainPointDebug.Count > 0)
-            {
-                Gizmos.color = Color.red;
-                for(int i = 0; i<mainPointDebug.Count; i++)
-                {
-                    Gizmos.DrawSphere(mainPointDebug[i], 0.3f);
-                }
-            }
-
-        }
         [ContextMenu("Test Generation")]
         public void GenerateMesh()
         {
-            vertexDebug.Clear();
-            mainPointDebug.Clear();
 
 
             MeshGenerationData data = new MeshGenerationData();
@@ -167,21 +142,6 @@ namespace MapMeshGenerator
             List<Vector2> result = new List<Vector2>();
             Vector2[] mainPoints = SimplifyEdgeLoop(edgeLoop.ToArray(), targetColor);
             result.AddRange(mainPoints);
-            GameObject container = new GameObject();
-            container.transform.position = Vector3.zero;
-            container.name = string.Format("{0}_Container", targetColor);
-
-            for (int i = 0; i < mainPoints.Length; i++)
-            {
-                GameObject debugPoint = Instantiate(fakeVertex);
-                debugPoint.transform.SetParent(container.transform);
-                debugPoint.transform.position = new Vector3(mainPoints[i].x, 0, mainPoints[i].y);
-                debugPoint.name = string.Format("{0}_{1}", targetColor, i);
-            }
-            //for(int i = 0; i < edgeLoop.Count; i++)
-            //{
-            //    result.Add(edgeLoop[i]);
-            //}
             return result;
         }
 
@@ -198,7 +158,6 @@ namespace MapMeshGenerator
                         if (!mainPoints.Contains(newPoint[j]))
                         {
                             mainPoints.Add(newPoint[j]);
-                            mainPointDebug.Add(new Vector3(newPoint[j].x, 0, newPoint[j].y));
                         }
                     }
 
@@ -222,14 +181,11 @@ namespace MapMeshGenerator
 
             return result.ToArray();
         }
-        [ContextMenu("Test Rank")]
         private bool IsCollinear(Vector2[] input)
         {
 
             float slopeA = input[0].x == input[1].x ? float.MaxValue : (input[1].y - input[0].y) / (input[1].x - input[0].x);
             float slobeB = input[0].x == input[2].x ? float.MaxValue : (input[2].y - input[1].y) / (input[2].x - input[1].x);
-
-            Debug.Log(slobeB == slopeA);
             return slopeA == slobeB;
         }
 
@@ -254,12 +210,19 @@ namespace MapMeshGenerator
                     if (!plusColor.Equals(cornerColor) || !minusColor.Equals(cornerColor))
                     {
                         isMainPoint = true;
+                        if (!plusColor.Equals(baseColor) && !minusColor.Equals(baseColor))
+                        {
+                            mainPointUV.Clear();
+                            mainPointUV.Add(new Vector2(
+                                (neighbors[plus].x + neighbors[minus].x) / 2f,
+                                (neighbors[plus].y + neighbors[minus].y) / 2f
+                                ));
+                            break;
+                        }
                         mainPointUV.Add( new Vector2(
                             (neighbors[plus].x + neighbors[minus].x) / 2f,
                             (neighbors[plus].y + neighbors[minus].y) / 2f
                             ));
-                        Debug.LogWarning(string.Format("New Main Point {0} from Min {1} and Max {2} based on original point {3}, on iterative {4} for tile {5}", mainPointUV, neighbors[minus], neighbors[plus], startPos, corner, baseColor));
-                        //break;
                     }
                 }
             }
@@ -273,12 +236,10 @@ namespace MapMeshGenerator
         {
             if(start.x < 0 || start.x >= imageScale.x)
             {
-                Debug.Log(string.Format("UV {0} invalid in x", start));
                 return false;
             }
             if(start.y < 0 || start.y >= imageScale.y)
             {
-                Debug.Log(string.Format("UV {0} invalid in y", start));
                 return false;
             }
             return true;
@@ -379,9 +340,6 @@ namespace MapMeshGenerator
             msh.RecalculateBounds();
             msh.RecalculateTangents();
             msh.uv = GenerateUVs(vertices2D, uvMinf, uvMaxf);
-
-            vertexDebug.AddRange(msh.vertices);
-            normalDebug.AddRange(msh.normals);
 
             GameObject newMesh = new GameObject(provinceData.Tag);
             newMesh.AddComponent(typeof(MeshRenderer));
