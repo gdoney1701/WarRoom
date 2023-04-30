@@ -2,7 +2,7 @@ using System.Collections.Generic;
 using UnityEngine;
 
 [System.Serializable]
-public class MapData
+public class MapColorData
 {
     [System.Serializable]
     public class TileData
@@ -19,7 +19,7 @@ public class MapData
         string path = string.Format("{0}/{1}/{2}.json", Application.streamingAssetsPath, "MapData", inputName);
         System.IO.File.WriteAllText(path, data);
     }
-    public MapData LoadFromFile(string inputName)
+    public MapColorData LoadFromFile(string inputName)
     {
         string path = string.Format("{0}/{1}/{2}.json", Application.streamingAssetsPath, "MapData", inputName);
         try
@@ -34,4 +34,18 @@ public class MapData
         }
         return this;
     }
+}
+public class ProvinceData
+{
+    public ProvinceData(Color32 provinceColor, string tag, Vector2[] edgePixels)
+    {
+        ProvinceColor = provinceColor;
+        Tag = tag;
+        EdgePixels = edgePixels;
+        VertexOrder = new List<int>();
+    }
+    public Color32 ProvinceColor { get; }
+    public string Tag { get; }
+    public Vector2[] EdgePixels { get; set; }
+    public List<int> VertexOrder { get; set; } //Indices of EdgePixels in clockwise rotation from the top left pixel
 }

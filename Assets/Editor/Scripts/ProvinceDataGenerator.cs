@@ -5,21 +5,9 @@ using UnityEditor;
 
 public class ProvinceDataGenerator : EditorWindow
 {
-    //[System.Serializable]
-    //public class TileData
-    //{
-    //    public Vector3Int TileColor = Vector3Int.zero;
-    //    public string TileTag = "Z100";
-    //}
-    //[System.Serializable]
-    //public class MapData
-    //{
-    //    public List<TileData> TileList = new List<TileData>() { new TileData() };
-    //}
+    private MapColorData currentData = new MapColorData();
 
-    private MapData currentData = new MapData();
-
-    public MapData CurrentData
+    public MapColorData CurrentData
     {
         get { return currentData; }
         set { currentData = value; }
@@ -96,7 +84,7 @@ public class ProvinceDataGenerator : EditorWindow
 
     private void AddTile()
     {
-        CurrentData.TileList.Add(new MapData.TileData());
+        CurrentData.TileList.Add(new MapColorData.TileData());
         Repaint();
     }
     private void RemoveTile(int removePoint)

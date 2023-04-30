@@ -4,21 +4,6 @@ using UnityEngine;
 
 namespace MapMeshGenerator
 {
-
-    public class ProvinceData
-    {
-        public ProvinceData(Color32 provinceColor, string tag, Vector2[] edgePixels)
-        {
-            ProvinceColor = provinceColor;
-            Tag = tag;
-            EdgePixels = edgePixels;
-            VertexOrder = new List<int>();
-        }
-        public Color32 ProvinceColor { get; }
-        public string Tag { get; }
-        public Vector2[] EdgePixels { get; set; }
-        public List<int> VertexOrder { get; set; } //Indices of EdgePixels in clockwise rotation from the top left pixel
-    }
     public class MeshGenerationData
     {
         //Continer class for input textures and materials. Could potentially be made redundant
@@ -30,8 +15,8 @@ namespace MapMeshGenerator
         public Vector2 minCoords = Vector2.zero;
         public Vector2 maxCoords = Vector2.zero;
         public ProvinceData[] provinceList; //Master list of province data
-
     }
+
     public class MapMeshGenerator : MonoBehaviour
     {
         [SerializeField]
@@ -42,6 +27,8 @@ namespace MapMeshGenerator
         private string colorDataPath = "SmallMapDemo";
         [SerializeField]
         private GameObject fakeContainer;
+        [SerializeField]
+        private GameObject tilePrefab;
 
         Color32[] imagePixels = new Color32[0];
         Vector2Int imageScale = Vector2Int.zero;
@@ -70,7 +57,7 @@ namespace MapMeshGenerator
 
         private ProvinceData[] GetProvinceData()
         {
-            MapData mapData = new MapData();
+            MapColorData mapData = new MapColorData();
             mapData.LoadFromFile(colorDataPath);
 
             ProvinceData[] newData = new ProvinceData[mapData.TileList.Count];
@@ -82,7 +69,7 @@ namespace MapMeshGenerator
             return newData;
         }
 
-        private ProvinceData TileDataToProvinceData(MapData.TileData tileData)
+        private ProvinceData TileDataToProvinceData(MapColorData.TileData tileData)
         {
             return new ProvinceData(
                 new Color32((byte)tileData.TileColor.x, (byte)tileData.TileColor.y, (byte)tileData.TileColor.z, 255),
@@ -322,7 +309,6 @@ namespace MapMeshGenerator
 
             float uvMinf = Mathf.Min(provinceData.EdgePixels[0].x, provinceData.EdgePixels[0].y);
             float uvMaxf = Mathf.Max(provinceData.EdgePixels[0].x, provinceData.EdgePixels[0].y);
-
             for(int i = 0; i < provinceData.EdgePixels.Length; i++)
             {
                 vertices2D[i] = new Vector2(provinceData.EdgePixels[i].x, provinceData.EdgePixels[i].y);
@@ -348,12 +334,16 @@ namespace MapMeshGenerator
             msh.RecalculateTangents();
             msh.uv = GenerateUVs(vertices2D, uvMinf, uvMaxf);
 
-            GameObject newMesh = new GameObject(provinceData.Tag);
-            newMesh.AddComponent(typeof(MeshRenderer));
-            MeshFilter filter = newMesh.AddComponent(typeof(MeshFilter)) as MeshFilter;
-            filter.mesh = msh;
-            newMesh.GetComponent<MeshRenderer>().material = faceMaterial;
-            newMesh.transform.SetParent(fakeContainer.transform);
+            GameObject newTile = Instantiate(tilePrefab, fakeContainer.transform);
+            newTile.transform.position = Vector3.zero;
+            newTile.GetComponent<MapTileInfo>().InitializePrefab(provinceData, msh, faceMaterial, CalculateCenter(vertices));
+
+            //GameObject newMesh = new GameObject(provinceData.Tag);
+            //newMesh.AddComponent(typeof(MeshRenderer));
+            //MeshFilter filter = newMesh.AddComponent(typeof(MeshFilter)) as MeshFilter;
+            //filter.mesh = msh;
+            //newMesh.GetComponent<MeshRenderer>().material = faceMaterial;
+            //newMesh.transform.SetParent(fakeContainer.transform);
         }
         
         Vector2[] GenerateUVs(Vector2[] vertices2D, float uvMin, float uvMax)
@@ -366,6 +356,29 @@ namespace MapMeshGenerator
             }
 
             return uvs;
+        }
+
+        Vector3 CalculateCenter(Vector3[] vertices)
+        {
+            Vector3 result = Vector3.zero;
+
+            float signedArea = 1;
+
+            for(int i = 0; i < vertices.Length; i++)
+            {
+                int j = i == vertices.Length - 1 ? 0 : i+1;
+                float coef = (vertices[i].x * vertices[j].z - vertices[j].x * vertices[i].z);
+                result.x += (vertices[i].x + vertices[j].x) * coef;
+                result.z += (vertices[i].z + vertices[j].z) * coef;
+                
+                signedArea += vertices[i].x * vertices[j].z - vertices[j].x * vertices[i].z;
+            }
+            signedArea *= 0.5f;
+
+            result.x /= 6 * signedArea;
+            result.z /= 6 * signedArea;
+
+            return result;
         }
 
     }
