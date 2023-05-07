@@ -23,7 +23,8 @@ namespace MapMeshGenerator
         {
             MaxPoint = max;
             MinPoint = min;
-            Center = new Vector2((min.x + max.x / 2), (min.y + max.y) / 2);
+            Debug.LogError(string.Format("Max {0}, Min {1}, Center {2}", max, min, (max + min) / 2));
+            Center = new Vector2((min.x + max.x) / 2, (min.y + max.y) / 2);
             Radius = Vector2.Distance(Center, max);
         }
         public Vector2 MaxPoint { get; set; }
