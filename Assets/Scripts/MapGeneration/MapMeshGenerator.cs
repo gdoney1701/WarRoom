@@ -17,6 +17,22 @@ namespace MapMeshGenerator
         public ProvinceData[] provinceList; //Master list of province data
     }
 
+    public class Quad
+    {
+        public Quad(Vector2 min, Vector2 max)
+        {
+            MaxPoint = max;
+            MinPoint = min;
+            Center = new Vector2((min.x + max.x / 2), (min.y + max.y) / 2);
+            Radius = Vector2.Distance(Center, max);
+        }
+        public Vector2 MaxPoint { get; set; }
+        public Vector2 MinPoint { get; set; }
+        public Vector2 Center { get; set; }
+        public float Radius { get; set; }
+
+    }
+
     public class MapMeshGenerator : MonoBehaviour
     {
         [SerializeField]
@@ -29,6 +45,10 @@ namespace MapMeshGenerator
         private GameObject fakeContainer;
         [SerializeField]
         private GameObject tilePrefab;
+        [SerializeField]
+        private GameObject testVertex;
+        [SerializeField]
+        private bool useTestGeo;
 
         Color32[] imagePixels = new Color32[0];
         Vector2Int imageScale = Vector2Int.zero;
@@ -174,6 +194,22 @@ namespace MapMeshGenerator
                 }
             }
 
+            if (useTestGeo)
+            {
+                Debug.LogWarning("Beginning Vertex Draw");
+                GameObject testContainer = new GameObject();
+                testContainer.name = string.Format("{0} Container", baseColor);
+                testVertex.transform.position = Vector3.zero;
+                for (int i = 0; i < result.Count; i++)
+                {
+                    GameObject testVert = Instantiate(testVertex);
+                    testVert.transform.position = new Vector3(result[i].x, 0, result[i].y);
+                    testVert.transform.SetParent(testContainer.transform);
+                    Debug.Log(result[i]);
+                }
+            }
+
+
             return result.ToArray();
         }
         private bool IsCollinear(Vector2[] input)
@@ -309,12 +345,13 @@ namespace MapMeshGenerator
 
             float uvMinf = Mathf.Min(provinceData.EdgePixels[0].x, provinceData.EdgePixels[0].y);
             float uvMaxf = Mathf.Max(provinceData.EdgePixels[0].x, provinceData.EdgePixels[0].y);
+            Debug.LogWarning("Start new Mesh");
             for(int i = 0; i < provinceData.EdgePixels.Length; i++)
             {
                 vertices2D[i] = new Vector2(provinceData.EdgePixels[i].x, provinceData.EdgePixels[i].y);
                 vertices[i] = new Vector3(vertices2D[i].x, 0, vertices2D[i].y);
                 Vector2 edgePixel = provinceData.EdgePixels[i];
-
+                Debug.Log(vertices2D[i]);
                 uvMaxf = Mathf.Max(uvMaxf, edgePixel.x, edgePixel.y);
                 uvMinf = Mathf.Min(uvMinf, edgePixel.x, edgePixel.y);
             }
@@ -336,7 +373,8 @@ namespace MapMeshGenerator
 
             GameObject newTile = Instantiate(tilePrefab, fakeContainer.transform);
             newTile.transform.position = Vector3.zero;
-            newTile.GetComponent<MapTileInfo>().InitializePrefab(provinceData, msh, faceMaterial, CalculateCenter(vertices));
+            newTile.GetComponent<MapTileInfo>().InitializePrefab(
+                provinceData, msh, faceMaterial, CalculatePOI(vertices2D,uvMinf, uvMaxf));
 
             //GameObject newMesh = new GameObject(provinceData.Tag);
             //newMesh.AddComponent(typeof(MeshRenderer));
@@ -358,27 +396,64 @@ namespace MapMeshGenerator
             return uvs;
         }
 
-        Vector3 CalculateCenter(Vector3[] vertices)
+        Vector3 CalculatePOI(Vector2[] vertices, float uvMin, float uvMax)
         {
-            Vector3 result = Vector3.zero;
+            Quad initialQuad = new Quad(new Vector2(uvMin, uvMin), new Vector2(uvMax, uvMax));
+            Debug.Log(string.Format("Center {0}, Radius {1}, SD {2}, UVMin {3}, UVMax {4}", 
+                initialQuad.Center, 
+                initialQuad.Radius, 
+                SignedDistance(vertices, initialQuad.Center),
+                uvMin,
+                uvMax));
+            return new Vector3(initialQuad.Center.x, 0, initialQuad.Center.y);
+        }
 
-            float signedArea = 1;
-
-            for(int i = 0; i < vertices.Length; i++)
+        float SignedDistance(Vector2[] vertices, Vector2 point)
+        {
+            bool inside = false;
+            float minDistSq = float.MaxValue;
+            for(int i = 0, j = 0; i < vertices.Length; i++)
             {
-                int j = i == vertices.Length - 1 ? 0 : i+1;
-                float coef = (vertices[i].x * vertices[j].z - vertices[j].x * vertices[i].z);
-                result.x += (vertices[i].x + vertices[j].x) * coef;
-                result.z += (vertices[i].z + vertices[j].z) * coef;
-                
-                signedArea += vertices[i].x * vertices[j].z - vertices[j].x * vertices[i].z;
+                j = i == vertices.Length - 1 ? 0 : i++;
+                Vector2 a = vertices[i];
+                Vector2 b = vertices[j];
+
+                if (((a.y > point.y) ^ (b.y > point.y)) &&
+                    (point.x < (b.x - a.x) * (point.y - a.y) / (b.y - a.y) + a.x))
+                    inside = !inside;
+                minDistSq = Mathf.Min(minDistSq, SegmentDistance(a, b, point));
             }
-            signedArea *= 0.5f;
 
-            result.x /= 6 * signedArea;
-            result.z /= 6 * signedArea;
+            return (inside ? 1 : -1) * Mathf.Sqrt(minDistSq);
+        }
 
-            return result;
+        float SegmentDistance(Vector2 a, Vector2 b, Vector2 p)
+        {
+            float x = a.x;
+            float y = a.y;
+            float dx = b.x - x;
+            float dy = b.y - y;
+
+            if (dx != 0 || dy != 0)
+            {
+                float t = ((p.x - x) * dx + (p.y - y) * dy) / (dx * dx + dy * dy);
+
+                if(t > 1)
+                {
+                    x = b.x;
+                    y = b.y;
+                }
+                else if(t > 0)
+                {
+                    x += dx * t;
+                    y += dy * t;
+                }
+            }
+
+            dx = p.x - x;
+            dy = p.y - y;
+
+            return dx * dx + dy * dy;
         }
 
     }
