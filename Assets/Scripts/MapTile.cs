@@ -1,7 +1,7 @@
 using UnityEngine;
 using TMPro;
 
-public class MapTileInfo : MonoBehaviour
+public class MapTile : MonoBehaviour
 {
     public string TileName = "A1";
 
@@ -13,6 +13,14 @@ public class MapTileInfo : MonoBehaviour
     private TextMeshProUGUI tileTagUI;
     [SerializeField]
     private Transform centerContainer;
+
+    private MapTile[] neighbors;
+
+    public MapTile[] Neighbors
+    {
+        get { return neighbors; }
+        set { neighbors = value; }
+    }
 
 
     public void InitializePrefab(ProvinceData provinceData, Mesh msh, Material mat, Vector3 center)

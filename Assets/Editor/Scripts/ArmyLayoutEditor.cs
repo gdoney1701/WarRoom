@@ -15,7 +15,7 @@ public class ArmyLayoutEditor : EditorWindow
     private string fileName = "newLayout";
 
     private Vector2 scrollView = Vector2.zero;
-    private MapTileInfo selectedTile;
+    private MapTile selectedTile;
 
     [MenuItem("Tools/Army Layout")]
     public static ArmyLayoutEditor GetWindow()
@@ -98,7 +98,7 @@ public class ArmyLayoutEditor : EditorWindow
     {
         try
         {
-            selectedTile = Selection.activeGameObject.GetComponentInParent<MapTileInfo>();
+            selectedTile = Selection.activeGameObject.GetComponentInParent<MapTile>();
             Repaint();
         }
         catch

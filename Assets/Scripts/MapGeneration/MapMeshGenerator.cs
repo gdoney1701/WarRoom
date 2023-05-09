@@ -6,7 +6,7 @@ namespace MapMeshGenerator
 {
     public class MeshGenerationData
     {
-        //Continer class for input textures and materials. Could potentially be made redundant
+        //Container class for input textures and materials. Could potentially be made redundant
         public Texture2D imageTexture;
         public Material faceMaterial;
         public Vector2[] vertexPositions = new Vector2[0];
@@ -15,6 +15,7 @@ namespace MapMeshGenerator
         public Vector2 minCoords = Vector2.zero;
         public Vector2 maxCoords = Vector2.zero;
         public ProvinceData[] provinceList; //Master list of province data
+        public GameObject[] mapTileObjects; //Master list of final object tiles
     }
 
     public class SDFCell
@@ -144,6 +145,7 @@ namespace MapMeshGenerator
             
             //Read the input data json containing tile tags and tile colors
             data.provinceList = GetProvinceData();
+            data.mapTileObjects = new GameObject[data.provinceList.Length];
 
             FindVertexPixels(data);
 
@@ -172,7 +174,7 @@ namespace MapMeshGenerator
             return new ProvinceData(
                 new Color32((byte)tileData.TileColor.x, (byte)tileData.TileColor.y, (byte)tileData.TileColor.z, 255),
                 tileData.TileTag,
-                new Vector2[0]
+                new EdgeVertex[0]
                 );
         }
 
@@ -180,30 +182,28 @@ namespace MapMeshGenerator
         public void FindVertexPixels(MeshGenerationData data)
         {
             Color32 backgroundColor = new Color32(255, 255, 255, 255);
-            Dictionary<Color32, List<Vector2>> provinceColors = new Dictionary<Color32, List<Vector2>>();
+
+            Dictionary<Color32, ProvinceData> sortedProvinces = new Dictionary<Color32, ProvinceData>();
+            List<Color32> foundColors = new List<Color32>();
+
+            for (int i = 0; i<data.provinceList.Length; i++)
+            {
+                sortedProvinces.Add(data.provinceList[i].ProvinceColor, data.provinceList[i]);
+            }
+
             for(int i = 0; i< imagePixels.Length; i++)
             {
                 Color32 colorIterative = imagePixels[i];
-                if (!provinceColors.ContainsKey(colorIterative) && !colorIterative.Equals(backgroundColor))
+                if(!foundColors.Contains(colorIterative) && !colorIterative.Equals(backgroundColor))
                 {
-                    provinceColors.Add(colorIterative, new List<Vector2>());
-                    provinceColors[colorIterative].AddRange(FindEdgeLoop(colorIterative, ConvertIndexToUV(i)));
-                }
-            }
-
-            for (int i = 0; i < data.provinceList.Length; i++)
-            {
-                Color32 provCol = data.provinceList[i].ProvinceColor;
-                if (provinceColors.ContainsKey(provCol))
-                {
-                    data.provinceList[i].EdgePixels = provinceColors[provCol].ToArray();
+                    sortedProvinces[colorIterative].EdgeVertices = FindEdgeLoop(colorIterative, ConvertIndexToUV(i));
                 }
             }
         }
 
         //Uses a modified Breadth First Search to find the adjacent edge tile 
         //Edge pixels are prioritized in N, E, S, W, NE, SE, SW, NW order
-        private List<Vector2> FindEdgeLoop(Color32 targetColor, Vector2Int start)
+        private EdgeVertex[] FindEdgeLoop(Color32 targetColor, Vector2Int start)
         {
             List<Vector2Int> edgeLoop = new List<Vector2Int>();
             Queue<Vector2Int> frontier = new Queue<Vector2Int>();
@@ -231,14 +231,11 @@ namespace MapMeshGenerator
                         }
                     }
                 }
-            }
-            List<Vector2> result = new List<Vector2>();
-            Vector2[] mainPoints = SimplifyEdgeLoop(edgeLoop.ToArray(), targetColor);
-            result.AddRange(mainPoints);
-            return result;
+            }           
+            return SimplifyEdgeLoop(edgeLoop.ToArray(), targetColor);
         }
 
-        private Vector2[] SimplifyEdgeLoop(Vector2Int[] uvInput, Color32 baseColor)
+        private EdgeVertex[] SimplifyEdgeLoop(Vector2Int[] uvInput, Color32 baseColor)
         {
             List<Vector2> mainPoints = new List<Vector2>();
             for(int i = 0; i < uvInput.Length; i++)
@@ -253,11 +250,9 @@ namespace MapMeshGenerator
                             mainPoints.Add(newPoint[j]);
                         }
                     }
-
-
                 }
             }
-            List<Vector2> result = new List<Vector2>();
+            List<Vector2> collinearReduction = new List<Vector2>();
             for(int i = 0; i < mainPoints.Count; i++)
             {
                 Vector2[] neighbors = new Vector2[3];
@@ -268,26 +263,63 @@ namespace MapMeshGenerator
 
                 if (!IsCollinear(neighbors))
                 {
-                    result.Add(mainPoints[i]);
+                    collinearReduction.Add(mainPoints[i]);
                 }
             }
 
-            if (useTestGeo)
+            EdgeVertex[] result = new EdgeVertex[collinearReduction.Count];
+            for(int i = 0; i < collinearReduction.Count; i++)
             {
-                Debug.LogWarning("Beginning Vertex Draw");
-                GameObject testContainer = new GameObject();
-                testContainer.name = string.Format("{0} Container", baseColor);
-                testVertex.transform.position = Vector3.zero;
-                for (int i = 0; i < result.Count; i++)
-                {
-                    GameObject testVert = Instantiate(testVertex);
-                    testVert.transform.position = new Vector3(result[i].x, 0, result[i].y);
-                    testVert.transform.SetParent(testContainer.transform);
-                    Debug.Log(result[i]);
-                }
+                Vector2 pos = collinearReduction[i];
+                result[i] = new EdgeVertex(pos, GetUVColorsFromVertex(pos));
             }
 
 
+
+            //if (useTestGeo)
+            //{
+            //    Debug.LogWarning("Beginning Vertex Draw");
+            //    GameObject testContainer = new GameObject();
+            //    testContainer.name = string.Format("{0} Container", baseColor);
+            //    testVertex.transform.position = Vector3.zero;
+            //    for (int i = 0; i < result.Count; i++)
+            //    {
+            //        GameObject testVert = Instantiate(testVertex);
+            //        testVert.transform.position = new Vector3(result[i].x, 0, result[i].y);
+            //        testVert.transform.SetParent(testContainer.transform);
+            //        Debug.Log(result[i]);
+            //    }
+            //}
+
+            return result;
+        }
+
+        private Color32[] GetUVColorsFromVertex(Vector2 inputCoord)
+        {
+            Color32 background = new Color32(255, 255, 255, 255);
+            List<Color32> result = new List<Color32>();
+            Color32[] corners = new Color32[4];
+
+            int minX = Mathf.FloorToInt(inputCoord.x);
+            int maxX = Mathf.CeilToInt(inputCoord.x);
+            int minY = Mathf.FloorToInt(inputCoord.y);
+            int maxY = Mathf.CeilToInt(inputCoord.y);
+
+            Vector2Int NW = new Vector2Int(minX, maxY);
+            Vector2Int NE = new Vector2Int(maxX, maxY);
+            Vector2Int SE = new Vector2Int(maxX, minY);
+            Vector2Int SW = new Vector2Int(minX, minY);
+
+            corners[0] = imagePixels[ConvertUVToIndex(NW)];
+            corners[1] = imagePixels[ConvertUVToIndex(NE)];
+            corners[2] = imagePixels[ConvertUVToIndex(SE)];
+            corners[3] = imagePixels[ConvertUVToIndex(SW)];
+
+            for(int i = 0; i < 4; i++)
+            {
+                if (!result.Contains(corners[i]) && !corners[i].Equals(background))
+                    result.Add(corners[i]);
+            }
             return result.ToArray();
         }
         private bool IsCollinear(Vector2[] input)
@@ -385,15 +417,14 @@ namespace MapMeshGenerator
         //Check the directly adjacent (no diagonals) for other colors
         private bool CheckForColorEdge(Vector2Int inputUV, Color32 pixelColor)
         {
-
             //Check the top and bottom pixels
             if(inputUV.y - 1 >= 0 && inputUV.y + 1 < imageScale.y)
             {
-                if (!imagePixels[ConvertUVToIndex(new Vector2Int(inputUV.x, inputUV.y - 1))].Equals(pixelColor))
+                if (!imagePixels[ConvertUVToIndex(new Vector2Int(inputUV.x, inputUV.y + 1))].Equals(pixelColor))
                 {
                     return true;
                 }
-                if (!imagePixels[ConvertUVToIndex(new Vector2Int( inputUV.x, inputUV.y + 1))].Equals(pixelColor))
+                if (!imagePixels[ConvertUVToIndex(new Vector2Int(inputUV.x, inputUV.y - 1))].Equals(pixelColor))
                 {
                     return true;
                 }
@@ -406,7 +437,7 @@ namespace MapMeshGenerator
                 {
                     return true;
                 }
-                if (!imagePixels[ConvertUVToIndex(new Vector2Int(inputUV.x + 1, inputUV.y ))].Equals(pixelColor))
+                if (!imagePixels[ConvertUVToIndex(new Vector2Int(inputUV.x + 1, inputUV.y))].Equals(pixelColor))
                 {
                     return true;
                 }
@@ -417,18 +448,17 @@ namespace MapMeshGenerator
 
         private void TriangulateVertices(ProvinceData provinceData)
         {
-            Vector2[] vertices2D = new Vector2[provinceData.EdgePixels.Length];
-            Vector3[] vertices = new Vector3[provinceData.EdgePixels.Length];
+            Vector2[] vertices2D = new Vector2[provinceData.EdgeVertices.Length];
+            Vector3[] vertices = new Vector3[provinceData.EdgeVertices.Length];
 
-            float uvMinf = Mathf.Min(provinceData.EdgePixels[0].x, provinceData.EdgePixels[0].y);
-            float uvMaxf = Mathf.Max(provinceData.EdgePixels[0].x, provinceData.EdgePixels[0].y);
-            for(int i = 0; i < provinceData.EdgePixels.Length; i++)
+            float uvMinf = Mathf.Min(provinceData.EdgeVertices[0].Pos.x, provinceData.EdgeVertices[0].Pos.y);
+            float uvMaxf = Mathf.Max(provinceData.EdgeVertices[0].Pos.x, provinceData.EdgeVertices[0].Pos.y);
+            for(int i = 0; i < provinceData.EdgeVertices.Length; i++)
             {
-                vertices2D[i] = new Vector2(provinceData.EdgePixels[i].x, provinceData.EdgePixels[i].y);
+                vertices2D[i] = provinceData.EdgeVertices[i].Pos;
                 vertices[i] = new Vector3(vertices2D[i].x, 0, vertices2D[i].y);
-                Vector2 edgePixel = provinceData.EdgePixels[i];
-                uvMaxf = Mathf.Max(uvMaxf, edgePixel.x, edgePixel.y);
-                uvMinf = Mathf.Min(uvMinf, edgePixel.x, edgePixel.y);
+                uvMaxf = Mathf.Max(uvMaxf, vertices2D[i].x, vertices2D[i].y);
+                uvMinf = Mathf.Min(uvMinf, vertices2D[i].x, vertices2D[i].y);
             }
 
             Triangulator tr = new Triangulator(vertices2D);
@@ -448,15 +478,8 @@ namespace MapMeshGenerator
 
             GameObject newTile = Instantiate(tilePrefab, fakeContainer.transform);
             newTile.transform.position = Vector3.zero;
-            newTile.GetComponent<MapTileInfo>().InitializePrefab(
+            newTile.GetComponent<MapTile>().InitializePrefab(
                 provinceData, msh, faceMaterial, CalculatePOI(vertices2D,uvMinf, uvMaxf));
-
-            //GameObject newMesh = new GameObject(provinceData.Tag);
-            //newMesh.AddComponent(typeof(MeshRenderer));
-            //MeshFilter filter = newMesh.AddComponent(typeof(MeshFilter)) as MeshFilter;
-            //filter.mesh = msh;
-            //newMesh.GetComponent<MeshRenderer>().material = faceMaterial;
-            //newMesh.transform.SetParent(fakeContainer.transform);
         }
         
         Vector2[] GenerateUVs(Vector2[] vertices2D, float uvMin, float uvMax)

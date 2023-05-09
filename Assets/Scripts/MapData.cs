@@ -37,15 +37,27 @@ public class MapColorData
 }
 public class ProvinceData
 {
-    public ProvinceData(Color32 provinceColor, string tag, Vector2[] edgePixels)
+    public ProvinceData(Color32 provinceColor, string tag, EdgeVertex[] inputVertices)
     {
         ProvinceColor = provinceColor;
         Tag = tag;
-        EdgePixels = edgePixels;
+        EdgeVertices = inputVertices;
         VertexOrder = new List<int>();
     }
     public Color32 ProvinceColor { get; }
     public string Tag { get; }
-    public Vector2[] EdgePixels { get; set; }
+    public EdgeVertex[] EdgeVertices { get; set; }
     public List<int> VertexOrder { get; set; } //Indices of EdgePixels in clockwise rotation from the top left pixel
+    public string[] NeighborTags { get; set; }
+}
+public struct EdgeVertex
+{
+    public Vector2 Pos;
+    public Color32[] EdgeColors;
+
+    public EdgeVertex(Vector2 inPos, Color32[] inEdgeCols)
+    {
+        Pos = inPos;
+        EdgeColors = inEdgeCols;
+    }
 }
