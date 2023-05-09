@@ -23,10 +23,8 @@ namespace MapMeshGenerator
         {
             MaxPoint = max;
             MinPoint = min;
-            Debug.LogError(string.Format("Max {0}, Min {1}, Center {2}", max, min, (max + min) / 2));
-            //Center = new Vector2((min.x + max.x) / 2, (min.y + max.y) / 2);
-            //Center = new Vector2(9.72f, 16.5f);
-            Center = new Vector2(12.54f, 10.85f);
+            //Debug.LogError(string.Format("Max {0}, Min {1}, Center {2}", max, min, (max + min) / 2));
+            Center = new Vector2((min.x + max.x) / 2, (min.y + max.y) / 2);
 
             Radius = Vector2.Distance(Center, max);
             Dist = SignedDistance(vertices);
@@ -55,18 +53,6 @@ namespace MapMeshGenerator
                     inside = !inside;
                 minDistSq = Mathf.Min(minDistSq, SegmentDistance(a, b, Center));
             }
-
-            //for (int i = 0, j = 0; i < vertices.Length; i++)
-            //{
-            //    j = i == vertices.Length - 1 ? 0 : i++;
-            //    Vector2 a = vertices[i];
-            //    Vector2 b = vertices[j];
-
-            //    if (((a.y > Center.y) != (b.y > Center.y)) &&
-            //        (Center.x < (b.x - a.x) * (Center.y - a.y) / (b.y - a.y) + a.x))
-            //        inside = !inside;
-            //    minDistSq = Mathf.Min(minDistSq, SegmentDistance(a, b, Center));
-            //}
 
             return (inside ? 1 : -1) * Mathf.Sqrt(minDistSq);
         }
@@ -97,6 +83,31 @@ namespace MapMeshGenerator
             dy = p.y - y;
 
             return dx * dx + dy * dy;
+        }
+
+        public void SubdivideCell(Vector2[]vertices, Queue<SDFCell> CellQueue)
+        {
+
+            CellQueue.Enqueue(new SDFCell(
+                new Vector2(MinPoint.x, (MaxPoint.y - MinPoint.y) / 2 + MinPoint.y),
+                new Vector2((MaxPoint.x - MinPoint.x) / 2 + MinPoint.x, MaxPoint.y),
+                vertices));
+
+            CellQueue.Enqueue(new SDFCell(
+                Center,
+                MaxPoint,
+                vertices));
+
+            CellQueue.Enqueue(new SDFCell(
+                new Vector2((MaxPoint.x - MinPoint.x) / 2 + MinPoint.x, MinPoint.y),
+                new Vector2(MaxPoint.x, (MaxPoint.y - MinPoint.y) / 2 + MinPoint.y),
+                vertices));
+
+            CellQueue.Enqueue(new SDFCell(
+                MinPoint,
+                Center,
+                vertices));
+
         }
     }
 
@@ -411,13 +422,11 @@ namespace MapMeshGenerator
 
             float uvMinf = Mathf.Min(provinceData.EdgePixels[0].x, provinceData.EdgePixels[0].y);
             float uvMaxf = Mathf.Max(provinceData.EdgePixels[0].x, provinceData.EdgePixels[0].y);
-            Debug.LogWarning("Start new Mesh");
             for(int i = 0; i < provinceData.EdgePixels.Length; i++)
             {
                 vertices2D[i] = new Vector2(provinceData.EdgePixels[i].x, provinceData.EdgePixels[i].y);
                 vertices[i] = new Vector3(vertices2D[i].x, 0, vertices2D[i].y);
                 Vector2 edgePixel = provinceData.EdgePixels[i];
-                Debug.Log(vertices2D[i]);
                 uvMaxf = Mathf.Max(uvMaxf, edgePixel.x, edgePixel.y);
                 uvMinf = Mathf.Min(uvMinf, edgePixel.x, edgePixel.y);
             }
@@ -440,7 +449,7 @@ namespace MapMeshGenerator
             GameObject newTile = Instantiate(tilePrefab, fakeContainer.transform);
             newTile.transform.position = Vector3.zero;
             newTile.GetComponent<MapTileInfo>().InitializePrefab(
-                provinceData, msh, faceMaterial, CalculatePOI(vertices2D,uvMinf, uvMaxf, provinceData.Tag));
+                provinceData, msh, faceMaterial, CalculatePOI(vertices2D,uvMinf, uvMaxf));
 
             //GameObject newMesh = new GameObject(provinceData.Tag);
             //newMesh.AddComponent(typeof(MeshRenderer));
@@ -462,17 +471,42 @@ namespace MapMeshGenerator
             return uvs;
         }
 
-        Vector3 CalculatePOI(Vector2[] vertices, float uvMin, float uvMax, string tag)
+        Vector3 CalculatePOI(Vector2[] vertices, float uvMin, float uvMax)
         {
-            SDFCell initialQuad = new SDFCell(new Vector2(uvMin, uvMin), new Vector2(uvMax, uvMax), vertices);
-            Debug.Log(string.Format("Center {0}, Radius {1}, SD {2}, UVMin {3}, UVMax {4}, province {5}", 
-                initialQuad.Center, 
-                initialQuad.Radius, 
-                initialQuad.Dist,
-                uvMin,
-                uvMax,
-                tag));
-            return new Vector3(initialQuad.Center.x, 0, initialQuad.Center.y);
+            SDFCell initialCell = new SDFCell(new Vector2(uvMin, uvMin), new Vector2(uvMax, uvMax), vertices);
+            SDFCell bestCell = initialCell;
+
+            Queue<SDFCell> frontier = new Queue<SDFCell>();
+            initialCell.SubdivideCell(vertices, frontier);
+            int fallBack = 0;
+            while(frontier.Count > 0)
+            {
+                SDFCell currentCell = frontier.Dequeue();
+                if (currentCell.Dist < 0)
+                    continue;
+
+                if (currentCell.Dist >= bestCell.Dist)
+                {
+                    //Debug.LogWarning(string.Format("New Best Cell Found: {0} from {1}", currentCell, bestCell));
+                    bestCell = currentCell;               
+                }
+                    
+
+                //if (currentCell.CellMax - bestCell.Dist <= 1)
+                //    continue;
+
+                currentCell.SubdivideCell(vertices, frontier);
+                fallBack++;
+
+                if(fallBack > 64)
+                {
+                    //Debug.LogWarning("Had to Fall Back after 32 iterations");
+                    break;
+                }
+            }
+
+
+            return new Vector3(bestCell.Center.x, 0, bestCell.Center.y);
         }
 
     }
