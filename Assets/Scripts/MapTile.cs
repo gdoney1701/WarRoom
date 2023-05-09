@@ -14,13 +14,13 @@ public class MapTile : MonoBehaviour
     [SerializeField]
     private Transform centerContainer;
 
-    private MapTile[] neighbors;
+    public MapTile[] Neighbors;
 
-    public MapTile[] Neighbors
-    {
-        get { return neighbors; }
-        set { neighbors = value; }
-    }
+    //public MapTile[] Neighbors
+    //{
+    //    get { return neighbors; }
+    //    set { neighbors = value; }
+    //}
 
 
     public void InitializePrefab(ProvinceData provinceData, Mesh msh, Material mat, Vector3 center)
@@ -32,6 +32,6 @@ public class MapTile : MonoBehaviour
         meshRenderer.material = mat;
 
         TileName = provinceData.Tag;
-    } 
+    }
 
 }

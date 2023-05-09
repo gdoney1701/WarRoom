@@ -15,7 +15,16 @@ namespace MapMeshGenerator
         public Vector2 minCoords = Vector2.zero;
         public Vector2 maxCoords = Vector2.zero;
         public ProvinceData[] provinceList; //Master list of province data
-        public GameObject[] mapTileObjects; //Master list of final object tiles
+        public Dictionary<string, MapTile> mapTiles = new Dictionary<string, MapTile>(); //Master list of final object tiles
+
+        public void AssignNeighbors(ProvinceData inputData)
+        {
+            mapTiles[inputData.Tag].Neighbors = new MapTile[inputData.NeighborTags.Length];
+            for(int i = 0; i < inputData.NeighborTags.Length; i++)
+            {
+                mapTiles[inputData.Tag].Neighbors[i] = mapTiles[inputData.NeighborTags[i]];
+            }
+        }
     }
 
     public class SDFCell
@@ -145,13 +154,16 @@ namespace MapMeshGenerator
             
             //Read the input data json containing tile tags and tile colors
             data.provinceList = GetProvinceData();
-            data.mapTileObjects = new GameObject[data.provinceList.Length];
 
             FindVertexPixels(data);
 
             for (int i = 0; i < data.provinceList.Length; i++)
             {
-                TriangulateVertices(data.provinceList[i]);
+                data.mapTiles.Add(data.provinceList[i].Tag, TriangulateVertices(data.provinceList[i]));
+            }
+            for(int i = 0; i < data.provinceList.Length; i++)
+            {
+                data.AssignNeighbors(data.provinceList[i]);
             }
         }
 
@@ -197,8 +209,15 @@ namespace MapMeshGenerator
                 if(!foundColors.Contains(colorIterative) && !colorIterative.Equals(backgroundColor))
                 {
                     sortedProvinces[colorIterative].EdgeVertices = FindEdgeLoop(colorIterative, ConvertIndexToUV(i));
+                    Color32[] neighborColors = ExtractNeighborColors(sortedProvinces[colorIterative]);
+                    sortedProvinces[colorIterative].NeighborTags = new string[neighborColors.Length];
+                    for(int j = 0; j < neighborColors.Length; j++)
+                    {
+                        sortedProvinces[colorIterative].NeighborTags[j] = sortedProvinces[neighborColors[j]].Tag;
+                    }
                 }
             }
+            
         }
 
         //Uses a modified Breadth First Search to find the adjacent edge tile 
@@ -271,7 +290,7 @@ namespace MapMeshGenerator
             for(int i = 0; i < collinearReduction.Count; i++)
             {
                 Vector2 pos = collinearReduction[i];
-                result[i] = new EdgeVertex(pos, GetUVColorsFromVertex(pos));
+                result[i] = new EdgeVertex(pos, GetUVColorsFromVertex(pos, baseColor));
             }
 
 
@@ -294,7 +313,7 @@ namespace MapMeshGenerator
             return result;
         }
 
-        private Color32[] GetUVColorsFromVertex(Vector2 inputCoord)
+        private Color32[] GetUVColorsFromVertex(Vector2 inputCoord, Color32 baseColor)
         {
             Color32 background = new Color32(255, 255, 255, 255);
             List<Color32> result = new List<Color32>();
@@ -317,7 +336,7 @@ namespace MapMeshGenerator
 
             for(int i = 0; i < 4; i++)
             {
-                if (!result.Contains(corners[i]) && !corners[i].Equals(background))
+                if (!result.Contains(corners[i]) && !corners[i].Equals(background) && !corners[i].Equals(baseColor))
                     result.Add(corners[i]);
             }
             return result.ToArray();
@@ -446,7 +465,7 @@ namespace MapMeshGenerator
             return false;
         }
 
-        private void TriangulateVertices(ProvinceData provinceData)
+        private MapTile TriangulateVertices(ProvinceData provinceData)
         {
             Vector2[] vertices2D = new Vector2[provinceData.EdgeVertices.Length];
             Vector3[] vertices = new Vector3[provinceData.EdgeVertices.Length];
@@ -478,8 +497,12 @@ namespace MapMeshGenerator
 
             GameObject newTile = Instantiate(tilePrefab, fakeContainer.transform);
             newTile.transform.position = Vector3.zero;
-            newTile.GetComponent<MapTile>().InitializePrefab(
+            MapTile mapTile = newTile.GetComponent<MapTile>();
+
+            mapTile.InitializePrefab(
                 provinceData, msh, faceMaterial, CalculatePOI(vertices2D,uvMinf, uvMaxf));
+
+            return mapTile;
         }
         
         Vector2[] GenerateUVs(Vector2[] vertices2D, float uvMin, float uvMax)
@@ -530,6 +553,21 @@ namespace MapMeshGenerator
 
 
             return new Vector3(bestCell.Center.x, 0, bestCell.Center.y);
+        }
+
+        Color32[] ExtractNeighborColors(ProvinceData provinceData)
+        {
+            List<Color32> uniqueNeighbors = new List<Color32>();
+            for(int i = 0; i < provinceData.EdgeVertices.Length; i++)
+            {
+                for(int j = 0; j < provinceData.EdgeVertices[i].EdgeColors.Length; j++)
+                {
+                    if (!uniqueNeighbors.Contains(provinceData.EdgeVertices[i].EdgeColors[j]))
+                        uniqueNeighbors.Add(provinceData.EdgeVertices[i].EdgeColors[j]);
+                }
+            }
+
+            return uniqueNeighbors.ToArray();
         }
 
     }
