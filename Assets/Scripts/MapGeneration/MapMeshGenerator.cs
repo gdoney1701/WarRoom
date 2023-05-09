@@ -17,21 +17,87 @@ namespace MapMeshGenerator
         public ProvinceData[] provinceList; //Master list of province data
     }
 
-    public class Quad
+    public class SDFCell
     {
-        public Quad(Vector2 min, Vector2 max)
+        public SDFCell(Vector2 min, Vector2 max, Vector2[] vertices)
         {
             MaxPoint = max;
             MinPoint = min;
             Debug.LogError(string.Format("Max {0}, Min {1}, Center {2}", max, min, (max + min) / 2));
-            Center = new Vector2((min.x + max.x) / 2, (min.y + max.y) / 2);
+            //Center = new Vector2((min.x + max.x) / 2, (min.y + max.y) / 2);
+            //Center = new Vector2(9.72f, 16.5f);
+            Center = new Vector2(12.54f, 10.85f);
+
             Radius = Vector2.Distance(Center, max);
+            Dist = SignedDistance(vertices);
+            CellMax = Dist + Radius;
         }
         public Vector2 MaxPoint { get; set; }
         public Vector2 MinPoint { get; set; }
         public Vector2 Center { get; set; }
         public float Radius { get; set; }
+        public float Dist { get; set; }
+        public float CellMax { get; set; }
 
+        float SignedDistance(Vector2[] vertices)
+        {
+            bool inside = false;
+            float minDistSq = float.MaxValue;
+
+            for (int i = 0, j = vertices.Length - 1; i < vertices.Length; j = i++)
+            {
+                Vector2 a = vertices[i];
+                Vector2 b = vertices[j];
+
+                if ((((a.y <= Center.y) && (Center.y < b.y)) ||
+                    ((b.y <= Center.y) && (Center.y < a.y))) &&
+                    (Center.x < (b.x - a.x) * (Center.y - a.y) / (b.y - a.y) + a.x))
+                    inside = !inside;
+                minDistSq = Mathf.Min(minDistSq, SegmentDistance(a, b, Center));
+            }
+
+            //for (int i = 0, j = 0; i < vertices.Length; i++)
+            //{
+            //    j = i == vertices.Length - 1 ? 0 : i++;
+            //    Vector2 a = vertices[i];
+            //    Vector2 b = vertices[j];
+
+            //    if (((a.y > Center.y) != (b.y > Center.y)) &&
+            //        (Center.x < (b.x - a.x) * (Center.y - a.y) / (b.y - a.y) + a.x))
+            //        inside = !inside;
+            //    minDistSq = Mathf.Min(minDistSq, SegmentDistance(a, b, Center));
+            //}
+
+            return (inside ? 1 : -1) * Mathf.Sqrt(minDistSq);
+        }
+        float SegmentDistance(Vector2 a, Vector2 b, Vector2 p)
+        {
+            float x = a.x;
+            float y = a.y;
+            float dx = b.x - x;
+            float dy = b.y - y;
+
+            if (dx != 0 || dy != 0)
+            {
+                float t = ((p.x - x) * dx + (p.y - y) * dy) / (dx * dx + dy * dy);
+
+                if (t > 1)
+                {
+                    x = b.x;
+                    y = b.y;
+                }
+                else if (t > 0)
+                {
+                    x += dx * t;
+                    y += dy * t;
+                }
+            }
+
+            dx = p.x - x;
+            dy = p.y - y;
+
+            return dx * dx + dy * dy;
+        }
     }
 
     public class MapMeshGenerator : MonoBehaviour
@@ -215,7 +281,6 @@ namespace MapMeshGenerator
         }
         private bool IsCollinear(Vector2[] input)
         {
-
             float slopeA = input[0].x == input[1].x ? float.MaxValue : (input[1].y - input[0].y) / (input[1].x - input[0].x);
             float slobeB = input[0].x == input[2].x ? float.MaxValue : (input[2].y - input[1].y) / (input[2].x - input[1].x);
             return slopeA == slobeB;
@@ -375,7 +440,7 @@ namespace MapMeshGenerator
             GameObject newTile = Instantiate(tilePrefab, fakeContainer.transform);
             newTile.transform.position = Vector3.zero;
             newTile.GetComponent<MapTileInfo>().InitializePrefab(
-                provinceData, msh, faceMaterial, CalculatePOI(vertices2D,uvMinf, uvMaxf));
+                provinceData, msh, faceMaterial, CalculatePOI(vertices2D,uvMinf, uvMaxf, provinceData.Tag));
 
             //GameObject newMesh = new GameObject(provinceData.Tag);
             //newMesh.AddComponent(typeof(MeshRenderer));
@@ -397,64 +462,17 @@ namespace MapMeshGenerator
             return uvs;
         }
 
-        Vector3 CalculatePOI(Vector2[] vertices, float uvMin, float uvMax)
+        Vector3 CalculatePOI(Vector2[] vertices, float uvMin, float uvMax, string tag)
         {
-            Quad initialQuad = new Quad(new Vector2(uvMin, uvMin), new Vector2(uvMax, uvMax));
-            Debug.Log(string.Format("Center {0}, Radius {1}, SD {2}, UVMin {3}, UVMax {4}", 
+            SDFCell initialQuad = new SDFCell(new Vector2(uvMin, uvMin), new Vector2(uvMax, uvMax), vertices);
+            Debug.Log(string.Format("Center {0}, Radius {1}, SD {2}, UVMin {3}, UVMax {4}, province {5}", 
                 initialQuad.Center, 
                 initialQuad.Radius, 
-                SignedDistance(vertices, initialQuad.Center),
+                initialQuad.Dist,
                 uvMin,
-                uvMax));
+                uvMax,
+                tag));
             return new Vector3(initialQuad.Center.x, 0, initialQuad.Center.y);
-        }
-
-        float SignedDistance(Vector2[] vertices, Vector2 point)
-        {
-            bool inside = false;
-            float minDistSq = float.MaxValue;
-            for(int i = 0, j = 0; i < vertices.Length; i++)
-            {
-                j = i == vertices.Length - 1 ? 0 : i++;
-                Vector2 a = vertices[i];
-                Vector2 b = vertices[j];
-
-                if (((a.y > point.y) ^ (b.y > point.y)) &&
-                    (point.x < (b.x - a.x) * (point.y - a.y) / (b.y - a.y) + a.x))
-                    inside = !inside;
-                minDistSq = Mathf.Min(minDistSq, SegmentDistance(a, b, point));
-            }
-
-            return (inside ? 1 : -1) * Mathf.Sqrt(minDistSq);
-        }
-
-        float SegmentDistance(Vector2 a, Vector2 b, Vector2 p)
-        {
-            float x = a.x;
-            float y = a.y;
-            float dx = b.x - x;
-            float dy = b.y - y;
-
-            if (dx != 0 || dy != 0)
-            {
-                float t = ((p.x - x) * dx + (p.y - y) * dy) / (dx * dx + dy * dy);
-
-                if(t > 1)
-                {
-                    x = b.x;
-                    y = b.y;
-                }
-                else if(t > 0)
-                {
-                    x += dx * t;
-                    y += dy * t;
-                }
-            }
-
-            dx = p.x - x;
-            dy = p.y - y;
-
-            return dx * dx + dy * dy;
         }
 
     }
