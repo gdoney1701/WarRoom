@@ -258,22 +258,24 @@ namespace MapMeshGenerator
         private EdgeVertex[] SimplifyEdgeLoop(Vector2Int[] uvInput, Color32 baseColor)
         {
             List<Vector2> mainPoints = new List<Vector2>();
-            for(int i = 0; i < uvInput.Length; i++)
+            for(int i = 0, p = uvInput.Length - 1; i < uvInput.Length; p = i++)
             {
                 List<Vector2> newPoint = new List<Vector2>();
-                if(CheckForMainPoint(uvInput[i], baseColor, out newPoint))
+                if(CheckForMainPoint(uvInput[i], uvInput[p], baseColor, out newPoint))
                 {
                     for(int j = 0; j < newPoint.Count; j++)
                     {
                         if (!mainPoints.Contains(newPoint[j]))
                         {
+                            Debug.LogError(string.Format("Adding new main points: {0}, iterative {1}", newPoint[j], i));
                             mainPoints.Add(newPoint[j]);
                         }
                     }
                 }
             }
             List<Vector2> collinearReduction = new List<Vector2>();
-            for(int i = 0; i < mainPoints.Count; i++)
+            //collinearReduction.AddRange(mainPoints);
+            for (int i = 0; i < mainPoints.Count; i++)
             {
                 Vector2[] neighbors = new Vector2[3];
 
@@ -294,22 +296,30 @@ namespace MapMeshGenerator
                 result[i] = new EdgeVertex(pos, GetUVColorsFromVertex(pos, baseColor));
             }
 
-
-
-            //if (useTestGeo)
-            //{
-            //    Debug.LogWarning("Beginning Vertex Draw");
-            //    GameObject testContainer = new GameObject();
-            //    testContainer.name = string.Format("{0} Container", baseColor);
-            //    testVertex.transform.position = Vector3.zero;
-            //    for (int i = 0; i < result.Length; i++)
-            //    {
-            //        GameObject testVert = Instantiate(testVertex);
-            //        testVert.transform.position = new Vector3(result[i].Pos.x, 0, result[i].Pos.y);
-            //        testVert.transform.SetParent(testContainer.transform);
-            //        Debug.Log(result[i]);
-            //    }
-            //}
+            //For debug purposes
+            if (useTestGeo)
+            {
+                Debug.LogWarning("Beginning Vertex Draw");
+                GameObject testContainer = new GameObject();
+                testContainer.name = string.Format("{0} Container", baseColor);
+                testVertex.transform.position = Vector3.zero;
+                for (int i = 0; i < result.Length; i++)
+                {
+                    GameObject testVert = Instantiate(testVertex);
+                    testVert.transform.position = new Vector3(result[i].Pos.x, 0, result[i].Pos.y);
+                    testVert.transform.SetParent(testContainer.transform);
+                    testVert.name = string.Format("MainPoint_{0}_{1}", result[i].Pos, i);
+                    //Debug.Log(result[i].Pos);
+                }
+                //for (int i = 0; i < uvInput.Length; i++)
+                //{
+                //    GameObject testVert = Instantiate(testVertex);
+                //    testVert.transform.position = new Vector3(uvInput[i].x, 0, uvInput[i].y);
+                //    testVert.transform.SetParent(testContainer.transform);
+                //    testVert.name = string.Format("UVPoint_{0}_{1}", uvInput[i], i);
+                //    Debug.Log(uvInput[i]);
+                //}
+            }
 
             return result;
         }
@@ -349,14 +359,16 @@ namespace MapMeshGenerator
             return slopeA == slobeB;
         }
 
-        private bool CheckForMainPoint(Vector2Int startPos, Color32 baseColor, out List<Vector2> mainPointUV )
+        private bool CheckForMainPoint(Vector2Int startPos, Vector2Int prevPos, Color32 baseColor, out List<Vector2> mainPointUV )
         {
+
             bool isMainPoint = false;
             mainPointUV = new List<Vector2>();
             Vector2Int[] neighbors = GetNeighbors(startPos);
 
-            for(int corner = 4; corner < neighbors.Length; corner++)
+            for(int i = 4, j = 7; i < neighbors.Length; i++, j--)
             {
+                int corner = prevPos.x > startPos.x ? i : j;
                 Color32 cornerColor = imagePixels[ConvertUVToIndex(neighbors[corner])];
 
                 if (!cornerColor.Equals(baseColor))
