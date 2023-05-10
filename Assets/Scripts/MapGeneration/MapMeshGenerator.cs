@@ -222,7 +222,7 @@ namespace MapMeshGenerator
         }
 
         //Uses a modified Breadth First Search to find the adjacent edge tile 
-        //Edge pixels are prioritized in N, E, S, W, NE, SE, SW, NW order
+        //Edge pixels are prioritized in E, S, W, N, SE, SW, NW, NE order
         private EdgeVertex[] FindEdgeLoop(Color32 targetColor, Vector2Int start)
         {
             List<Vector2Int> edgeLoop = new List<Vector2Int>();
@@ -265,29 +265,29 @@ namespace MapMeshGenerator
                 {
                     for(int j = 0; j < newPoint.Count; j++)
                     {
+                        Debug.LogError(string.Format("Adding Point {0} from uv {1} on iterative {2}", newPoint[j], uvInput[i], i));
                         if (!mainPoints.Contains(newPoint[j]))
-                        {
-                            Debug.LogError(string.Format("Adding new main points: {0}, iterative {1}", newPoint[j], i));
+                        {                 
                             mainPoints.Add(newPoint[j]);
                         }
                     }
                 }
             }
             List<Vector2> collinearReduction = new List<Vector2>();
-            //collinearReduction.AddRange(mainPoints);
-            for (int i = 0; i < mainPoints.Count; i++)
-            {
-                Vector2[] neighbors = new Vector2[3];
+            collinearReduction.AddRange(mainPoints);
+            //for (int i = 0; i < mainPoints.Count; i++)
+            //{
+            //    Vector2[] neighbors = new Vector2[3];
 
-                neighbors[0] = i == 0 ? mainPoints[mainPoints.Count - 1] : mainPoints[i - 1];
-                neighbors[1] = mainPoints[i];
-                neighbors[2] = i == mainPoints.Count - 1 ? mainPoints[0] : mainPoints[i + 1];
+            //    neighbors[0] = i == 0 ? mainPoints[mainPoints.Count - 1] : mainPoints[i - 1];
+            //    neighbors[1] = mainPoints[i];
+            //    neighbors[2] = i == mainPoints.Count - 1 ? mainPoints[0] : mainPoints[i + 1];
 
-                if (!IsCollinear(neighbors))
-                {
-                    collinearReduction.Add(mainPoints[i]);
-                }
-            }
+            //    if (!IsCollinear(neighbors))
+            //    {
+            //        collinearReduction.Add(mainPoints[i]);
+            //    }
+            //}
 
             EdgeVertex[] result = new EdgeVertex[collinearReduction.Count];
             for(int i = 0; i < collinearReduction.Count; i++)
@@ -299,7 +299,6 @@ namespace MapMeshGenerator
             //For debug purposes
             if (useTestGeo)
             {
-                Debug.LogWarning("Beginning Vertex Draw");
                 GameObject testContainer = new GameObject();
                 testContainer.name = string.Format("{0} Container", baseColor);
                 testVertex.transform.position = Vector3.zero;
@@ -311,14 +310,14 @@ namespace MapMeshGenerator
                     testVert.name = string.Format("MainPoint_{0}_{1}", result[i].Pos, i);
                     //Debug.Log(result[i].Pos);
                 }
-                //for (int i = 0; i < uvInput.Length; i++)
-                //{
-                //    GameObject testVert = Instantiate(testVertex);
-                //    testVert.transform.position = new Vector3(uvInput[i].x, 0, uvInput[i].y);
-                //    testVert.transform.SetParent(testContainer.transform);
-                //    testVert.name = string.Format("UVPoint_{0}_{1}", uvInput[i], i);
-                //    Debug.Log(uvInput[i]);
-                //}
+                for (int i = 0; i < uvInput.Length; i++)
+                {
+                    GameObject testVert = Instantiate(testVertex);
+                    testVert.transform.position = new Vector3(uvInput[i].x, 0, uvInput[i].y);
+                    testVert.transform.SetParent(testContainer.transform);
+                    testVert.name = string.Format("UVPoint_{0}_{1}", uvInput[i], i);
+                    //Debug.Log(uvInput[i]);
+                }
             }
 
             return result;
@@ -359,6 +358,30 @@ namespace MapMeshGenerator
             return slopeA == slobeB;
         }
 
+        [ContextMenu("Dot Testing")]
+        public void TestDot()
+        {
+            Vector2 origin = new Vector2(38f, 46f);
+            Vector2 p1 = new Vector2(38.5f, 46.5f);
+            Vector2 p2 = new Vector2(38.5f, 45.5f);
+
+            float dotP1 = Vector2.Dot(origin.normalized, p1.normalized);
+            float dotP2 = Vector2.Dot(origin.normalized, p2.normalized);
+
+            Debug.Log(string.Format("P1 Dot = {0}, P2 Dot = {1}", dotP1, dotP2));
+
+            origin = new Vector2(39f, 46f);
+            p1 = new Vector2(38.5f, 47.5f);
+            p2 = new Vector2(38.5f, 46.5f);
+
+            dotP1 = Vector2.Dot(origin.normalized, p1.normalized);
+            dotP2 = Vector2.Dot(origin.normalized, p2.normalized);
+
+            Debug.Log(string.Format("P1 Dot = {0}, P2 Dot = {1}", dotP1, dotP2));
+        }
+
+
+        //Determines if an edge point is considered important enough to be preserved. Does not check collinearity 
         private bool CheckForMainPoint(Vector2Int startPos, Vector2Int prevPos, Color32 baseColor, out List<Vector2> mainPointUV )
         {
 
@@ -366,9 +389,11 @@ namespace MapMeshGenerator
             mainPointUV = new List<Vector2>();
             Vector2Int[] neighbors = GetNeighbors(startPos);
 
-            for(int i = 4, j = 7; i < neighbors.Length; i++, j--)
+            for(int i = 7, j = 6; i > 3; i--,j--)
             {
-                int corner = prevPos.x > startPos.x ? i : j;
+                if (j == 3)
+                    j = 7;
+                int corner = prevPos.y != startPos.y && prevPos.x == startPos.x ? j : i;
                 Color32 cornerColor = imagePixels[ConvertUVToIndex(neighbors[corner])];
 
                 if (!cornerColor.Equals(baseColor))
@@ -398,7 +423,6 @@ namespace MapMeshGenerator
                     }
                 }
             }
-            
             return isMainPoint;
         }
 
@@ -433,15 +457,15 @@ namespace MapMeshGenerator
         private Vector2Int[] GetNeighbors(Vector2Int start)
         {
             Vector2Int[] neighbors = new Vector2Int[8];
-
-            neighbors[0] = new Vector2Int(start.x, start.y + 1); //North
-            neighbors[1] = new Vector2Int(start.x + 1, start.y); //East
-            neighbors[2] = new Vector2Int(start.x, start.y - 1); //South
-            neighbors[3] = new Vector2Int(start.x - 1, start.y); //West
-            neighbors[4] = new Vector2Int(start.x + 1, start.y + 1); //North East
-            neighbors[5] = new Vector2Int(start.x + 1, start.y - 1); //South East
-            neighbors[6] = new Vector2Int(start.x - 1, start.y - 1); //South West
-            neighbors[7] = new Vector2Int(start.x - 1, start.y + 1); //North West
+          
+            neighbors[0] = new Vector2Int(start.x + 1, start.y); //East
+            neighbors[1] = new Vector2Int(start.x, start.y - 1); //South
+            neighbors[2] = new Vector2Int(start.x - 1, start.y); //West
+            neighbors[3] = new Vector2Int(start.x, start.y + 1); //North       
+            neighbors[4] = new Vector2Int(start.x + 1, start.y - 1); //South East
+            neighbors[5] = new Vector2Int(start.x - 1, start.y - 1); //South West
+            neighbors[6] = new Vector2Int(start.x - 1, start.y + 1); //North West
+            neighbors[7] = new Vector2Int(start.x + 1, start.y + 1); //North East
 
             return neighbors;
         }
@@ -557,7 +581,7 @@ namespace MapMeshGenerator
                 currentCell.SubdivideCell(vertices, frontier);
                 fallBack++;
 
-                if(fallBack > 64)
+                if(fallBack > 128)
                 {
                     //Debug.LogWarning("Had to Fall Back after 32 iterations");
                     break;
