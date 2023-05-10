@@ -215,6 +215,7 @@ namespace MapMeshGenerator
                     {
                         sortedProvinces[colorIterative].NeighborTags[j] = sortedProvinces[neighborColors[j]].Tag;
                     }
+                    foundColors.Add(colorIterative);
                 }
             }
             
@@ -301,10 +302,10 @@ namespace MapMeshGenerator
             //    GameObject testContainer = new GameObject();
             //    testContainer.name = string.Format("{0} Container", baseColor);
             //    testVertex.transform.position = Vector3.zero;
-            //    for (int i = 0; i < result.Count; i++)
+            //    for (int i = 0; i < result.Length; i++)
             //    {
             //        GameObject testVert = Instantiate(testVertex);
-            //        testVert.transform.position = new Vector3(result[i].x, 0, result[i].y);
+            //        testVert.transform.position = new Vector3(result[i].Pos.x, 0, result[i].Pos.y);
             //        testVert.transform.SetParent(testContainer.transform);
             //        Debug.Log(result[i]);
             //    }

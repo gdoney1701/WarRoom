@@ -13,14 +13,19 @@ public class MapTile : MonoBehaviour
     private TextMeshProUGUI tileTagUI;
     [SerializeField]
     private Transform centerContainer;
+    [SerializeField]
+    public LineRenderer borderRenderer;
 
-    public MapTile[] Neighbors;
+    private Color32 ownColor;
+    private Color32[] neighborColors;
 
-    //public MapTile[] Neighbors
-    //{
-    //    get { return neighbors; }
-    //    set { neighbors = value; }
-    //}
+    private MapTile[] neighbors;
+
+    public MapTile[] Neighbors
+    {
+        get { return neighbors; }
+        set { neighbors = value; }
+    }
 
 
     public void InitializePrefab(ProvinceData provinceData, Mesh msh, Material mat, Vector3 center)
@@ -32,6 +37,12 @@ public class MapTile : MonoBehaviour
         meshRenderer.material = mat;
 
         TileName = provinceData.Tag;
+
+        borderRenderer.positionCount = provinceData.EdgeVertices.Length;
+        for(int i = 0; i < provinceData.EdgeVertices.Length; i++)
+        {
+            borderRenderer.SetPosition(i, provinceData.EdgeVertices[i].Pos);
+        }
     }
 
 }

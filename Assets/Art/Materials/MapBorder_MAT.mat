@@ -7,12 +7,12 @@ Material:
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_Name: MapTile_MAT
-  m_Shader: {fileID: -6465566751694194690, guid: f04ae7268baaf5b4f9b28dfa701bf119,
+  m_Name: MapBorder_MAT
+  m_Shader: {fileID: -6465566751694194690, guid: a99166cd88826d145aa2706edb2ea1a9,
     type: 3}
   m_ValidKeywords: []
   m_InvalidKeywords: []
-  m_LightmapFlags: 2
+  m_LightmapFlags: 4
   m_EnableInstancingVariants: 0
   m_DoubleSidedGI: 0
   m_CustomRenderQueue: -1
@@ -38,9 +38,10 @@ Material:
     - _QueueControl: 0
     - _QueueOffset: 0
     m_Colors:
-    - _RimColor: {r: 1, g: 1, b: 1, a: 1}
+    - _GColor: {r: 1, g: 0, b: 0, a: 0}
+    - _RColor: {r: 0, g: 0.19173235, b: 1, a: 0}
   m_BuildTextureStacks: []
---- !u!114 &1978893872112925476
+--- !u!114 &4326101577613573755
 MonoBehaviour:
   m_ObjectHideFlags: 11
   m_CorrespondingSourceObject: {fileID: 0}
