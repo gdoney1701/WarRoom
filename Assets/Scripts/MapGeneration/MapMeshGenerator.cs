@@ -265,7 +265,6 @@ namespace MapMeshGenerator
                 {
                     for(int j = 0; j < newPoint.Count; j++)
                     {
-                        Debug.LogError(string.Format("Adding Point {0} from uv {1} on iterative {2}", newPoint[j], uvInput[i], i));
                         if (!mainPoints.Contains(newPoint[j]))
                         {                 
                             mainPoints.Add(newPoint[j]);
@@ -358,29 +357,6 @@ namespace MapMeshGenerator
             return slopeA == slobeB;
         }
 
-        [ContextMenu("Dot Testing")]
-        public void TestDot()
-        {
-            Vector2 origin = new Vector2(38f, 46f);
-            Vector2 p1 = new Vector2(38.5f, 46.5f);
-            Vector2 p2 = new Vector2(38.5f, 45.5f);
-
-            float dotP1 = Vector2.Dot(origin.normalized, p1.normalized);
-            float dotP2 = Vector2.Dot(origin.normalized, p2.normalized);
-
-            Debug.Log(string.Format("P1 Dot = {0}, P2 Dot = {1}", dotP1, dotP2));
-
-            origin = new Vector2(39f, 46f);
-            p1 = new Vector2(38.5f, 47.5f);
-            p2 = new Vector2(38.5f, 46.5f);
-
-            dotP1 = Vector2.Dot(origin.normalized, p1.normalized);
-            dotP2 = Vector2.Dot(origin.normalized, p2.normalized);
-
-            Debug.Log(string.Format("P1 Dot = {0}, P2 Dot = {1}", dotP1, dotP2));
-        }
-
-
         //Determines if an edge point is considered important enough to be preserved. Does not check collinearity 
         private bool CheckForMainPoint(Vector2Int startPos, Vector2Int prevPos, Color32 baseColor, out List<Vector2> mainPointUV )
         {
@@ -423,6 +399,26 @@ namespace MapMeshGenerator
                     }
                 }
             }
+            //Doesn't work because some Non Main Points don't have corresponding UV points on the other edge loop
+
+            //if (!isMainPoint)
+            //{
+            //    Debug.LogWarning(string.Format("Point {0} has no corner neighbors, attempting adjacent", startPos));
+            //    for(int i = 3; i > 0; i--)
+            //    {
+            //        Color32 adjacentColor = imagePixels[ConvertUVToIndex(neighbors[i])];
+            //        Debug.Log(string.Format("Point {0}, Neighbor {1} has color {2}", startPos, neighbors[i], adjacentColor));
+            //        if (!adjacentColor.Equals(baseColor))
+            //        {
+            //            isMainPoint = true;
+            //            mainPointUV.Add(new Vector2(
+            //                (neighbors[i].x + startPos.x) / 2f,
+            //                (neighbors[i].y + startPos.y) / 2f
+            //                ));
+            //            break;
+            //        }
+            //    }
+            //}
             return isMainPoint;
         }
 
@@ -581,7 +577,7 @@ namespace MapMeshGenerator
                 currentCell.SubdivideCell(vertices, frontier);
                 fallBack++;
 
-                if(fallBack > 128)
+                if(fallBack > 64)
                 {
                     //Debug.LogWarning("Had to Fall Back after 32 iterations");
                     break;
