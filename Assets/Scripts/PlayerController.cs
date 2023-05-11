@@ -7,6 +7,10 @@ public class PlayerController : MonoBehaviour
 {
     [SerializeField]
     private PlayerInput playerInput;
+    [SerializeField]
+    private float maxCameraHeight;
+    [SerializeField]
+    private float minCameraHeight;
 
 
     public void OnCameraMove(InputAction.CallbackContext context)
