@@ -503,15 +503,20 @@ namespace MapMeshGenerator
             Vector2[] vertices2D = new Vector2[provinceData.EdgeVertices.Length];
             Vector3[] vertices = new Vector3[provinceData.EdgeVertices.Length];
 
-            float uvMinf = Mathf.Min(provinceData.EdgeVertices[0].Pos.x, provinceData.EdgeVertices[0].Pos.y);
-            float uvMaxf = Mathf.Max(provinceData.EdgeVertices[0].Pos.x, provinceData.EdgeVertices[0].Pos.y);
+            Vector2 minPoints = provinceData.EdgeVertices[0].Pos;
+            Vector2 maxPoints = provinceData.EdgeVertices[0].Pos;
+
             for(int i = 0; i < provinceData.EdgeVertices.Length; i++)
             {
                 vertices2D[i] = provinceData.EdgeVertices[i].Pos;
                 vertices[i] = new Vector3(vertices2D[i].x, 0, vertices2D[i].y);
-                uvMaxf = Mathf.Max(uvMaxf, vertices2D[i].x, vertices2D[i].y);
-                uvMinf = Mathf.Min(uvMinf, vertices2D[i].x, vertices2D[i].y);
+
+                minPoints = Vector2.Min(minPoints, vertices2D[i]);
+                maxPoints = Vector2.Max(maxPoints, vertices2D[i]);               
             }
+
+            float uvMinf = Mathf.Min(Mathf.Min(minPoints.x, minPoints.y));
+            float uvMaxf = Mathf.Max(Mathf.Max(maxPoints.x, maxPoints.y));
 
             Triangulator tr = new Triangulator(vertices2D);
             int[] indices = tr.Triangulate();
@@ -533,7 +538,7 @@ namespace MapMeshGenerator
             MapTile mapTile = newTile.GetComponent<MapTile>();
 
             mapTile.InitializePrefab(
-                provinceData, msh, faceMaterial, CalculatePOI(vertices2D,uvMinf, uvMaxf));
+                provinceData, msh, faceMaterial, CalculatePOI(vertices2D,uvMinf, uvMaxf), maxPoints, minPoints);
 
             return mapTile;
         }

@@ -14,7 +14,9 @@ public class MapTile : MonoBehaviour
     [SerializeField]
     private Transform centerContainer;
     [SerializeField]
-    public LineRenderer borderRenderer;
+    private LineRenderer borderRenderer;
+    [SerializeField]
+    private MeshCollider meshCollider;
 
     private Color32 ownColor;
     private Color32[] neighborColors;
@@ -28,13 +30,19 @@ public class MapTile : MonoBehaviour
     }
 
 
-    public void InitializePrefab(ProvinceData provinceData, Mesh msh, Material mat, Vector3 center)
+    public void InitializePrefab(ProvinceData provinceData, Mesh msh, Material mat, Vector3 center, Vector2 inMax, Vector2 inMin)
     {
+        
         centerContainer.position = center;
         gameObject.name = provinceData.Tag;
+
+        float minDiameter = Mathf.Min(inMax.x - inMin.x, inMax.y - inMin.y);
         tileTagUI.text = provinceData.Tag;
+        tileTagUI.gameObject.transform.localScale = new Vector3(minDiameter / 10f, minDiameter / 10f, minDiameter / 10f);
+
         meshFilter.mesh = msh;
         meshRenderer.material = mat;
+        meshCollider.sharedMesh = msh;
 
         TileName = provinceData.Tag;
 

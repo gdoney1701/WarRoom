@@ -129,7 +129,7 @@ MeshCollider:
   m_IsTrigger: 0
   m_Enabled: 1
   serializedVersion: 4
-  m_Convex: 0
+  m_Convex: 1
   m_CookingOptions: 30
   m_Mesh: {fileID: 0}
 --- !u!1 &1262288820513990315
@@ -319,6 +319,7 @@ MonoBehaviour:
   tileTagUI: {fileID: 1262288820513990313}
   centerContainer: {fileID: 2538642642727723943}
   borderRenderer: {fileID: 1676443054722733144}
+  meshCollider: {fileID: 1262288820381516421}
 --- !u!1 &1262288822010870121
 GameObject:
   m_ObjectHideFlags: 0
@@ -543,7 +544,7 @@ LineRenderer:
   - {x: 0, y: 0, z: 1}
   m_Parameters:
     serializedVersion: 3
-    widthMultiplier: 0.3
+    widthMultiplier: 0.5
     widthCurve:
       serializedVersion: 2
       m_Curve:
