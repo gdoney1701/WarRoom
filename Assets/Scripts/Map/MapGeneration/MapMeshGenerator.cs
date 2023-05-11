@@ -25,6 +25,13 @@ namespace MapMeshGenerator
                 mapTiles[inputData.Tag].Neighbors[i] = mapTiles[inputData.NeighborTags[i]];
             }
         }
+
+        public MapTile[] ExtractMapTiles()
+        {
+            List<MapTile> result = new List<MapTile>();
+            result.AddRange(mapTiles.Values);
+            return result.ToArray();
+        }
     }
 
     public class SDFCell
@@ -130,16 +137,25 @@ namespace MapMeshGenerator
         [SerializeField]
         private string colorDataPath = "SmallMapDemo";
         [SerializeField]
-        private GameObject fakeContainer;
+        private GameObject tileContainer;
         [SerializeField]
         private GameObject tilePrefab;
         [SerializeField]
         private GameObject testVertex;
         [SerializeField]
         private bool useTestGeo;
+        [SerializeField, Range(0.1f, 1f)]
+        private float mapScale = 0.5f;
 
         Color32[] imagePixels = new Color32[0];
         Vector2Int imageScale = Vector2Int.zero;
+
+        public delegate void OnMapLoad(Dictionary<string, MapTile> tileDict);
+        public static event OnMapLoad onMapLoad;
+        private void Start()
+        {
+            GenerateMesh();
+        }
 
         [ContextMenu("Test Generation")]
         public void GenerateMesh()
@@ -164,6 +180,14 @@ namespace MapMeshGenerator
             for(int i = 0; i < data.provinceList.Length; i++)
             {
                 data.AssignNeighbors(data.provinceList[i]);
+            }
+            float uniScale = (mapScale * 64f) / inputTexture.width;
+
+            tileContainer.transform.localScale = new Vector3(uniScale, 1, uniScale);
+
+            if (Application.isPlaying)
+            {
+                onMapLoad?.Invoke(data.mapTiles);
             }
         }
 
@@ -533,7 +557,7 @@ namespace MapMeshGenerator
             msh.RecalculateTangents();
             msh.uv = GenerateUVs(vertices2D, uvMinf, uvMaxf);
 
-            GameObject newTile = Instantiate(tilePrefab, fakeContainer.transform);
+            GameObject newTile = Instantiate(tilePrefab, tileContainer.transform);
             newTile.transform.position = Vector3.zero;
             MapTile mapTile = newTile.GetComponent<MapTile>();
 

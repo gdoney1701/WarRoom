@@ -21,14 +21,14 @@ public class ArmyInfo
     public void SaveToFile(string inputName)
     {
         string data = SaveToString();
-        string path = string.Format("{0}/{1}.json", Application.streamingAssetsPath, inputName);
+        string path = string.Format("{0}/FactionData/{1}.json", Application.streamingAssetsPath, inputName);
         System.IO.File.WriteAllText(path, data);
 
     }
 
     public ArmyInfo LoadFromFile(string inputName)
     {
-        string path = string.Format("{0}/{1}.json", Application.streamingAssetsPath, inputName);
+        string path = string.Format("{0}/FactionData/{1}.json", Application.streamingAssetsPath, inputName);
         try
         {
             string jsonString = System.IO.File.ReadAllText(path);

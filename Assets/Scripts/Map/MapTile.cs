@@ -29,11 +29,16 @@ public class MapTile : MonoBehaviour
         set { neighbors = value; }
     }
 
+    public Transform CenterContainer
+    {
+        get { return centerContainer; }
+    }
+
 
     public void InitializePrefab(ProvinceData provinceData, Mesh msh, Material mat, Vector3 center, Vector2 inMax, Vector2 inMin)
     {
         
-        centerContainer.position = center;
+        centerContainer.localPosition = center * centerContainer.localScale.x;
         gameObject.name = provinceData.Tag;
 
         float minDiameter = Mathf.Min(inMax.x - inMin.x, inMax.y - inMin.y);

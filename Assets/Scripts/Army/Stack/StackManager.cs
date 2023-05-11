@@ -49,7 +49,7 @@ public class StackManager : MonoBehaviour
     private void TroopClassLoop(int overallCounter, Color troopColor)
     {
         GameObject tempVisual = Instantiate(landVisual, visualParent);
-        tempVisual.transform.position = Vector3.zero;
+        tempVisual.transform.localPosition = Vector3.zero;
         tempVisual.transform.Translate(0, 0.25f * overallCounter + 0.125f, 0);
         tempVisual.GetComponent<Renderer>().material.color = troopColor;
         stackVisuals[overallCounter] = tempVisual;

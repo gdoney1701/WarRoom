@@ -15,7 +15,7 @@ public class StackInfo
     public int YellowTroopCount = 0;
 
 
-    public string LocationCode = "Z1";
+    public string TileTag = "Z1";
     public string TroopID = "us_l_57";
 
     public int GetStackTotal()

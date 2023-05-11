@@ -69,7 +69,7 @@ public class ArmyLayoutEditor : EditorWindow
                 stack.GenerateStackID(ActiveData.FactionName);
             }
             GUILayout.EndHorizontal();
-            stack.LocationCode = EditorGUILayout.TextField("Location: ", stack.LocationCode);
+            stack.TileTag = EditorGUILayout.TextField("Location: ", stack.TileTag);
 
             stack.StackZone = (ArmyInfoStatic.CombatZone)EditorGUILayout.EnumPopup("Combat Zone: ", stack.StackZone);
             GUILayout.Space(10);
@@ -111,7 +111,7 @@ public class ArmyLayoutEditor : EditorWindow
     private void AddNewStack()
     {
         ActiveData.ResizeFactionArray(ActiveData.FactionStacks.Length + 1);
-        ActiveData.FactionStacks[ActiveData.FactionStacks.Length - 1].LocationCode = selectedTile.TileName;
+        ActiveData.FactionStacks[ActiveData.FactionStacks.Length - 1].TileTag = selectedTile.TileName;
         Repaint();
     }
 
