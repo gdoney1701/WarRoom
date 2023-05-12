@@ -554,6 +554,7 @@ namespace MapMeshGenerator
             msh.RecalculateBounds();
             msh.RecalculateTangents();
             msh.uv = GenerateUVs(vertices2D, minPoint, maxPoint);
+            msh.uv2 = vertices2D;
 
             GameObject newTile = Instantiate(tilePrefab, tileContainer.transform);
             newTile.transform.position = Vector3.zero;
