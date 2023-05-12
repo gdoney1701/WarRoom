@@ -527,20 +527,18 @@ namespace MapMeshGenerator
             Vector2[] vertices2D = new Vector2[provinceData.EdgeVertices.Length];
             Vector3[] vertices = new Vector3[provinceData.EdgeVertices.Length];
 
-            Vector2 minPoints = provinceData.EdgeVertices[0].Pos;
-            Vector2 maxPoints = provinceData.EdgeVertices[0].Pos;
+            Vector2 minPoint = provinceData.EdgeVertices[0].Pos;
+            Vector2 maxPoint = provinceData.EdgeVertices[0].Pos;
 
             for(int i = 0; i < provinceData.EdgeVertices.Length; i++)
             {
                 vertices2D[i] = provinceData.EdgeVertices[i].Pos;
                 vertices[i] = new Vector3(vertices2D[i].x, 0, vertices2D[i].y);
 
-                minPoints = Vector2.Min(minPoints, vertices2D[i]);
-                maxPoints = Vector2.Max(maxPoints, vertices2D[i]);               
+                minPoint = Vector2.Min(minPoint, vertices2D[i]);
+                maxPoint = Vector2.Max(maxPoint, vertices2D[i]);               
             }
-
-            float uvMinf = Mathf.Min(Mathf.Min(minPoints.x, minPoints.y));
-            float uvMaxf = Mathf.Max(Mathf.Max(maxPoints.x, maxPoints.y));
+            Debug.LogWarning(string.Format("For Tile {0}, minPoint = {1}, maxPoint = {2}", provinceData.Tag, minPoint, maxPoint));
 
             Triangulator tr = new Triangulator(vertices2D);
             int[] indices = tr.Triangulate();
@@ -555,33 +553,37 @@ namespace MapMeshGenerator
             msh.RecalculateNormals();
             msh.RecalculateBounds();
             msh.RecalculateTangents();
-            msh.uv = GenerateUVs(vertices2D, uvMinf, uvMaxf);
+            msh.uv = GenerateUVs(vertices2D, minPoint, maxPoint);
 
             GameObject newTile = Instantiate(tilePrefab, tileContainer.transform);
             newTile.transform.position = Vector3.zero;
             MapTile mapTile = newTile.GetComponent<MapTile>();
 
             mapTile.InitializePrefab(
-                provinceData, msh, faceMaterial, CalculatePOI(vertices2D,uvMinf, uvMaxf), maxPoints, minPoints);
+                provinceData, msh, faceMaterial, CalculatePOI(vertices2D,minPoint, maxPoint), maxPoint, minPoint);
 
             return mapTile;
         }
         
-        Vector2[] GenerateUVs(Vector2[] vertices2D, float uvMin, float uvMax)
+        Vector2[] GenerateUVs(Vector2[] vertices2D, Vector2 minPoint, Vector2 maxPoint)
         {
             Vector2[] uvs = new Vector2[vertices2D.Length];
-            float uvScale = uvMax - uvMin;
+            float uvScale = Mathf.Max(maxPoint.x - minPoint.x, maxPoint.y - minPoint.y);
+
             for(int i = 0; i < vertices2D.Length; i++)
             {
-                uvs[i] = new Vector2((vertices2D[i].x - uvMin) / uvScale, (vertices2D[i].y - uvMin) / uvScale);
+                uvs[i] = new Vector2((vertices2D[i].x - minPoint.x) / uvScale, (vertices2D[i].y - minPoint.y) / uvScale);
             }
 
             return uvs;
         }
 
-        Vector3 CalculatePOI(Vector2[] vertices, float uvMin, float uvMax)
+        Vector3 CalculatePOI(Vector2[] vertices, Vector2 minPoint, Vector2 maxPoint)
         {
-            SDFCell initialCell = new SDFCell(new Vector2(uvMin, uvMin), new Vector2(uvMax, uvMax), vertices);
+            float uvScale = Mathf.Max(maxPoint.x - minPoint.x, maxPoint.y - minPoint.y);
+            Vector2 uvMaxPoint = new Vector2(minPoint.x + uvScale, minPoint.y + uvScale);
+
+            SDFCell initialCell = new SDFCell(minPoint, uvMaxPoint, vertices);
             SDFCell bestCell = initialCell;
 
             Queue<SDFCell> frontier = new Queue<SDFCell>();
