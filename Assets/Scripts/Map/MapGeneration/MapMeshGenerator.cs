@@ -181,9 +181,9 @@ namespace MapMeshGenerator
             {
                 data.AssignNeighbors(data.provinceList[i]);
             }
-            float uniScale = (mapScale * 64f) / inputTexture.width;
+            //float uniScale = (mapScale * 64f) / inputTexture.width;
 
-            tileContainer.transform.localScale = new Vector3(uniScale, 1, uniScale);
+            //tileContainer.transform.localScale = new Vector3(uniScale, 1, uniScale);
 
             if (Application.isPlaying)
             {
