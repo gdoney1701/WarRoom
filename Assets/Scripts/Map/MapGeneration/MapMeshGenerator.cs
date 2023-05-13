@@ -16,6 +16,7 @@ namespace MapMeshGenerator
         public Vector2 maxCoords = Vector2.zero;
         public ProvinceData[] provinceList; //Master list of province data
         public Dictionary<string, MapTile> mapTiles = new Dictionary<string, MapTile>(); //Master list of final object tiles
+        public GameObject[] columnArray;
 
         public void AssignNeighbors(ProvinceData inputData)
         {
@@ -150,7 +151,7 @@ namespace MapMeshGenerator
         Color32[] imagePixels = new Color32[0];
         Vector2Int imageScale = Vector2Int.zero;
 
-        public delegate void OnMapLoad(Dictionary<string, MapTile> tileDict);
+        public delegate void OnMapLoad(MeshGenerationData data);
         public static event OnMapLoad onMapLoad;
         private void Start()
         {
@@ -181,13 +182,17 @@ namespace MapMeshGenerator
             {
                 data.AssignNeighbors(data.provinceList[i]);
             }
-            //float uniScale = (mapScale * 64f) / inputTexture.width;
 
-            //tileContainer.transform.localScale = new Vector3(uniScale, 1, uniScale);
+            data.columnArray = CreateVerticalGroups(data, 12);
+
 
             if (Application.isPlaying)
             {
-                onMapLoad?.Invoke(data.mapTiles);
+                //float uniScale = (mapScale * 64f) / inputTexture.width;
+
+                tileContainer.transform.localScale = new Vector3(0.1f, 0.1f, 0.1f);
+
+                onMapLoad?.Invoke(data);
             }
         }
 
@@ -538,7 +543,8 @@ namespace MapMeshGenerator
                 minPoint = Vector2.Min(minPoint, vertices2D[i]);
                 maxPoint = Vector2.Max(maxPoint, vertices2D[i]);               
             }
-            Debug.LogWarning(string.Format("For Tile {0}, minPoint = {1}, maxPoint = {2}", provinceData.Tag, minPoint, maxPoint));
+            provinceData.MaxPoint = maxPoint;
+            provinceData.MinPoint = minPoint;
 
             Triangulator tr = new Triangulator(vertices2D);
             int[] indices = tr.Triangulate();
@@ -633,6 +639,26 @@ namespace MapMeshGenerator
             }
 
             return uniqueNeighbors.ToArray();
+        }
+
+        GameObject[] CreateVerticalGroups(MeshGenerationData data, int columnNumber)
+        {
+            float columnWidth = inputTexture.width / columnNumber;
+            GameObject[] columnContainer = new GameObject[columnNumber];
+            for(int i = 0; i < columnNumber; i++)
+            {
+                GameObject newColumn = new GameObject(string.Format("TileColumn_{0}", i));
+                newColumn.transform.SetParent(tileContainer.transform);
+                newColumn.transform.position = new Vector3(i * columnWidth, 0, 0);
+                columnContainer[i] = newColumn;
+            }
+
+            for(int i = 0; i < data.provinceList.Length; i++)
+            {
+                int index = Mathf.FloorToInt(data.provinceList[i].MaxPoint.x / columnWidth);
+                data.mapTiles[data.provinceList[i].Tag].transform.SetParent(columnContainer[index].transform);
+            }
+            return columnContainer;
         }
 
     }

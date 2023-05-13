@@ -14,7 +14,7 @@ public class MapManager : MonoBehaviour
         MapMeshGenerator.MapMeshGenerator.onMapLoad -= DoSomething;
     }
 
-    void DoSomething(Dictionary<string, MapTile> inputDict)
+    void DoSomething(MapMeshGenerator.MeshGenerationData data)
     {
         Debug.Log("Did Something");
     }

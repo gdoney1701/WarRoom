@@ -43,12 +43,16 @@ public class ProvinceData
         Tag = tag;
         EdgeVertices = inputVertices;
         VertexOrder = new List<int>();
+        MaxPoint = Vector2.zero;
+        MinPoint = Vector2.zero;
     }
     public Color32 ProvinceColor { get; }
     public string Tag { get; }
     public EdgeVertex[] EdgeVertices { get; set; }
     public List<int> VertexOrder { get; set; } //Indices of EdgePixels in clockwise rotation from the top left pixel
     public string[] NeighborTags { get; set; }
+    public Vector2 MaxPoint { get; set; }
+    public Vector2 MinPoint { get; set; }
 }
 public struct EdgeVertex
 {

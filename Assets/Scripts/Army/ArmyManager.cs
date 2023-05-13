@@ -16,15 +16,6 @@ public class ArmyManager : MonoBehaviour
     {
         armyInfo.LoadFromFile(armyInfoPath);
         MapMeshGenerator.MapMeshGenerator.onMapLoad += SpawnInitialStacks;
-
-        //foreach(StackInfo stack in armyInfo.FactionStacks)
-        //{
-        //    GameObject tempStack = Instantiate(stackManagerPrefab);
-        //    tempStack.transform.SetParent(transform);
-        //    StackManager tempManager = tempStack.GetComponent<StackManager>();
-        //    tempManager.UpdateVisuals(armyInfo.FactionName, stack);
-        //    factionStack.Add(tempManager);
-        //}
     }
 
     private void OnDisable()
@@ -32,12 +23,12 @@ public class ArmyManager : MonoBehaviour
         MapMeshGenerator.MapMeshGenerator.onMapLoad -= SpawnInitialStacks;
     }
 
-    void SpawnInitialStacks(Dictionary<string, MapTile> inDict)
+    void SpawnInitialStacks(MapMeshGenerator.MeshGenerationData data)
     {
         for(int i = 0; i < armyInfo.FactionStacks.Length; i++)
         {
             GameObject tempStack = Instantiate(stackPrefab);
-            MapTile assignedTile = inDict[armyInfo.FactionStacks[i].TileTag];
+            MapTile assignedTile = data.mapTiles[armyInfo.FactionStacks[i].TileTag];
             tempStack.name = armyInfo.FactionStacks[i].TroopID;
             tempStack.transform.SetParent(assignedTile.CenterContainer);
             tempStack.transform.localPosition = Vector3.zero;
