@@ -589,6 +589,7 @@ namespace MapMeshGenerator
         {
             float uvScale = Mathf.Max(maxPoint.x - minPoint.x, maxPoint.y - minPoint.y);
             Vector2 uvMaxPoint = new Vector2(minPoint.x + uvScale, minPoint.y + uvScale);
+            bool foundInterior = false;
 
             SDFCell initialCell = new SDFCell(minPoint, uvMaxPoint, vertices);
             SDFCell bestCell = initialCell;
@@ -599,9 +600,14 @@ namespace MapMeshGenerator
             while(frontier.Count > 0)
             {
                 SDFCell currentCell = frontier.Dequeue();
-                if (currentCell.Dist < 0)
+                if (currentCell.Dist < 0 && foundInterior)
+                {
                     continue;
-
+                }
+                else
+                {
+                    foundInterior = true;
+                }
                 if (currentCell.Dist >= bestCell.Dist)
                 {
                     //Debug.LogWarning(string.Format("New Best Cell Found: {0} from {1}", currentCell, bestCell));
