@@ -17,6 +17,8 @@ public class PlayerController : MonoBehaviour
     private GameObject[] mapColumns;
     private bool readyToMove = false;
     private float maxDistance;
+    private float zOffset;
+    private int columnWidth;
 
     private void OnEnable()
     {
@@ -32,31 +34,37 @@ public class PlayerController : MonoBehaviour
     {
         mapColumns = data.columnArray;
         maxDistance = data.imageTexture.width;
+        columnWidth = (int)maxDistance / mapColumns.Length;
+        Debug.Log(columnWidth);
         readyToMove = true;
+        zOffset = 0;
     }
 
     public void OnCameraMove(InputAction.CallbackContext context)
     {
-        Debug.Log(context.ReadValue<Vector2>().normalized);
         if (readyToMove)
         {
-            Vector2 input = context.ReadValue<Vector2>().normalized * moveSpeed * Time.deltaTime;
-            for(int i = 0; i < mapColumns.Length; i++)
-            {
-                Transform mapTransform = mapColumns[i].transform;
-                mapTransform.Translate(new Vector3(input.x, 0, 0), Space.Self);
-                if(mapTransform.position.x < 0)
-                {
-                    float offset = mapTransform.position.x;
-                    mapTransform.position = new Vector3(maxDistance + offset, 0, mapTransform.localPosition.z);
-                }
-                else if(mapTransform.localPosition.x > maxDistance)
-                {
-                    float offset = mapTransform.localPosition.x - maxDistance;
-                    mapTransform.localPosition = new Vector3(offset, 0, mapTransform.localPosition.z);
-                }
+            Vector2 input = context.ReadValue<Vector2>();
+            input.Normalize();
+            input *= Time.deltaTime * moveSpeed;
 
-                //mapTransform.Translate(new Vector3(0, 0, input.y), Space.Self);
+            //positionOffset += new Vector3(input.x, 0, input.y);
+            //positionOffset = new Vector3(positionOffset.x + input.x, 0, Mathf.Clamp(positionOffset.z + input.y, -100f, 100f));
+
+            zOffset += input.y;
+            for (int i = 0; i < mapColumns.Length; i++)
+            {         
+                float xOffset = mapColumns[i].transform.localPosition.x + input.x;
+                if(xOffset > maxDistance)
+                {
+                    xOffset -= maxDistance;
+                }
+                else if(xOffset < 0)
+                {
+                    xOffset += maxDistance;
+                }
+                mapColumns[i].transform.localPosition = new Vector3(xOffset, 0, zOffset);
+               
             }
         }
     }

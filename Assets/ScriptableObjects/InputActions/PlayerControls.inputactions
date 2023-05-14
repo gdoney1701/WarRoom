@@ -16,7 +16,7 @@
                 },
                 {
                     "name": "MoveCam",
-                    "type": "Value",
+                    "type": "PassThrough",
                     "id": "7f012dc7-ac84-4400-86ab-007b82cf790f",
                     "expectedControlType": "Vector2",
                     "processors": "",

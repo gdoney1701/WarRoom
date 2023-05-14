@@ -579,7 +579,7 @@ MonoBehaviour:
   playerInput: {fileID: 1050315764}
   maxCameraHeight: 0
   minCameraHeight: 0
-  moveSpeed: 20
+  moveSpeed: 200
 --- !u!114 &1050315764
 MonoBehaviour:
   m_ObjectHideFlags: 0
