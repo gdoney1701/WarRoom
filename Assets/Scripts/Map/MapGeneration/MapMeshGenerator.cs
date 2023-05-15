@@ -145,8 +145,6 @@ namespace MapMeshGenerator
         private GameObject testVertex;
         [SerializeField]
         private bool useTestGeo;
-        [SerializeField, Range(0.1f, 1f)]
-        private float mapScale = 0.5f;
 
         Color32[] imagePixels = new Color32[0];
         Vector2Int imageScale = Vector2Int.zero;
