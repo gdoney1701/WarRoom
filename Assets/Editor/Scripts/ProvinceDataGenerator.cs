@@ -42,7 +42,7 @@ public class ProvinceDataGenerator : EditorWindow
             {
                 CurrentData.LoadFromFile(fileName);
                 mapTexture = (Texture2D)AssetDatabase.LoadMainAssetAtPath(CurrentData.MapTexturePath);
-                //Repaint();
+                Repaint();
             }
         }
         EditorGUI.BeginDisabledGroup(CurrentData == null);
