@@ -14,6 +14,7 @@ public class ProvinceDataGenerator : EditorWindow
     }
     private Vector2 scrollView = Vector2.zero;
     private string fileName = "newTileData";
+    private Texture2D mapTexture;
 
     [MenuItem("Tools/Generate Tile Color Data")]
     public static ProvinceDataGenerator GetWindow()
@@ -40,16 +41,22 @@ public class ProvinceDataGenerator : EditorWindow
             if (!string.IsNullOrEmpty(fileName))
             {
                 CurrentData.LoadFromFile(fileName);
+                mapTexture = (Texture2D)AssetDatabase.LoadMainAssetAtPath(CurrentData.MapTexturePath);
                 //Repaint();
             }
         }
         EditorGUI.BeginDisabledGroup(CurrentData == null);
         if (GUILayout.Button("Save"))
         {
+            if(mapTexture != null)
+            {
+                CurrentData.MapTexturePath = AssetDatabase.GetAssetPath(mapTexture);
+            }
             CurrentData.SaveToFile(fileName);
         }
         EditorGUI.EndDisabledGroup();
         GUILayout.EndHorizontal();
+        mapTexture = (Texture2D)EditorGUILayout.ObjectField("Map Texture", mapTexture, typeof(Texture2D), false);
         GUILayout.BeginVertical(new GUIStyle("GroupBox"));
         scrollView = GUILayout.BeginScrollView(scrollView);
         for(int i = 0; i < CurrentData.TileList.Count; i++)

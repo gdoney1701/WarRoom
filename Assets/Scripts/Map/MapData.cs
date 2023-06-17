@@ -12,7 +12,7 @@ public class MapColorData
     }
 
     public List<TileData> TileList = new List<TileData>() { new TileData() };
-
+    public string MapTexturePath = string.Empty;
     public void SaveToFile(string inputName)
     {
         string data = JsonUtility.ToJson(this);
