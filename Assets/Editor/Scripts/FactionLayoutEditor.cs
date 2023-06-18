@@ -17,7 +17,37 @@ public class FactionLayoutEditor : EditorWindow
     private readonly Rect _zoomArea = new Rect(20.0f, 30.0f, 450f, 450f);
     private float _zoom = 1.0f;
     private Vector2 _zoomCoordsOrigin = Vector2.zero;
+    private Color32 selectedColor = new Color32(255, 255, 255, 255);
+    private Color32 SelectedColor
+    {
+        get { return selectedColor; }
+        set
+        {
+            if (!value.Equals(selectedColor))
+            {
+                selectedColor = value;
+                if (!value.Equals(new Color32(255, 255, 255, 255)))
+                {
+                    GetTagFromColor();
+                }
+            }
 
+        }
+    }
+
+    private string selectedTag = "Z100";
+
+
+    void GetTagFromColor()
+    {
+        Vector3Int convertedColor = new Vector3Int(selectedColor.r, selectedColor.g, selectedColor.b);
+        Debug.Log(convertedColor);
+        if (LoadedMapData.ContainsKey(convertedColor))
+        {
+            selectedTag = LoadedMapData[convertedColor];
+            Repaint();
+        }
+    }
     private Vector2 ConvertScreenCoordsToZoomCoords(Vector2 screenCoords)
     {
         return (screenCoords - _zoomArea.TopLeft()) / _zoom + _zoomCoordsOrigin;
@@ -92,6 +122,36 @@ public class FactionLayoutEditor : EditorWindow
             //Event.current.Use();
             Repaint();
         }
+        if(Event.current.type == EventType.MouseDown && Event.current.button == 0)
+        {
+            Vector2 clickPos = Event.current.mousePosition;
+            if(IsInsideRect(clickPos, _zoomArea))
+            {
+                Debug.Log(string.Format("Click Position: {0}, Pixel Position {1}",clickPos, GetTextureColor(clickPos, _zoomArea)));
+            }
+        }
+    }
+
+    private bool IsInsideRect(Vector2 mousePos, Rect inputRect)
+    {
+        if(mousePos.x >= inputRect.x && mousePos.x <= inputRect.x + inputRect.width)
+        {
+            if (mousePos.y >= inputRect.y && mousePos.y <= inputRect.y + inputRect.height)
+            {
+                return true;
+            }
+        }
+        return false;
+    }
+
+    private Vector2 GetTextureColor(Vector2 mousePos, Rect inputRect)
+    {
+        Vector2 adjustedPos = new Vector2(
+            (mousePos.x - inputRect.x)/inputRect.width * mapTexture.width, 
+            (mousePos.y - inputRect.y)/inputRect.height * mapTexture.height);
+
+
+        return adjustedPos;
     }
 
     private void DrawZoomArea()
@@ -109,6 +169,20 @@ public class FactionLayoutEditor : EditorWindow
 
     private void DrawNonZoomArea()
     {
+        GUILayout.BeginArea(new Rect(_zoomArea.x, _zoomArea.y + _zoomArea.height + 10f, _zoomArea.width, Screen.height - _zoomArea.height - _zoomArea.y - 10f));
+        EditorGUILayout.BeginHorizontal();
+
+        GUIStyle text = new GUIStyle("In BigTitle");
+        text.fontSize = 15;
+        GUI.backgroundColor = Color.black;
+        EditorGUILayout.LabelField(selectedTag, text, GUILayout.Height(30f), GUILayout.Width(40f));
+        GUI.backgroundColor = Color.white;
+        GUILayout.Space(10);
+        SelectedColor = EditorGUILayout.ColorField(SelectedColor, GUILayout.Height(30f));
+
+        EditorGUILayout.EndHorizontal();
+        GUILayout.EndArea();
+
         GUILayout.BeginArea(new Rect(_zoomArea.x + _zoomArea.width + 10.0f, _zoomArea.y, Screen.width - _zoomArea.width - 20.0f - _zoomArea.x, Screen.height));
         GUILayout.BeginVertical();
         if (GUILayout.Button("Fucking Nothing"))
@@ -134,6 +208,8 @@ public class FactionLayoutEditor : EditorWindow
                     LoadedMapData.Add(loadedData.TileList[i].TileColor, loadedData.TileList[i].TileTag);
                 }
             }
+
+            Debug.LogWarning(LoadedMapData.Count);
 
             mapTexture = (Texture2D)AssetDatabase.LoadMainAssetAtPath(loadedData.MapTexturePath);
         }
