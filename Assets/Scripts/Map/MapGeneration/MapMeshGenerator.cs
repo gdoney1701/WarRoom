@@ -208,7 +208,7 @@ namespace MapMeshGenerator
             return newData;
         }
 
-        private ProvinceData TileDataToProvinceData(MapColorData.TileData tileData)
+        private ProvinceData TileDataToProvinceData(TileData tileData)
         {
             return new ProvinceData(
                 new Color32((byte)tileData.TileColor.x, (byte)tileData.TileColor.y, (byte)tileData.TileColor.z, 255),

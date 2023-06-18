@@ -34,6 +34,13 @@ public class FactionLayoutEditor : EditorWindow
                 {
                     GetTagFromColor();
                 }
+                if(toolbarInt == 2)
+                {
+                    if(armyToolbarInt == 0)
+                    {
+                        AddSelectedOccupation();
+                    }
+                }
             }
         }
     }
@@ -43,12 +50,43 @@ public class FactionLayoutEditor : EditorWindow
     private int toolbarInt = 0;
     private int armyToolbarInt = 0;
     private string[] toolbarStrings = { "Tag", "Faction", "Army" };
-    private string[] armyToolbarStrings = { "Control", "Stacks" };
+    private string[] armyToolbarStrings = { "Occupation", "Stacks" };
 
     private Vector2 tileScrollView = Vector2.zero;
+    private Vector2 occupationScroll = Vector2.zero;
+    private Vector2 stackScroll = Vector2.zero;
 
     private int factionIndex = 0;
 
+    void AddSelectedOccupation()
+    {
+        FactionData currentData = belligerentData.WarParticipants[factionIndex];
+
+        TileData newData = new TileData { TileColor = ColorToVector(selectedColor), TileTag = selectedTag };
+
+        if(currentData.TileControl.Length > 0)
+        {
+            for(int i = 0; i < currentData.TileControl.Length; i++)
+            {
+                if (currentData.TileControl[i].Equals(newData))
+                {
+                    return;
+                }
+            }
+            currentData.IncreaseTileArray(newData);
+        }
+
+        Repaint();
+    }
+
+    void RemoveSelectedOccupation(int index)
+    {
+        FactionData currentData = belligerentData.WarParticipants[factionIndex];
+
+        currentData.DecreaseTileArray(index);
+
+        Repaint();
+    }
     void GetTagFromColor()
     {
         Vector3Int convertedColor = new Vector3Int(selectedColor.r, selectedColor.g, selectedColor.b);
@@ -338,6 +376,10 @@ public class FactionLayoutEditor : EditorWindow
         {
             belligerentData.IncreaseArray();
             RefreshBelligerentPopup();
+            if (!string.IsNullOrEmpty(belligerentDataName))
+            {
+                ImportMapData();
+            }
             Repaint();
         }
         if(GUILayout.Button("Remove Current"))
@@ -354,6 +396,59 @@ public class FactionLayoutEditor : EditorWindow
 
     private void DrawArmyTab()
     {
+        GUILayout.BeginVertical(new GUIStyle("GroupBox"));
+
+        factionIndex = EditorGUILayout.Popup(factionIndex, BelligerentNames);
+
+        armyToolbarInt = GUILayout.Toolbar(armyToolbarInt, armyToolbarStrings);
+
+        switch (armyToolbarInt)
+        {
+            case 0:
+                DrawOccupation();
+                break;
+            case 1:
+                DrawStacks();
+                break;
+
+        }
+
+        GUILayout.EndVertical();
+    }
+
+    private void DrawOccupation()
+    {
+        GUILayout.BeginVertical(new GUIStyle("GroupBox"));
+        GUILayout.BeginScrollView(occupationScroll);
+        FactionData currentFaction = belligerentData.WarParticipants[factionIndex];
+        for(int i = 0; i < currentFaction.TileControl.Length; i++)
+        {
+            GUILayout.BeginHorizontal();
+
+            EditorGUILayout.LabelField(currentFaction.TileControl[i].TileTag, new GUIStyle("In BigTitle"), GUILayout.Height(25f), GUILayout.Width(40f));
+
+            EditorGUILayout.ColorField(VectorToColor(currentFaction.TileControl[i].TileColor), GUILayout.Height(25f));
+
+            if (GUILayout.Button("-", GUILayout.Height(25f), GUILayout.Width(25f)))
+            {
+                currentFaction.DecreaseTileArray(i);
+                Repaint();
+            }
+
+            GUILayout.EndHorizontal();
+        }
+        GUILayout.EndScrollView();
+        GUILayout.BeginHorizontal();
+        GUILayout.FlexibleSpace();
+        if (GUILayout.Button("Save", GUILayout.Width(70f)))
+        {
+            belligerentData.SaveToFile(belligerentDataName);
+        }
+        GUILayout.EndHorizontal();
+        GUILayout.EndVertical();
+    }
+    private void DrawStacks()
+    {
 
     }
 
@@ -362,9 +457,16 @@ public class FactionLayoutEditor : EditorWindow
         if (belligerentData.WarParticipants.Length != 0)
         {
             BelligerentNames = new string[belligerentData.WarParticipants.Length];
+            Debug.Log(string.Format("BelligerentNames Length {0}", BelligerentNames.Length));
             for (int i = 0; i < BelligerentNames.Length; i++)
             {
-                BelligerentNames[i] = belligerentData.WarParticipants[i].LongName;
+                string newName = belligerentData.WarParticipants[i].LongName;
+                if(belligerentData.WarParticipants[i].LongName == new FactionData().LongName)
+                {
+                    newName = string.Format("{0} ({1})", newName, i);
+                }
+                BelligerentNames[i] = newName;
+                Debug.Log(BelligerentNames[i]);
             }
         }
     }
@@ -425,7 +527,7 @@ public class FactionLayoutEditor : EditorWindow
     }
     private void AddTile()
     {
-        mapColorData.TileList.Add(new MapColorData.TileData());
+        mapColorData.TileList.Add(new TileData());
     }
     private void RemoveTile(int removePoint)
     {

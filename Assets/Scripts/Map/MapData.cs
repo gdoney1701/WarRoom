@@ -4,12 +4,6 @@ using UnityEngine;
 [System.Serializable]
 public class MapColorData
 {
-    [System.Serializable]
-    public class TileData
-    {
-        public Vector3Int TileColor = Vector3Int.zero;
-        public string TileTag = "Z100";
-    }
 
     public List<TileData> TileList = new List<TileData>() { new TileData() };
     public string MapTexturePath = string.Empty;
@@ -34,6 +28,13 @@ public class MapColorData
         }
         return this;
     }
+}
+
+[System.Serializable]
+public class TileData
+{
+    public Vector3Int TileColor = Vector3Int.zero;
+    public string TileTag = "Z100";
 }
 public class ProvinceData
 {

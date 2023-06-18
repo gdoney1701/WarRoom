@@ -31,13 +31,16 @@ public class BelligerentData
 
     public void IncreaseArray()
     {
+        
         FactionData[] newArray = new FactionData[WarParticipants.Length + 1];
         for(int i = 0; i < WarParticipants.Length; i++)
         {
             newArray[i] = WarParticipants[i];
         }
         newArray[newArray.Length - 1] = new FactionData();
+        Debug.Log(string.Format("Increaseing Array. Initial Lenght {0}. New Length {1}", WarParticipants.Length, newArray.Length));
         WarParticipants = newArray;
+        Debug.Log(string.Format("Confirming Change. New Length {0}", WarParticipants.Length));
     }
     public void DecreaseArray(int index)
     {
@@ -62,8 +65,55 @@ public class FactionData
     public string ID = "hre";
     public int AllianceID = 0;
 
-    public string[] TileControl = new string[] { "Z100" };
+    public TileData[] TileControl = new TileData[] { new TileData()};
     public StackData[] StackArray = new StackData[] { new StackData() };
+
+    public void IncreaseTileArray(TileData newEntry)
+    {
+        TileData[] newArray = new TileData[TileControl.Length + 1];
+        for (int i = 0; i < TileControl.Length; i++)
+        {
+            newArray[i] = TileControl[i];
+        }
+        newArray[newArray.Length - 1] = newEntry;
+        TileControl = newArray;
+    }
+    public void IncreaseStackArray(StackData newEntry)
+    {
+        StackData[] newArray = new StackData[StackArray.Length + 1];
+        for (int i = 0; i < StackArray.Length; i++)
+        {
+            newArray[i] = StackArray[i];
+        }
+        newArray[newArray.Length - 1] = newEntry;
+        StackArray = newArray;
+    }
+    public void DecreaseTileArray(int index)
+    {
+        TileData[] newArray = new TileData[TileControl.Length - 1];
+        for (int i = 0, j = 0; i < TileControl.Length; i++)
+        {
+            if (i != index)
+            {
+                newArray[j] = TileControl[i];
+                j++;
+            }
+        }
+        TileControl = newArray;
+    }
+    public void DecreateStackArray(int index)
+    {
+        StackData[] newArray = new StackData[StackArray.Length - 1];
+        for (int i = 0, j = 0; i < StackArray.Length; i++)
+        {
+            if (i != index)
+            {
+                newArray[j] = StackArray[i];
+                j++;
+            }
+        }
+        StackArray = newArray;
+    }
 }
 
 [System.Serializable]
