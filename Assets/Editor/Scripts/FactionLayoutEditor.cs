@@ -15,11 +15,11 @@ public class FactionLayoutEditor : EditorWindow
     private BelligerentData belligerentData = new BelligerentData();
     private string[] BelligerentNames = new string[0];
 
-    private const float kZoomMin = 0.1f;
+    private const float kZoomMin = 1.1f;
     private const float kZoomMax = 10.0f;
 
     private readonly Rect _zoomArea = new Rect(20.0f, 30.0f, 450f, 450f);
-    private float _zoom = 1.0f;
+    private float _zoom = 1.1f;
     private Vector2 _zoomCoordsOrigin = Vector2.zero;
     private Color32 selectedColor = new Color32(255, 255, 255, 255);
     private Color32 SelectedColor
