@@ -6,10 +6,14 @@ using UnityEditor;
 public class FactionLayoutEditor : EditorWindow
 {
 
-    private string fileName = "newLayout";
+    private string mapDataName = "newLayout";
+    private string belligerentDataName = "newBelligerents";
 
     private Dictionary<Vector3Int, string> loadedMapData = new Dictionary<Vector3Int, string>();
     private Texture2D mapTexture;
+    private MapColorData mapColorData = new MapColorData();
+    private BelligerentData belligerentData = new BelligerentData();
+    private string[] BelligerentNames = new string[0];
 
     private const float kZoomMin = 0.1f;
     private const float kZoomMax = 10.0f;
@@ -31,12 +35,19 @@ public class FactionLayoutEditor : EditorWindow
                     GetTagFromColor();
                 }
             }
-
         }
     }
 
     private string selectedTag = "Z100";
 
+    private int toolbarInt = 0;
+    private int armyToolbarInt = 0;
+    private string[] toolbarStrings = { "Tag", "Faction", "Army" };
+    private string[] armyToolbarStrings = { "Control", "Stacks" };
+
+    private Vector2 tileScrollView = Vector2.zero;
+
+    private int factionIndex = 0;
 
     void GetTagFromColor()
     {
@@ -59,10 +70,10 @@ public class FactionLayoutEditor : EditorWindow
         set { loadedMapData = value; }
     }
 
-    [MenuItem("Tools/Faction Layout")]
+    [MenuItem("Tools/Tile and Faction Editor")]
     public static FactionLayoutEditor GetWindow()
     {
-        return GetWindow<FactionLayoutEditor>("Faction Layout");
+        return GetWindow<FactionLayoutEditor>("Tile and Faction Editor");
     }
 
     public static FactionLayoutEditor OpenWindow()
@@ -79,14 +90,43 @@ public class FactionLayoutEditor : EditorWindow
         GUILayout.BeginVertical();
         GUILayout.Space(5f);
         GUILayout.BeginHorizontal();
-        fileName = EditorGUILayout.TextField("File Name: ", fileName);
-        if(GUILayout.Button("Load Map Data"))
+
+        GUILayout.Space(20f);
+        EditorGUILayout.LabelField("Map Data File:", new GUIStyle("BoldLabel"), GUILayout.Width(100f));
+        mapDataName = EditorGUILayout.TextField(mapDataName, GUILayout.Width(150f));
+        if(GUILayout.Button("Load"))
         {
-            if (!string.IsNullOrEmpty(fileName))
+            if (!string.IsNullOrEmpty(mapDataName))
             {
                 ImportMapData();
             }
         }
+        if (GUILayout.Button("New"))
+        {
+            if (!string.IsNullOrEmpty(mapDataName))
+            {
+                ImportMapData(true);
+            }
+        }
+
+        GUILayout.Space(20f);
+        EditorGUILayout.LabelField("Belligerent Data File:", new GUIStyle("BoldLabel"), GUILayout.Width(150f));
+        belligerentDataName = EditorGUILayout.TextField(belligerentDataName, GUILayout.Width(150f));
+        if (GUILayout.Button("Load"))
+        {
+            if (!string.IsNullOrEmpty(belligerentDataName))
+            {
+                ImportBelligerentData();
+            }
+        }
+        if (GUILayout.Button("New"))
+        {
+            if (!string.IsNullOrEmpty(belligerentDataName))
+            {
+                ImportBelligerentData(true);
+            }
+        }
+
         GUILayout.EndHorizontal();
         GUILayout.EndVertical();
 
@@ -96,7 +136,7 @@ public class FactionLayoutEditor : EditorWindow
 
     private void HandleEvents()
     {
-        if(Event.current.type == EventType.ScrollWheel)
+        if(Event.current.type == EventType.ScrollWheel && IsInsideRect(Event.current.mousePosition, _zoomArea))
         {
             Vector2 screenCoordsMousePos = Event.current.mousePosition;
             Vector2 delta = Event.current.delta;
@@ -106,8 +146,6 @@ public class FactionLayoutEditor : EditorWindow
             _zoom += zoomDelta;
             _zoom = Mathf.Clamp(_zoom, kZoomMin, kZoomMax);
             _zoomCoordsOrigin += (zoomCoordsMousePos - _zoomCoordsOrigin) - (oldZoom / _zoom) * (zoomCoordsMousePos - _zoomCoordsOrigin);
-
-            //Event.current.Use();
             Repaint();
         }
 
@@ -115,19 +153,13 @@ public class FactionLayoutEditor : EditorWindow
             (Event.current.button == 0 && Event.current.modifiers == EventModifiers.Alt) ||
             Event.current.button == 2)
         {
-            Vector2 delta = Event.current.delta;
-            delta /= _zoom;
-            _zoomCoordsOrigin -= delta;
-
-            //Event.current.Use();
-            Repaint();
-        }
-        if(Event.current.type == EventType.MouseDown && Event.current.button == 0)
-        {
-            Vector2 clickPos = Event.current.mousePosition;
-            if(IsInsideRect(clickPos, _zoomArea))
+            if(IsInsideRect(Event.current.mousePosition, _zoomArea))
             {
-                Debug.Log(string.Format("Click Position: {0}, Pixel Position {1}",clickPos, GetTextureColor(clickPos, _zoomArea)));
+                Vector2 delta = Event.current.delta;
+                delta /= _zoom;
+                _zoomCoordsOrigin -= delta;
+
+                Repaint();
             }
         }
     }
@@ -142,16 +174,6 @@ public class FactionLayoutEditor : EditorWindow
             }
         }
         return false;
-    }
-
-    private Vector2 GetTextureColor(Vector2 mousePos, Rect inputRect)
-    {
-        Vector2 adjustedPos = new Vector2(
-            (mousePos.x - inputRect.x)/inputRect.width * mapTexture.width, 
-            (mousePos.y - inputRect.y)/inputRect.height * mapTexture.height);
-
-
-        return adjustedPos;
     }
 
     private void DrawZoomArea()
@@ -169,7 +191,8 @@ public class FactionLayoutEditor : EditorWindow
 
     private void DrawNonZoomArea()
     {
-        GUILayout.BeginArea(new Rect(_zoomArea.x, _zoomArea.y + _zoomArea.height + 10f, _zoomArea.width, Screen.height - _zoomArea.height - _zoomArea.y - 10f));
+        float smallBoxHeight = Screen.height - _zoomArea.height - _zoomArea.y - 10f;
+        GUILayout.BeginArea(new Rect(_zoomArea.x, _zoomArea.y + _zoomArea.height + 10f, _zoomArea.width, smallBoxHeight));
         EditorGUILayout.BeginHorizontal();
 
         GUIStyle text = new GUIStyle("In BigTitle");
@@ -183,44 +206,239 @@ public class FactionLayoutEditor : EditorWindow
         EditorGUILayout.EndHorizontal();
         GUILayout.EndArea();
 
-        GUILayout.BeginArea(new Rect(_zoomArea.x + _zoomArea.width + 10.0f, _zoomArea.y, Screen.width - _zoomArea.width - 20.0f - _zoomArea.x, Screen.height));
-        GUILayout.BeginVertical();
-        if (GUILayout.Button("Fucking Nothing"))
+        GUILayout.BeginArea(new Rect(_zoomArea.x + _zoomArea.width + 10.0f, _zoomArea.y, Screen.width - _zoomArea.width - 20.0f - _zoomArea.x, _zoomArea.height + smallBoxHeight - 30f));
+        if (loadedMapData.Count == 0)
         {
-            Debug.Log("It Does Nothing");
+            EditorGUILayout.LabelField("No Loaded Map Data", new GUIStyle("IN BigTitle"), GUILayout.Height(30));
         }
-        GUILayout.EndVertical();
+        else
+        {
+            GUILayout.BeginVertical();
+            toolbarInt = GUILayout.Toolbar(toolbarInt, toolbarStrings);
+            switch (toolbarInt)
+            {
+                case 0:
+                    DrawTagTab();
+                    break;
+                case 1:
+                    DrawFactionTab();
+                    break;
+                case 2:
+                    DrawArmyTab();
+                    break;
+
+            }
+            GUILayout.EndVertical();
+        }
         GUILayout.EndArea();
     }
 
-    private void ImportMapData()
+    private void DrawTagTab()
     {
-        MapColorData loadedData = new MapColorData();
-        loadedData.LoadFromFile(fileName);
+        GUILayout.BeginVertical(new GUIStyle("GroupBox"));
 
-        if(loadedData.TileList.Count != 0)
+        GUILayout.BeginHorizontal();
+
+        mapTexture = (Texture2D)EditorGUILayout.ObjectField("Map Texture", mapTexture, typeof(Texture2D), false);
+
+        GUILayout.EndHorizontal();
+        GUILayout.BeginVertical(new GUIStyle("GroupBox"));
+        tileScrollView = GUILayout.BeginScrollView(tileScrollView);
+        for (int i = 0; i < mapColorData.TileList.Count; i++)
+        {
+            GUILayout.BeginHorizontal();
+            mapColorData.TileList[i].TileTag = EditorGUILayout.TextField(mapColorData.TileList[i].TileTag, GUILayout.Width(50f));
+            mapColorData.TileList[i].TileColor =
+                ColorToVector(EditorGUILayout.ColorField(
+                    VectorToColor(mapColorData.TileList[i].TileColor))
+                );
+            if (GUILayout.Button("-", new GUIStyle("minibutton"), GUILayout.Width(40f)))
+            {
+                RemoveTile(i);
+            }
+            GUILayout.EndHorizontal();
+        }
+        GUILayout.EndScrollView();
+        GUILayout.EndVertical();
+
+        GUILayout.BeginHorizontal();
+        if(GUILayout.Button("Save Map Data"))
+        {
+            mapColorData.MapTexturePath = AssetDatabase.GetAssetPath(mapTexture);
+            mapColorData.SaveToFile(mapDataName);
+            if (!string.IsNullOrEmpty(mapDataName))
+            {
+                ImportMapData();
+            }
+            Repaint();
+        }
+        GUILayout.FlexibleSpace();
+        if (GUILayout.Button("+", new GUIStyle("minibutton")))
+        {
+            AddTile();
+        }
+        if (GUILayout.Button("-", new GUIStyle("minibutton")))
+        {
+            RemoveTile(mapColorData.TileList.Count - 1);
+        }
+        GUILayout.EndHorizontal();
+        GUILayout.EndVertical();
+    }
+
+    private void DrawFactionTab()
+    {
+        GUILayout.BeginVertical(new GUIStyle("GroupBox"));
+
+        factionIndex = EditorGUILayout.Popup(factionIndex, BelligerentNames);
+
+        GUILayout.BeginVertical(new GUIStyle("GroupBox"));
+        FactionData selectedFaction = belligerentData.WarParticipants[factionIndex];
+
+        GUILayout.BeginHorizontal();
+        EditorGUILayout.LabelField("Long Name: ", GUILayout.Width(80f));
+        selectedFaction.LongName = EditorGUILayout.TextField(selectedFaction.LongName);
+        GUILayout.EndHorizontal();
+
+        GUILayout.Space(5f);
+
+        GUILayout.BeginHorizontal();
+        EditorGUILayout.LabelField("Color: ", GUILayout.Width(80f));
+        selectedFaction.Color = ColorToVector(EditorGUILayout.ColorField(VectorToColor(selectedFaction.Color)));
+        GUILayout.EndHorizontal();
+
+        GUILayout.Space(5f);
+
+        GUILayout.BeginHorizontal();
+        EditorGUILayout.LabelField("ID: ", GUILayout.Width(80f));
+        selectedFaction.ID = EditorGUILayout.TextField(selectedFaction.ID);
+        GUILayout.EndHorizontal();
+
+        GUILayout.Space(5f);
+
+        GUILayout.BeginHorizontal();
+        EditorGUILayout.LabelField("Alliance ID: ", GUILayout.Width(80f));
+        selectedFaction.AllianceID = EditorGUILayout.IntField(selectedFaction.AllianceID);
+        GUILayout.EndHorizontal();
+
+        GUILayout.EndVertical();
+
+        GUILayout.BeginHorizontal();
+        GUILayout.FlexibleSpace();
+        if (GUILayout.Button("Save"))
+        {
+            belligerentData.SaveToFile(belligerentDataName);
+            RefreshBelligerentPopup();
+            if (!string.IsNullOrEmpty(belligerentDataName))
+            {
+                ImportMapData();
+            }
+            Repaint();
+        }
+        if(GUILayout.Button("New Entry"))
+        {
+            belligerentData.IncreaseArray();
+            RefreshBelligerentPopup();
+            Repaint();
+        }
+        if(GUILayout.Button("Remove Current"))
+        {
+            belligerentData.DecreaseArray(factionIndex);
+            factionIndex = 0;
+            RefreshBelligerentPopup();
+            Repaint();
+        }
+        GUILayout.EndHorizontal();
+
+        GUILayout.EndVertical();
+    }
+
+    private void DrawArmyTab()
+    {
+
+    }
+
+    private void RefreshBelligerentPopup()
+    {
+        if (belligerentData.WarParticipants.Length != 0)
+        {
+            BelligerentNames = new string[belligerentData.WarParticipants.Length];
+            for (int i = 0; i < BelligerentNames.Length; i++)
+            {
+                BelligerentNames[i] = belligerentData.WarParticipants[i].LongName;
+            }
+        }
+    }
+
+    private void ImportBelligerentData(bool newData = false)
+    {
+        belligerentData = new BelligerentData();
+        if (!newData)
+        {
+            belligerentData.LoadFromFile(belligerentDataName);
+        }
+
+
+        if (belligerentData.WarParticipants.Length != 0)
+        {
+            RefreshBelligerentPopup();
+        }
+        else
+        {
+            if (EditorUtility.DisplayDialog("Invalid Belligerent Data File", "Please Re-enter the File Name String", "OK"))
+            {
+                belligerentDataName = string.Empty;
+            }
+        }
+    }
+
+    private void ImportMapData(bool newData = false)
+    {
+        mapColorData = new MapColorData();
+        if (!newData)
+        {
+            mapColorData.LoadFromFile(mapDataName);
+        }
+
+        mapTexture = (Texture2D)AssetDatabase.LoadMainAssetAtPath(mapColorData.MapTexturePath);
+
+        if (mapColorData.TileList.Count != 0)
         {
             LoadedMapData.Clear();
-            for(int i = 0; i < loadedData.TileList.Count; i++)
+            for(int i = 0; i < mapColorData.TileList.Count; i++)
             {
-                if (!LoadedMapData.ContainsKey(loadedData.TileList[i].TileColor))
+                if (!LoadedMapData.ContainsKey(mapColorData.TileList[i].TileColor))
                 {
-                    LoadedMapData.Add(loadedData.TileList[i].TileColor, loadedData.TileList[i].TileTag);
+                    LoadedMapData.Add(mapColorData.TileList[i].TileColor, mapColorData.TileList[i].TileTag);
                 }
             }
 
-            Debug.LogWarning(LoadedMapData.Count);
-
-            mapTexture = (Texture2D)AssetDatabase.LoadMainAssetAtPath(loadedData.MapTexturePath);
+            mapTexture = (Texture2D)AssetDatabase.LoadMainAssetAtPath(mapColorData.MapTexturePath);
         }
         else
         {
             if(EditorUtility.DisplayDialog("Invalid Map Data File", "Please Re-enter the File Name String", "OK"))
             {
-                fileName = string.Empty;
+                mapDataName = string.Empty;
             }
         }
         Repaint();
+    }
+    private void AddTile()
+    {
+        mapColorData.TileList.Add(new MapColorData.TileData());
+    }
+    private void RemoveTile(int removePoint)
+    {
+        mapColorData.TileList.RemoveAt(removePoint);
+    }
+
+    private Color32 VectorToColor(Vector3Int entry)
+    {
+        return new Color32((byte)entry.x, (byte)entry.y, (byte)entry.z, 255);
+    }
+    private Vector3Int ColorToVector(Color32 entry)
+    {
+        return new Vector3Int(entry.r, entry.g, entry.b);
     }
 }
 
