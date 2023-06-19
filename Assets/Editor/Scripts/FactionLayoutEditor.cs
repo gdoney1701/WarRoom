@@ -457,7 +457,53 @@ public class FactionLayoutEditor : EditorWindow
     }
     private void DrawStacks()
     {
+        FactionData currentFaction = belligerentData.WarParticipants[factionIndex];
+        GUILayout.BeginVertical(new GUIStyle("GroupBox"));
+        stackScroll = GUILayout.BeginScrollView(stackScroll);
 
+        for(int i = 0; i < currentFaction.StackArray.Length; i++)
+        {
+            StackData currentStack = currentFaction.StackArray[i];
+            GUILayout.BeginHorizontal();
+
+            currentStack.TileTag = EditorGUILayout.TextField(currentStack.TileTag, GUILayout.Width(50f));
+            currentStack.StackZone = (StackData.StackType)EditorGUILayout.EnumPopup(currentStack.StackZone);
+            currentStack.TroopNumberID = EditorGUILayout.TextField(currentStack.TroopNumberID, GUILayout.Width(50f));
+            GUILayout.Space(10f);
+
+            GUI.backgroundColor = Color.red;
+            currentStack.RedTroopCount = EditorGUILayout.IntField(currentStack.RedTroopCount, GUILayout.Width(35f));
+            GUI.backgroundColor = Color.green;
+            currentStack.GreenTroopCount = EditorGUILayout.IntField(currentStack.GreenTroopCount, GUILayout.Width(35f));
+            GUI.backgroundColor = Color.blue;
+            currentStack.BlueTroopCount = EditorGUILayout.IntField(currentStack.BlueTroopCount, GUILayout.Width(35f));
+            GUI.backgroundColor = Color.yellow;
+            currentStack.YellowTroopCount = EditorGUILayout.IntField(currentStack.YellowTroopCount, GUILayout.Width(35f));
+
+            GUI.backgroundColor = Color.white;
+
+            if (GUILayout.Button("-"))
+            {
+                currentFaction.DecreateStackArray(i);
+                Repaint();
+            }
+            GUILayout.EndHorizontal();
+        }
+
+        GUILayout.EndScrollView();
+
+        GUILayout.BeginHorizontal();
+
+        GUILayout.FlexibleSpace();
+
+        if (GUILayout.Button("Add"))
+        {
+            currentFaction.IncreaseStackArray(new StackData(currentFaction.ID));
+        }
+
+        GUILayout.EndHorizontal();
+
+        GUILayout.EndVertical();
     }
 
     private void RefreshBelligerentPopup()

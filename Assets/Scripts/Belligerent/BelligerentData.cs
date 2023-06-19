@@ -9,6 +9,14 @@ public class BelligerentData
 
     public void SaveToFile(string inputName)
     {
+        for(int i = 0; i < WarParticipants.Length; i++)
+        {
+            for(int j = 0; j < WarParticipants[i].StackArray.Length; j++)
+            {
+                WarParticipants[i].StackArray[j].GenerateLongID(WarParticipants[i].ID);
+            }
+        }
+
         string data = JsonUtility.ToJson(this, true);
         string path = string.Format("{0}/{1}/{2}.json", Application.streamingAssetsPath, "BelligerentData", inputName);
         System.IO.File.WriteAllText(path, data);
@@ -20,7 +28,6 @@ public class BelligerentData
         {
             string jsonString = System.IO.File.ReadAllText(path);
             JsonUtility.FromJsonOverwrite(jsonString, this);
-
         }
         catch
         {
@@ -30,8 +37,7 @@ public class BelligerentData
     }
 
     public void IncreaseArray()
-    {
-        
+    {     
         FactionData[] newArray = new FactionData[WarParticipants.Length + 1];
         for(int i = 0; i < WarParticipants.Length; i++)
         {
@@ -66,7 +72,7 @@ public class FactionData
     public int AllianceID = 0;
 
     public TileData[] TileControl = new TileData[] { new TileData()};
-    public StackData[] StackArray = new StackData[] { new StackData() };
+    public StackData[] StackArray = new StackData[] { new StackData("hre") };
 
     public void IncreaseTileArray(TileData newEntry)
     {
@@ -119,25 +125,48 @@ public class FactionData
 [System.Serializable]
 public class StackData
 {
+    public StackType StackZone = StackType.Land;
 
-    public ArmyInfoStatic.CombatZone StackZone = ArmyInfoStatic.CombatZone.Land;
+    public int RedTroopCount;
+    public int BlueTroopCount;
+    public int GreenTroopCount;
+    public int YellowTroopCount;
 
-    public int RedTroopCount = 0;
-    public int BlueTroopCount = 0;
-    public int GreenTroopCount = 0;
-    public int YellowTroopCount = 0;
+    public string TileTag;
+    public string TroopLongTag;
+    public string TroopNumberID;
 
+    public StackData(string inputID)
+    {
+        StackZone = StackType.Land;
+        RedTroopCount = 0;
+        BlueTroopCount = 0;
+        GreenTroopCount = 0;
+        YellowTroopCount = 0;
 
-    public string TileTag = "Z1";
-    public string TroopID = "us_l_57";
+        TileTag = "Z1";
+        GenerateDefaultID(inputID);
+    }
 
     public int GetStackTotal()
     {
         return RedTroopCount + BlueTroopCount + YellowTroopCount + GreenTroopCount;
     }
-    public void GenerateStackID(ArmyInfoStatic.Faction inputFaction)
+
+    public void GenerateDefaultID(string factionID)
     {
-        string factionID = ArmyInfoStatic.ConvertFactionToInfo(inputFaction).factionID;
-        TroopID = string.Format("{0}_{1}_{2}", factionID, "l", Random.Range(10, 100));
+        TroopLongTag = string.Format("{0}_{1}_{2}", factionID, ((int)StackZone), 57);
+        TroopNumberID = string.Format("{0}", 57);
+    }
+    public void GenerateLongID(string factionID)
+    {
+        TroopLongTag = string.Format("{0}_{1}_{2}", factionID, ((int)StackZone), TroopNumberID);
+    }
+
+    public enum StackType
+    {
+        Air = 0,
+        Land = 1,
+        Ocean = 2
     }
 }
