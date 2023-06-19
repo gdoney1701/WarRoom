@@ -9,7 +9,7 @@ public class BelligerentData
 
     public void SaveToFile(string inputName)
     {
-        string data = JsonUtility.ToJson(this);
+        string data = JsonUtility.ToJson(this, true);
         string path = string.Format("{0}/{1}/{2}.json", Application.streamingAssetsPath, "BelligerentData", inputName);
         System.IO.File.WriteAllText(path, data);
     }

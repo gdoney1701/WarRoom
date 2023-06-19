@@ -79,22 +79,30 @@ public class FactionLayoutEditor : EditorWindow
         Repaint();
     }
 
-    void RemoveSelectedOccupation(int index)
-    {
-        FactionData currentData = belligerentData.WarParticipants[factionIndex];
-
-        currentData.DecreaseTileArray(index);
-
-        Repaint();
-    }
     void GetTagFromColor()
     {
-        Vector3Int convertedColor = new Vector3Int(selectedColor.r, selectedColor.g, selectedColor.b);
-        Debug.Log(convertedColor);
+        Vector3Int convertedColor = ColorToVector(selectedColor);
         if (LoadedMapData.ContainsKey(convertedColor))
         {
             selectedTag = LoadedMapData[convertedColor];
             Repaint();
+        }
+        else
+        {
+            foreach(KeyValuePair<Vector3Int, string> keyValue in LoadedMapData)
+            {
+                Vector3Int vectorColor = ColorToVector(selectedColor);
+
+                if( Mathf.Abs(keyValue.Key.x - vectorColor.x) <= 2 &&
+                    Mathf.Abs(keyValue.Key.y - vectorColor.y) <= 2 &&
+                    Mathf.Abs(keyValue.Key.z - vectorColor.z) <= 2)
+                {
+                    selectedColor = VectorToColor(keyValue.Key);
+                    selectedTag = LoadedMapData[ColorToVector(selectedColor)];
+                    Repaint();
+                    break;
+                }
+            }
         }
     }
     private Vector2 ConvertScreenCoordsToZoomCoords(Vector2 screenCoords)
@@ -419,7 +427,7 @@ public class FactionLayoutEditor : EditorWindow
     private void DrawOccupation()
     {
         GUILayout.BeginVertical(new GUIStyle("GroupBox"));
-        GUILayout.BeginScrollView(occupationScroll);
+        occupationScroll = GUILayout.BeginScrollView(occupationScroll);
         FactionData currentFaction = belligerentData.WarParticipants[factionIndex];
         for(int i = 0; i < currentFaction.TileControl.Length; i++)
         {
@@ -457,7 +465,6 @@ public class FactionLayoutEditor : EditorWindow
         if (belligerentData.WarParticipants.Length != 0)
         {
             BelligerentNames = new string[belligerentData.WarParticipants.Length];
-            Debug.Log(string.Format("BelligerentNames Length {0}", BelligerentNames.Length));
             for (int i = 0; i < BelligerentNames.Length; i++)
             {
                 string newName = belligerentData.WarParticipants[i].LongName;
@@ -466,7 +473,6 @@ public class FactionLayoutEditor : EditorWindow
                     newName = string.Format("{0} ({1})", newName, i);
                 }
                 BelligerentNames[i] = newName;
-                Debug.Log(BelligerentNames[i]);
             }
         }
     }

@@ -1,0 +1,463 @@
+{
+    "WarParticipants": [
+        {
+            "LongName": "United States",
+            "Color": {
+                "x": 104,
+                "y": 192,
+                "z": 148
+            },
+            "ID": "usa",
+            "AllianceID": 0,
+            "TileControl": [
+                {
+                    "TileColor": {
+                        "x": 206,
+                        "y": 119,
+                        "z": 214
+                    },
+                    "TileTag": "N3"
+                },
+                {
+                    "TileColor": {
+                        "x": 22,
+                        "y": 7,
+                        "z": 81
+                    },
+                    "TileTag": "N6"
+                },
+                {
+                    "TileColor": {
+                        "x": 18,
+                        "y": 95,
+                        "z": 150
+                    },
+                    "TileTag": "N5"
+                },
+                {
+                    "TileColor": {
+                        "x": 3,
+                        "y": 198,
+                        "z": 140
+                    },
+                    "TileTag": "N7"
+                },
+                {
+                    "TileColor": {
+                        "x": 116,
+                        "y": 80,
+                        "z": 178
+                    },
+                    "TileTag": "N8"
+                },
+                {
+                    "TileColor": {
+                        "x": 221,
+                        "y": 198,
+                        "z": 44
+                    },
+                    "TileTag": "N10"
+                },
+                {
+                    "TileColor": {
+                        "x": 78,
+                        "y": 64,
+                        "z": 132
+                    },
+                    "TileTag": "N14"
+                }
+            ],
+            "StackArray": [
+                {
+                    "StackZone": 1,
+                    "RedTroopCount": 0,
+                    "BlueTroopCount": 0,
+                    "GreenTroopCount": 0,
+                    "YellowTroopCount": 0,
+                    "TileTag": "Z1",
+                    "TroopID": "us_l_57"
+                }
+            ]
+        },
+        {
+            "LongName": "Great Britain",
+            "Color": {
+                "x": 231,
+                "y": 228,
+                "z": 169
+            },
+            "ID": "gb",
+            "AllianceID": 0,
+            "TileControl": [
+                {
+                    "TileColor": {
+                        "x": 21,
+                        "y": 56,
+                        "z": 3
+                    },
+                    "TileTag": "E2"
+                },
+                {
+                    "TileColor": {
+                        "x": 107,
+                        "y": 62,
+                        "z": 96
+                    },
+                    "TileTag": "E3"
+                },
+                {
+                    "TileColor": {
+                        "x": 84,
+                        "y": 31,
+                        "z": 198
+                    },
+                    "TileTag": "E9"
+                },
+                {
+                    "TileColor": {
+                        "x": 59,
+                        "y": 114,
+                        "z": 62
+                    },
+                    "TileTag": "N1"
+                },
+                {
+                    "TileColor": {
+                        "x": 133,
+                        "y": 252,
+                        "z": 30
+                    },
+                    "TileTag": "N2"
+                },
+                {
+                    "TileColor": {
+                        "x": 183,
+                        "y": 7,
+                        "z": 48
+                    },
+                    "TileTag": "N4"
+                },
+                {
+                    "TileColor": {
+                        "x": 96,
+                        "y": 99,
+                        "z": 85
+                    },
+                    "TileTag": "N9"
+                },
+                {
+                    "TileColor": {
+                        "x": 115,
+                        "y": 127,
+                        "z": 40
+                    },
+                    "TileTag": "N11"
+                },
+                {
+                    "TileColor": {
+                        "x": 51,
+                        "y": 86,
+                        "z": 112
+                    },
+                    "TileTag": "N12"
+                },
+                {
+                    "TileColor": {
+                        "x": 7,
+                        "y": 57,
+                        "z": 255
+                    },
+                    "TileTag": "N13"
+                },
+                {
+                    "TileColor": {
+                        "x": 51,
+                        "y": 14,
+                        "z": 36
+                    },
+                    "TileTag": "F1"
+                },
+                {
+                    "TileColor": {
+                        "x": 108,
+                        "y": 131,
+                        "z": 221
+                    },
+                    "TileTag": "F4"
+                },
+                {
+                    "TileColor": {
+                        "x": 71,
+                        "y": 16,
+                        "z": 27
+                    },
+                    "TileTag": "F7"
+                },
+                {
+                    "TileColor": {
+                        "x": 242,
+                        "y": 217,
+                        "z": 31
+                    },
+                    "TileTag": "F8"
+                },
+                {
+                    "TileColor": {
+                        "x": 93,
+                        "y": 226,
+                        "z": 56
+                    },
+                    "TileTag": "F9"
+                },
+                {
+                    "TileColor": {
+                        "x": 10,
+                        "y": 109,
+                        "z": 16
+                    },
+                    "TileTag": "F10"
+                },
+                {
+                    "TileColor": {
+                        "x": 147,
+                        "y": 173,
+                        "z": 173
+                    },
+                    "TileTag": "F11"
+                },
+                {
+                    "TileColor": {
+                        "x": 163,
+                        "y": 153,
+                        "z": 16
+                    },
+                    "TileTag": "A1"
+                },
+                {
+                    "TileColor": {
+                        "x": 105,
+                        "y": 219,
+                        "z": 83
+                    },
+                    "TileTag": "A2"
+                },
+                {
+                    "TileColor": {
+                        "x": 74,
+                        "y": 40,
+                        "z": 99
+                    },
+                    "TileTag": "A5"
+                }
+            ],
+            "StackArray": [
+                {
+                    "StackZone": 1,
+                    "RedTroopCount": 0,
+                    "BlueTroopCount": 0,
+                    "GreenTroopCount": 0,
+                    "YellowTroopCount": 0,
+                    "TileTag": "Z1",
+                    "TroopID": "us_l_57"
+                }
+            ]
+        },
+        {
+            "LongName": "Soviet Union",
+            "Color": {
+                "x": 128,
+                "y": 48,
+                "z": 48
+            },
+            "ID": "ussr",
+            "AllianceID": 0,
+            "TileControl": [
+                {
+                    "TileColor": {
+                        "x": 188,
+                        "y": 70,
+                        "z": 49
+                    },
+                    "TileTag": "E8"
+                },
+                {
+                    "TileColor": {
+                        "x": 103,
+                        "y": 191,
+                        "z": 95
+                    },
+                    "TileTag": "A4"
+                },
+                {
+                    "TileColor": {
+                        "x": 80,
+                        "y": 116,
+                        "z": 183
+                    },
+                    "TileTag": "A3"
+                },
+                {
+                    "TileColor": {
+                        "x": 62,
+                        "y": 224,
+                        "z": 186
+                    },
+                    "TileTag": "A10"
+                },
+                {
+                    "TileColor": {
+                        "x": 54,
+                        "y": 5,
+                        "z": 117
+                    },
+                    "TileTag": "A14"
+                },
+                {
+                    "TileColor": {
+                        "x": 193,
+                        "y": 192,
+                        "z": 133
+                    },
+                    "TileTag": "A15"
+                },
+                {
+                    "TileColor": {
+                        "x": 117,
+                        "y": 205,
+                        "z": 234
+                    },
+                    "TileTag": "A16"
+                },
+                {
+                    "TileColor": {
+                        "x": 61,
+                        "y": 79,
+                        "z": 56
+                    },
+                    "TileTag": "A17"
+                },
+                {
+                    "TileColor": {
+                        "x": 249,
+                        "y": 119,
+                        "z": 107
+                    },
+                    "TileTag": "A13"
+                },
+                {
+                    "TileColor": {
+                        "x": 107,
+                        "y": 17,
+                        "z": 20
+                    },
+                    "TileTag": "A18"
+                },
+                {
+                    "TileColor": {
+                        "x": 15,
+                        "y": 28,
+                        "z": 117
+                    },
+                    "TileTag": "A19"
+                }
+            ],
+            "StackArray": [
+                {
+                    "StackZone": 1,
+                    "RedTroopCount": 0,
+                    "BlueTroopCount": 0,
+                    "GreenTroopCount": 0,
+                    "YellowTroopCount": 0,
+                    "TileTag": "Z1",
+                    "TroopID": "us_l_57"
+                }
+            ]
+        },
+        {
+            "LongName": "Germany",
+            "Color": {
+                "x": 115,
+                "y": 115,
+                "z": 115
+            },
+            "ID": "ger",
+            "AllianceID": 1,
+            "TileControl": [
+                {
+                    "TileColor": {
+                        "x": 16,
+                        "y": 58,
+                        "z": 50
+                    },
+                    "TileTag": "E1"
+                },
+                {
+                    "TileColor": {
+                        "x": 103,
+                        "y": 133,
+                        "z": 252
+                    },
+                    "TileTag": "E4"
+                },
+                {
+                    "TileColor": {
+                        "x": 73,
+                        "y": 127,
+                        "z": 12
+                    },
+                    "TileTag": "E5"
+                },
+                {
+                    "TileColor": {
+                        "x": 137,
+                        "y": 0,
+                        "z": 16
+                    },
+                    "TileTag": "E7"
+                }
+            ],
+            "StackArray": [
+                {
+                    "StackZone": 1,
+                    "RedTroopCount": 0,
+                    "BlueTroopCount": 0,
+                    "GreenTroopCount": 0,
+                    "YellowTroopCount": 0,
+                    "TileTag": "Z1",
+                    "TroopID": "us_l_57"
+                }
+            ]
+        },
+        {
+            "LongName": "Italy",
+            "Color": {
+                "x": 41,
+                "y": 154,
+                "z": 38
+            },
+            "ID": "ita",
+            "AllianceID": 1,
+            "TileControl": [
+                {
+                    "TileColor": {
+                        "x": 163,
+                        "y": 99,
+                        "z": 21
+                    },
+                    "TileTag": "E6"
+                }
+            ],
+            "StackArray": [
+                {
+                    "StackZone": 1,
+                    "RedTroopCount": 0,
+                    "BlueTroopCount": 0,
+                    "GreenTroopCount": 0,
+                    "YellowTroopCount": 0,
+                    "TileTag": "Z1",
+                    "TroopID": "us_l_57"
+                }
+            ]
+        }
+    ]
+}
