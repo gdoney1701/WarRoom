@@ -19,10 +19,9 @@ public class BelligerentManager : MonoBehaviour
         MapMeshGenerator.MapMeshGenerator.onMapLoad -= InitializeFactions;
     }
 
-    void InitializeFactions(MapMeshGenerator.MeshGenerationData data)
+    void InitializeFactions(MapMeshGenerator.MeshGenerationData data, SaveData loadedSave)
     {
-        BelligerentData belligerentData = new BelligerentData();
-        belligerentData.LoadFromFile(factionPath);
+        BelligerentData belligerentData = loadedSave.saveBelligerents;
 
         for(int j = 0; j < belligerentData.WarParticipants.Length; j++)
         {
@@ -37,6 +36,13 @@ public class BelligerentManager : MonoBehaviour
 
                 StackManager tempManager = tempStack.GetComponent<StackManager>();
                 tempManager.UpdateVisuals(VectorToColor(currentFaction.Color), currentFaction.StackArray[i]);
+            }
+
+            for(int i = 0; i < currentFaction.TileControl.Length; i++)
+            {
+                MapTile occupiedTile = data.mapTiles[currentFaction.TileControl[i].TileTag];
+                Color32 convertedColor = VectorToColor(currentFaction.Color);
+                occupiedTile.SetOccupationVisuals(convertedColor, convertedColor);
             }
         }
     }

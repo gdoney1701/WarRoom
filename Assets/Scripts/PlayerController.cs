@@ -60,7 +60,7 @@ public class PlayerController : MonoBehaviour
         MapMeshGenerator.MapMeshGenerator.onMapLoad -= RegisterMapObjects;
     }
 
-    void RegisterMapObjects(MapMeshGenerator.MeshGenerationData data)
+    void RegisterMapObjects(MapMeshGenerator.MeshGenerationData data, SaveData loadedSave)
     {
         mapColumns = data.columnArray;
         maxDistance = data.imageTexture.width;

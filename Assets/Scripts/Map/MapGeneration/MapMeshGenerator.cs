@@ -136,8 +136,8 @@ namespace MapMeshGenerator
         //private Texture2D inputTexture;
         [SerializeField]
         private Material faceMaterial;
-        [SerializeField]
-        private string colorDataPath = "SmallMapDemo";
+        //[SerializeField]
+        //private string colorDataPath = "SmallMapDemo";
         [SerializeField]
         private GameObject tileContainer;
         [SerializeField]
@@ -151,28 +151,39 @@ namespace MapMeshGenerator
         Vector2Int imageScale = Vector2Int.zero;
         float maxImageLength = 0;
 
-        public delegate void OnMapLoad(MeshGenerationData data);
+        public delegate void OnMapLoad(MeshGenerationData data, SaveData saveData);
         public static event OnMapLoad onMapLoad;
-        private void Start()
+        //private void Start()
+        //{
+        //    GenerateMesh();
+        //}
+
+        public void Awake()
         {
-            GenerateMesh();
+            
         }
 
-        [ContextMenu("Test Generation")]
-        public void GenerateMesh()
+        public void OnEnable()
+        {
+            MainMenu.sendMapData += GenerateMesh;
+        }
+
+        public void OnDisable()
+        {
+            MainMenu.sendMapData -= GenerateMesh;
+        }
+
+        public void GenerateMesh(string saveDataPath)
         {
             MeshGenerationData data = new MeshGenerationData();
-            data.provinceList = GetProvinceData(out data.imageTexture);
-            //data.imageTexture = inputTexture;
-            data.faceMaterial = faceMaterial;
+            SaveData loadedSave = new SaveData();
+            loadedSave.LoadFromFile(saveDataPath);
 
-            //imageScale.x = data.imageTexture.width;
-            //imageScale.y = data.imageTexture.height;
+            data.provinceList = GetProvinceData(out data.imageTexture, loadedSave);
+            data.faceMaterial = faceMaterial;
             imagePixels = data.imageTexture.GetPixels32();
             
             //Read the input data json containing tile tags and tile colors
-
-
             FindVertexPixels(data);
 
             for (int i = 0; i < data.provinceList.Length; i++)
@@ -193,15 +204,13 @@ namespace MapMeshGenerator
 
                 tileContainer.transform.localScale = new Vector3(0.1f, 0.1f, 0.1f);
 
-                onMapLoad?.Invoke(data);
+                onMapLoad?.Invoke(data, loadedSave);
             }
         }
 
-        private ProvinceData[] GetProvinceData(out Texture2D inputTexture)
+        private ProvinceData[] GetProvinceData(out Texture2D inputTexture, SaveData loadedData)
         {
-            MapColorData mapData = new MapColorData();
-            mapData.LoadFromFile(colorDataPath);
-
+            MapColorData mapData = loadedData.loadedMapData;
 
             var assetBundle = AssetBundle.LoadFromFile(Path.Combine(Application.streamingAssetsPath, "AssetBundles/textures/maps"));
             inputTexture = assetBundle.LoadAsset<Texture2D>(mapData.MapTexturePath);
