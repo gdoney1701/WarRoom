@@ -24,6 +24,22 @@ public class PlayerController : MonoBehaviour
     private Camera mainCamera;
     private float neutralHeight;
 
+    public delegate void OnTileSelect(MapTile selectedTile);
+    public static event OnTileSelect onTileSelect;
+
+    private MapTile selectedTile;
+    public MapTile SelectedTile
+    {
+        get { return selectedTile; }
+        set
+        {
+            if(selectedTile == null | value != selectedTile)
+            {
+                selectedTile = value;
+                onTileSelect?.Invoke(value);
+            }
+        }
+    }
 
     private void Awake()
     {
@@ -90,13 +106,17 @@ public class PlayerController : MonoBehaviour
             {
                 try
                 {
-                    MapTile selectedTile = hit.collider.GetComponentInParent<MapTile>();
+                    SelectedTile = hit.collider.GetComponentInParent<MapTile>();
                     Debug.Log(selectedTile.TileName);
                 }
                 catch
                 {
                     Debug.LogError("No Viable MapTile script");
                 }
+            }
+            else
+            {
+                SelectedTile = null;
             }
 
         }

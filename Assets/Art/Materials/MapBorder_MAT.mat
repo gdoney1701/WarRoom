@@ -37,8 +37,11 @@ Material:
     m_Floats:
     - _QueueControl: 0
     - _QueueOffset: 0
+    - _Selected: 0
     m_Colors:
+    - _BorderColor: {r: 1, g: 1, b: 1, a: 1}
     - _GColor: {r: 1, g: 1, b: 1, a: 1}
+    - _HighlightColor: {r: 4, g: 1.533677, b: 0, a: 1}
     - _RColor: {r: 0, g: 0.19173235, b: 1, a: 0}
   m_BuildTextureStacks: []
 --- !u!114 &4326101577613573755

@@ -149,6 +149,7 @@ namespace MapMeshGenerator
 
         Color32[] imagePixels = new Color32[0];
         Vector2Int imageScale = Vector2Int.zero;
+        float maxImageLength = 0;
 
         public delegate void OnMapLoad(MeshGenerationData data);
         public static event OnMapLoad onMapLoad;
@@ -206,6 +207,8 @@ namespace MapMeshGenerator
             inputTexture = assetBundle.LoadAsset<Texture2D>(mapData.MapTexturePath);
             imageScale.x = inputTexture.width;
             imageScale.y = inputTexture.height;
+
+            maxImageLength = Mathf.Max(imageScale.x, imageScale.y);
 
             ProvinceData[] newData = new ProvinceData[mapData.TileList.Count];
             for(int i = 0; i<newData.Length; i++)
@@ -566,7 +569,7 @@ namespace MapMeshGenerator
             msh.RecalculateBounds();
             msh.RecalculateTangents();
             msh.uv = GenerateUVs(vertices2D, minPoint, maxPoint);
-            msh.uv2 = vertices2D;
+            msh.uv2 = GenerateUVs(vertices2D, new Vector2(0,0), new Vector2(maxImageLength, maxImageLength)) ;
 
             GameObject newTile = Instantiate(tilePrefab, tileContainer.transform);
             newTile.transform.position = Vector3.zero;
