@@ -12,17 +12,29 @@ public class PlayerController : MonoBehaviour
     [SerializeField]
     private float minCameraHeight;
     [SerializeField]
-    private float moveSpeed;
+    private float maxZoomSpeed = 20f;
 
     private GameObject[] mapColumns;
     private bool readyToMove = false;
     private float maxDistance;
     private float zOffset;
     private int columnWidth;
+    private Camera mainCamera;
+    private float neutralHeight;
+
+
+    private void Awake()
+    {
+        mainCamera = Camera.main;
+        neutralHeight = (maxCameraHeight + minCameraHeight) / 2;
+    }
+
+
 
     private void OnEnable()
     {
         MapMeshGenerator.MapMeshGenerator.onMapLoad += RegisterMapObjects;
+        mainCamera = Camera.main;
     }
 
     private void OnDisable()
@@ -45,11 +57,7 @@ public class PlayerController : MonoBehaviour
         if (readyToMove)
         {
             Vector2 input = context.ReadValue<Vector2>();
-            input.Normalize();
-            input *= Time.deltaTime * moveSpeed;
-
-            //positionOffset += new Vector3(input.x, 0, input.y);
-            //positionOffset = new Vector3(positionOffset.x + input.x, 0, Mathf.Clamp(positionOffset.z + input.y, -100f, 100f));
+            mainCamera.ScreenToWorldPoint(input);
 
             zOffset += input.y;
             for (int i = 0; i < mapColumns.Length; i++)
@@ -81,6 +89,20 @@ public class PlayerController : MonoBehaviour
 
     public void OnZoom(InputAction.CallbackContext context)
     {
-        Debug.Log(context.ReadValue<Vector2>().normalized);
+        Vector2 scrollInput = context.ReadValue<Vector2>();
+        if(scrollInput.y != 0)
+        {
+            float heightRatio = Mathf.Abs(neutralHeight - mainCamera.transform.position.y) / (maxCameraHeight - neutralHeight);
+            float scrollSpeed = Mathf.SmoothStep(maxZoomSpeed, maxZoomSpeed / 5, heightRatio) * Time.deltaTime;
+
+            if(scrollSpeed * -scrollInput.y + mainCamera.transform.position.y > maxCameraHeight ||
+                scrollSpeed * -scrollInput.y + mainCamera.transform.position.y < minCameraHeight)
+            {
+                return;
+            }
+
+            mainCamera.transform.Translate(new Vector3(0, -scrollInput.y * scrollSpeed, 0), Space.World);
+        }
+
     }
 }
