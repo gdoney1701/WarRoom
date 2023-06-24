@@ -6,13 +6,14 @@ using UnityEditor;
 public class FactionLayoutEditor : EditorWindow
 {
 
-    private string mapDataName = "newLayout";
-    private string belligerentDataName = "newBelligerents";
+    private string mapDataName = "EarthMap_01_Demo";
+    private string belligerentDataName = "EarthMap_01_Bell";
 
     private Dictionary<Vector3Int, string> loadedMapData = new Dictionary<Vector3Int, string>();
     private Texture2D mapTexture;
     private MapColorData mapColorData = new MapColorData();
     private BelligerentData belligerentData = new BelligerentData();
+    private SaveData saveData = new SaveData();
     private string[] BelligerentNames = new string[0];
 
     private const float kZoomMin = 1.1f;
@@ -49,8 +50,12 @@ public class FactionLayoutEditor : EditorWindow
 
     private int toolbarInt = 0;
     private int armyToolbarInt = 0;
-    private string[] toolbarStrings = { "Tag", "Faction", "Army" };
+    private string[] toolbarStrings = { "Tag", "Belligerent", "Faction", "Save State" };
     private string[] armyToolbarStrings = { "Occupation", "Stacks" };
+
+    private string saveBelligerentPath = "EarthMap_01_Bell";
+    private string saveDataPath = "SaveData_01";
+    private string saveMapPath = "EarthMap_01_Demo";
 
     private Vector2 tileScrollView = Vector2.zero;
     private Vector2 occupationScroll = Vector2.zero;
@@ -271,6 +276,9 @@ public class FactionLayoutEditor : EditorWindow
                     break;
                 case 2:
                     DrawArmyTab();
+                    break;
+                case 3:
+                    DrawSaveTab();
                     break;
 
             }
@@ -499,6 +507,54 @@ public class FactionLayoutEditor : EditorWindow
         if (GUILayout.Button("Add"))
         {
             currentFaction.IncreaseStackArray(new StackData(currentFaction.ID));
+        }
+
+        GUILayout.EndHorizontal();
+
+        GUILayout.EndVertical();
+    }
+
+    private void DrawSaveTab()
+    {
+        GUILayout.BeginVertical(new GUIStyle("GroupBox"));
+
+        GUILayout.BeginHorizontal();
+        EditorGUILayout.LabelField("Save File Path:", new GUIStyle("BoldLabel"));
+        saveDataPath = EditorGUILayout.TextField(saveDataPath);
+        GUILayout.EndHorizontal();
+
+        GUILayout.Space(10f);
+
+        GUILayout.BeginHorizontal();
+        EditorGUILayout.LabelField("Belligerent Data:", new GUIStyle("BoldLabel"));
+        saveBelligerentPath = EditorGUILayout.TextField(saveBelligerentPath);
+        GUILayout.EndHorizontal();
+
+        GUILayout.Space(5f);
+
+        GUILayout.BeginHorizontal();
+        EditorGUILayout.LabelField("Map Data:", new GUIStyle("BoldLabel"));
+        saveMapPath = EditorGUILayout.TextField(saveMapPath);
+        GUILayout.EndHorizontal();
+
+        GUILayout.Space(5f);
+
+        GUILayout.BeginHorizontal();
+
+        GUILayout.FlexibleSpace();
+        if (GUILayout.Button("Save"))
+        {
+            saveData = new SaveData();
+            saveData.saveName = saveMapPath;
+            saveData.SwapLoadedBelligerentData(saveBelligerentPath);
+            saveData.SwapLoadedMapData(saveMapPath);
+            saveData.SaveToFile(saveDataPath);
+        }
+
+        if (GUILayout.Button("Load"))
+        {
+            saveData = new SaveData();
+            saveData.LoadFromFile(saveDataPath);
         }
 
         GUILayout.EndHorizontal();

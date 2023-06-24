@@ -9,13 +9,7 @@ public class BelligerentData
 
     public void SaveToFile(string inputName)
     {
-        for(int i = 0; i < WarParticipants.Length; i++)
-        {
-            for(int j = 0; j < WarParticipants[i].StackArray.Length; j++)
-            {
-                WarParticipants[i].StackArray[j].GenerateLongID(WarParticipants[i].ID);
-            }
-        }
+        GenerateLongID();
 
         string data = JsonUtility.ToJson(this, true);
         string path = string.Format("{0}/{1}/{2}.json", Application.streamingAssetsPath, "BelligerentData", inputName);
@@ -34,6 +28,17 @@ public class BelligerentData
             Debug.LogError("Failed to find a file to load");
         }
         return this;
+    }
+
+    public void GenerateLongID()
+    {
+        for (int i = 0; i < WarParticipants.Length; i++)
+        {
+            for (int j = 0; j < WarParticipants[i].StackArray.Length; j++)
+            {
+                WarParticipants[i].StackArray[j].GenerateLongID(WarParticipants[i].ID);
+            }
+        }
     }
 
     public void IncreaseArray()
