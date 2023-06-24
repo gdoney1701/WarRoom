@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using System.IO;
 
 namespace MapMeshGenerator
 {
@@ -131,8 +132,8 @@ namespace MapMeshGenerator
 
     public class MapMeshGenerator : MonoBehaviour
     {
-        [SerializeField]
-        private Texture2D inputTexture;
+        //[SerializeField]
+        //private Texture2D inputTexture;
         [SerializeField]
         private Material faceMaterial;
         [SerializeField]
@@ -160,15 +161,16 @@ namespace MapMeshGenerator
         public void GenerateMesh()
         {
             MeshGenerationData data = new MeshGenerationData();
-            data.imageTexture = inputTexture;
+            data.provinceList = GetProvinceData(out data.imageTexture);
+            //data.imageTexture = inputTexture;
             data.faceMaterial = faceMaterial;
 
-            imageScale.x = data.imageTexture.width;
-            imageScale.y = data.imageTexture.height;
+            //imageScale.x = data.imageTexture.width;
+            //imageScale.y = data.imageTexture.height;
             imagePixels = data.imageTexture.GetPixels32();
             
             //Read the input data json containing tile tags and tile colors
-            data.provinceList = GetProvinceData();
+
 
             FindVertexPixels(data);
 
@@ -194,10 +196,16 @@ namespace MapMeshGenerator
             }
         }
 
-        private ProvinceData[] GetProvinceData()
+        private ProvinceData[] GetProvinceData(out Texture2D inputTexture)
         {
             MapColorData mapData = new MapColorData();
             mapData.LoadFromFile(colorDataPath);
+
+
+            var assetBundle = AssetBundle.LoadFromFile(Path.Combine(Application.streamingAssetsPath, "AssetBundles/textures/maps"));
+            inputTexture = assetBundle.LoadAsset<Texture2D>(mapData.MapTexturePath);
+            imageScale.x = inputTexture.width;
+            imageScale.y = inputTexture.height;
 
             ProvinceData[] newData = new ProvinceData[mapData.TileList.Count];
             for(int i = 0; i<newData.Length; i++)
@@ -647,7 +655,7 @@ namespace MapMeshGenerator
 
         GameObject[] CreateVerticalGroups(MeshGenerationData data, int columnNumber)
         {
-            float columnWidth = inputTexture.width / columnNumber;
+            float columnWidth = imageScale.x / columnNumber;
             GameObject[] columnContainer = new GameObject[columnNumber];
             for(int i = 0; i < columnNumber; i++)
             {
