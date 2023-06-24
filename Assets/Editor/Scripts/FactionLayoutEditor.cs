@@ -41,6 +41,10 @@ public class FactionLayoutEditor : EditorWindow
                     {
                         AddSelectedOccupation();
                     }
+                    if(armyToolbarInt == 1)
+                    {
+                        AddSelectedStack();
+                    }
                 }
             }
         }
@@ -63,6 +67,17 @@ public class FactionLayoutEditor : EditorWindow
 
     private int factionIndex = 0;
 
+
+    void AddSelectedStack()
+    {
+        FactionData currentData = belligerentData.WarParticipants[factionIndex];
+
+        StackData newStack = new StackData("57");
+        newStack.TileTag = selectedTag;
+
+        currentData.IncreaseStackArray(newStack);
+        Repaint();
+    }
     void AddSelectedOccupation()
     {
         FactionData currentData = belligerentData.WarParticipants[factionIndex];

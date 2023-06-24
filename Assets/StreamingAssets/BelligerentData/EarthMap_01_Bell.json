@@ -71,11 +71,52 @@
                 {
                     "StackZone": 1,
                     "RedTroopCount": 0,
+                    "BlueTroopCount": 2,
+                    "GreenTroopCount": 3,
+                    "YellowTroopCount": 2,
+                    "TileTag": "N3",
+                    "TroopLongTag": "usa_1_21",
+                    "TroopNumberID": "21"
+                },
+                {
+                    "StackZone": 1,
+                    "RedTroopCount": 0,
+                    "BlueTroopCount": 1,
+                    "GreenTroopCount": 0,
+                    "YellowTroopCount": 4,
+                    "TileTag": "N6",
+                    "TroopLongTag": "usa_1_58",
+                    "TroopNumberID": "58"
+                },
+                {
+                    "StackZone": 1,
+                    "RedTroopCount": 0,
+                    "BlueTroopCount": 1,
+                    "GreenTroopCount": 1,
+                    "YellowTroopCount": 1,
+                    "TileTag": "N5",
+                    "TroopLongTag": "usa_1_90",
+                    "TroopNumberID": "90"
+                },
+                {
+                    "StackZone": 1,
+                    "RedTroopCount": 0,
                     "BlueTroopCount": 0,
                     "GreenTroopCount": 0,
-                    "YellowTroopCount": 0,
-                    "TileTag": "Z1",
-                    "TroopID": "us_l_57"
+                    "YellowTroopCount": 8,
+                    "TileTag": "N7",
+                    "TroopLongTag": "usa_1_17",
+                    "TroopNumberID": "17"
+                },
+                {
+                    "StackZone": 1,
+                    "RedTroopCount": 0,
+                    "BlueTroopCount": 3,
+                    "GreenTroopCount": 2,
+                    "YellowTroopCount": 3,
+                    "TileTag": "N8",
+                    "TroopLongTag": "usa_1_63",
+                    "TroopNumberID": "63"
                 }
             ]
         },
@@ -107,67 +148,11 @@
                 },
                 {
                     "TileColor": {
-                        "x": 84,
-                        "y": 31,
-                        "z": 198
+                        "x": 16,
+                        "y": 58,
+                        "z": 50
                     },
-                    "TileTag": "E9"
-                },
-                {
-                    "TileColor": {
-                        "x": 59,
-                        "y": 114,
-                        "z": 62
-                    },
-                    "TileTag": "N1"
-                },
-                {
-                    "TileColor": {
-                        "x": 133,
-                        "y": 252,
-                        "z": 30
-                    },
-                    "TileTag": "N2"
-                },
-                {
-                    "TileColor": {
-                        "x": 183,
-                        "y": 7,
-                        "z": 48
-                    },
-                    "TileTag": "N4"
-                },
-                {
-                    "TileColor": {
-                        "x": 96,
-                        "y": 99,
-                        "z": 85
-                    },
-                    "TileTag": "N9"
-                },
-                {
-                    "TileColor": {
-                        "x": 115,
-                        "y": 127,
-                        "z": 40
-                    },
-                    "TileTag": "N11"
-                },
-                {
-                    "TileColor": {
-                        "x": 51,
-                        "y": 86,
-                        "z": 112
-                    },
-                    "TileTag": "N12"
-                },
-                {
-                    "TileColor": {
-                        "x": 7,
-                        "y": 57,
-                        "z": 255
-                    },
-                    "TileTag": "N13"
+                    "TileTag": "E1"
                 },
                 {
                     "TileColor": {
@@ -179,75 +164,11 @@
                 },
                 {
                     "TileColor": {
-                        "x": 108,
-                        "y": 131,
-                        "z": 221
-                    },
-                    "TileTag": "F4"
-                },
-                {
-                    "TileColor": {
-                        "x": 71,
-                        "y": 16,
-                        "z": 27
-                    },
-                    "TileTag": "F7"
-                },
-                {
-                    "TileColor": {
-                        "x": 242,
-                        "y": 217,
-                        "z": 31
-                    },
-                    "TileTag": "F8"
-                },
-                {
-                    "TileColor": {
-                        "x": 93,
-                        "y": 226,
-                        "z": 56
-                    },
-                    "TileTag": "F9"
-                },
-                {
-                    "TileColor": {
-                        "x": 10,
-                        "y": 109,
-                        "z": 16
-                    },
-                    "TileTag": "F10"
-                },
-                {
-                    "TileColor": {
-                        "x": 147,
-                        "y": 173,
-                        "z": 173
-                    },
-                    "TileTag": "F11"
-                },
-                {
-                    "TileColor": {
                         "x": 163,
                         "y": 153,
                         "z": 16
                     },
                     "TileTag": "A1"
-                },
-                {
-                    "TileColor": {
-                        "x": 105,
-                        "y": 219,
-                        "z": 83
-                    },
-                    "TileTag": "A2"
-                },
-                {
-                    "TileColor": {
-                        "x": 74,
-                        "y": 40,
-                        "z": 99
-                    },
-                    "TileTag": "A5"
                 }
             ],
             "StackArray": [
@@ -255,10 +176,51 @@
                     "StackZone": 1,
                     "RedTroopCount": 0,
                     "BlueTroopCount": 0,
+                    "GreenTroopCount": 4,
+                    "YellowTroopCount": 4,
+                    "TileTag": "E2",
+                    "TroopLongTag": "gb_1_53",
+                    "TroopNumberID": "53"
+                },
+                {
+                    "StackZone": 1,
+                    "RedTroopCount": 0,
+                    "BlueTroopCount": 2,
+                    "GreenTroopCount": 4,
+                    "YellowTroopCount": 2,
+                    "TileTag": "E1",
+                    "TroopLongTag": "gb_1_14",
+                    "TroopNumberID": "14"
+                },
+                {
+                    "StackZone": 1,
+                    "RedTroopCount": 0,
+                    "BlueTroopCount": 3,
                     "GreenTroopCount": 0,
-                    "YellowTroopCount": 0,
-                    "TileTag": "Z1",
-                    "TroopID": "us_l_57"
+                    "YellowTroopCount": 4,
+                    "TileTag": "E1",
+                    "TroopLongTag": "gb_1_12",
+                    "TroopNumberID": "12"
+                },
+                {
+                    "StackZone": 1,
+                    "RedTroopCount": 0,
+                    "BlueTroopCount": 0,
+                    "GreenTroopCount": 1,
+                    "YellowTroopCount": 3,
+                    "TileTag": "F1",
+                    "TroopLongTag": "gb_1_67",
+                    "TroopNumberID": "67"
+                },
+                {
+                    "StackZone": 1,
+                    "RedTroopCount": 0,
+                    "BlueTroopCount": 2,
+                    "GreenTroopCount": 1,
+                    "YellowTroopCount": 2,
+                    "TileTag": "A1",
+                    "TroopLongTag": "gb_1_42",
+                    "TroopNumberID": "42"
                 }
             ]
         },
@@ -282,19 +244,19 @@
                 },
                 {
                     "TileColor": {
+                        "x": 54,
+                        "y": 5,
+                        "z": 117
+                    },
+                    "TileTag": "A14"
+                },
+                {
+                    "TileColor": {
                         "x": 103,
                         "y": 191,
                         "z": 95
                     },
                     "TileTag": "A4"
-                },
-                {
-                    "TileColor": {
-                        "x": 80,
-                        "y": 116,
-                        "z": 183
-                    },
-                    "TileTag": "A3"
                 },
                 {
                     "TileColor": {
@@ -306,59 +268,11 @@
                 },
                 {
                     "TileColor": {
-                        "x": 54,
-                        "y": 5,
-                        "z": 117
+                        "x": 80,
+                        "y": 116,
+                        "z": 183
                     },
-                    "TileTag": "A14"
-                },
-                {
-                    "TileColor": {
-                        "x": 193,
-                        "y": 192,
-                        "z": 133
-                    },
-                    "TileTag": "A15"
-                },
-                {
-                    "TileColor": {
-                        "x": 117,
-                        "y": 205,
-                        "z": 234
-                    },
-                    "TileTag": "A16"
-                },
-                {
-                    "TileColor": {
-                        "x": 61,
-                        "y": 79,
-                        "z": 56
-                    },
-                    "TileTag": "A17"
-                },
-                {
-                    "TileColor": {
-                        "x": 249,
-                        "y": 119,
-                        "z": 107
-                    },
-                    "TileTag": "A13"
-                },
-                {
-                    "TileColor": {
-                        "x": 107,
-                        "y": 17,
-                        "z": 20
-                    },
-                    "TileTag": "A18"
-                },
-                {
-                    "TileColor": {
-                        "x": 15,
-                        "y": 28,
-                        "z": 117
-                    },
-                    "TileTag": "A19"
+                    "TileTag": "A3"
                 }
             ],
             "StackArray": [
@@ -367,9 +281,40 @@
                     "RedTroopCount": 0,
                     "BlueTroopCount": 0,
                     "GreenTroopCount": 0,
+                    "YellowTroopCount": 8,
+                    "TileTag": "E8",
+                    "TroopLongTag": "ussr_1_123",
+                    "TroopNumberID": "123"
+                },
+                {
+                    "StackZone": 1,
+                    "RedTroopCount": 0,
+                    "BlueTroopCount": 2,
+                    "GreenTroopCount": 2,
                     "YellowTroopCount": 0,
-                    "TileTag": "Z1",
-                    "TroopID": "us_l_57"
+                    "TileTag": "A4",
+                    "TroopLongTag": "ussr_1_21",
+                    "TroopNumberID": "21"
+                },
+                {
+                    "StackZone": 1,
+                    "RedTroopCount": 0,
+                    "BlueTroopCount": 3,
+                    "GreenTroopCount": 0,
+                    "YellowTroopCount": 2,
+                    "TileTag": "A3",
+                    "TroopLongTag": "ussr_1_25",
+                    "TroopNumberID": "25"
+                },
+                {
+                    "StackZone": 1,
+                    "RedTroopCount": 0,
+                    "BlueTroopCount": 1,
+                    "GreenTroopCount": 5,
+                    "YellowTroopCount": 1,
+                    "TileTag": "A10",
+                    "TroopLongTag": "ussr_1_96",
+                    "TroopNumberID": "96"
                 }
             ]
         },
@@ -385,14 +330,6 @@
             "TileControl": [
                 {
                     "TileColor": {
-                        "x": 16,
-                        "y": 58,
-                        "z": 50
-                    },
-                    "TileTag": "E1"
-                },
-                {
-                    "TileColor": {
                         "x": 103,
                         "y": 133,
                         "z": 252
@@ -401,11 +338,11 @@
                 },
                 {
                     "TileColor": {
-                        "x": 73,
-                        "y": 127,
-                        "z": 12
+                        "x": 114,
+                        "y": 98,
+                        "z": 178
                     },
-                    "TileTag": "E5"
+                    "TileTag": "F2"
                 },
                 {
                     "TileColor": {
@@ -414,6 +351,22 @@
                         "z": 16
                     },
                     "TileTag": "E7"
+                },
+                {
+                    "TileColor": {
+                        "x": 84,
+                        "y": 23,
+                        "z": 196
+                    },
+                    "TileTag": "F5"
+                },
+                {
+                    "TileColor": {
+                        "x": 73,
+                        "y": 127,
+                        "z": 12
+                    },
+                    "TileTag": "E5"
                 }
             ],
             "StackArray": [
@@ -421,10 +374,51 @@
                     "StackZone": 1,
                     "RedTroopCount": 0,
                     "BlueTroopCount": 0,
+                    "GreenTroopCount": 4,
+                    "YellowTroopCount": 4,
+                    "TileTag": "E4",
+                    "TroopLongTag": "ger_1_69",
+                    "TroopNumberID": "69"
+                },
+                {
+                    "StackZone": 1,
+                    "RedTroopCount": 0,
+                    "BlueTroopCount": 0,
+                    "GreenTroopCount": 6,
+                    "YellowTroopCount": 1,
+                    "TileTag": "E5",
+                    "TroopLongTag": "ger_1_76",
+                    "TroopNumberID": "76"
+                },
+                {
+                    "StackZone": 1,
+                    "RedTroopCount": 0,
+                    "BlueTroopCount": 4,
                     "GreenTroopCount": 0,
-                    "YellowTroopCount": 0,
-                    "TileTag": "Z1",
-                    "TroopID": "us_l_57"
+                    "YellowTroopCount": 2,
+                    "TileTag": "E7",
+                    "TroopLongTag": "ger_1_23",
+                    "TroopNumberID": "23"
+                },
+                {
+                    "StackZone": 1,
+                    "RedTroopCount": 0,
+                    "BlueTroopCount": 2,
+                    "GreenTroopCount": 1,
+                    "YellowTroopCount": 5,
+                    "TileTag": "F2",
+                    "TroopLongTag": "ger_1_35",
+                    "TroopNumberID": "35"
+                },
+                {
+                    "StackZone": 1,
+                    "RedTroopCount": 0,
+                    "BlueTroopCount": 4,
+                    "GreenTroopCount": 1,
+                    "YellowTroopCount": 3,
+                    "TileTag": "F5",
+                    "TroopLongTag": "ger_1_86",
+                    "TroopNumberID": "86"
                 }
             ]
         },
@@ -453,9 +447,10 @@
                     "RedTroopCount": 0,
                     "BlueTroopCount": 0,
                     "GreenTroopCount": 0,
-                    "YellowTroopCount": 0,
-                    "TileTag": "Z1",
-                    "TroopID": "us_l_57"
+                    "YellowTroopCount": 8,
+                    "TileTag": "E6",
+                    "TroopLongTag": "ita_1_111",
+                    "TroopNumberID": "111"
                 }
             ]
         }
