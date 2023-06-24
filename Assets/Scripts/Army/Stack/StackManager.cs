@@ -13,9 +13,16 @@ public class StackManager : MonoBehaviour
     [SerializeField]
     private TextMeshProUGUI stackID;
 
+    private string stackLongTag;
+
+    public string StackLongTag
+    {
+        get { return stackLongTag; }
+    }
+
     private GameObject[] stackVisuals;
 
-    public void UpdateVisuals(ArmyInfoStatic.Faction inputFaction, StackInfo inputStack)
+    public void UpdateVisuals(Color32 factionColor, StackData inputStack)
     {
         int stackTotal = inputStack.GetStackTotal();
         stackVisuals = new GameObject[stackTotal+1];
@@ -40,9 +47,8 @@ public class StackManager : MonoBehaviour
             TroopClassLoop(counter, Color.red);
         }
 
-        TroopClassLoop(counter, ArmyInfoStatic.ConvertFactionToInfo(inputFaction).factionColor);
-        string[] idBreakdown = inputStack.TroopID.Split("_");
-        stackID.SetText(idBreakdown[idBreakdown.Length -1]);
+        TroopClassLoop(counter, factionColor);
+        stackID.SetText(inputStack.TroopNumberID);
         stackID.gameObject.transform.Translate(0, counter * 0.25f + 0.125f, 0, Space.World);
     }
 
@@ -54,4 +60,6 @@ public class StackManager : MonoBehaviour
         tempVisual.GetComponent<Renderer>().material.color = troopColor;
         stackVisuals[overallCounter] = tempVisual;
     }
+
+
 }
