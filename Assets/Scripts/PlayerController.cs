@@ -13,6 +13,8 @@ public class PlayerController : MonoBehaviour
     private float minCameraHeight;
     [SerializeField]
     private float maxZoomSpeed = 20f;
+    [SerializeField]
+    private LayerMask clickMask;
 
     private GameObject[] mapColumns;
     private bool readyToMove = false;
@@ -82,7 +84,21 @@ public class PlayerController : MonoBehaviour
     {
         if (context.performed)
         {
-            Debug.Log("Clicked");
+            Ray ray = mainCamera.ScreenPointToRay(Mouse.current.position.ReadValue());
+            RaycastHit hit;
+            if (Physics.Raycast(ray, out hit, 100f, 1 << 6))
+            {
+                try
+                {
+                    MapTile selectedTile = hit.collider.GetComponentInParent<MapTile>();
+                    Debug.Log(selectedTile.TileName);
+                }
+                catch
+                {
+                    Debug.LogError("No Viable MapTile script");
+                }
+            }
+
         }
 
     }

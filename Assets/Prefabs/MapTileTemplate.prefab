@@ -9,7 +9,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 2538642642727723943}
-  m_Layer: 0
+  m_Layer: 6
   m_Name: Center
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -45,7 +45,7 @@ GameObject:
   - component: {fileID: 1262288820381516419}
   - component: {fileID: 1262288820381516420}
   - component: {fileID: 1262288820381516421}
-  m_Layer: 0
+  m_Layer: 6
   m_Name: MapTile_Visual
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -129,7 +129,7 @@ MeshCollider:
   m_IsTrigger: 0
   m_Enabled: 1
   serializedVersion: 4
-  m_Convex: 1
+  m_Convex: 0
   m_CookingOptions: 30
   m_Mesh: {fileID: 0}
 --- !u!1 &1262288820513990315
@@ -143,7 +143,7 @@ GameObject:
   - component: {fileID: 1262288820513990314}
   - component: {fileID: 1262288820513990312}
   - component: {fileID: 1262288820513990313}
-  m_Layer: 5
+  m_Layer: 6
   m_Name: TileTag
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -277,7 +277,7 @@ GameObject:
   m_Component:
   - component: {fileID: 1262288821938751289}
   - component: {fileID: 1262288821938751290}
-  m_Layer: 0
+  m_Layer: 6
   m_Name: MapTileTemplate
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -331,7 +331,7 @@ GameObject:
   - component: {fileID: 1262288822010870120}
   - component: {fileID: 1262288822010870117}
   - component: {fileID: 1262288822010870118}
-  m_Layer: 5
+  m_Layer: 6
   m_Name: Canvas
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -412,7 +412,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 5243451937158037146}
-  m_Layer: 0
+  m_Layer: 6
   m_Name: StackContainer
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -443,7 +443,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 130467244601300318}
-  m_Layer: 0
+  m_Layer: 6
   m_Name: UI
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -476,7 +476,7 @@ GameObject:
   m_Component:
   - component: {fileID: 289068900846075065}
   - component: {fileID: 1676443054722733144}
-  m_Layer: 0
+  m_Layer: 6
   m_Name: Line
   m_TagString: Untagged
   m_Icon: {fileID: 0}

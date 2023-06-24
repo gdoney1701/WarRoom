@@ -483,6 +483,9 @@ MonoBehaviour:
   maxCameraHeight: 45
   minCameraHeight: 10
   maxZoomSpeed: 10
+  clickMask:
+    serializedVersion: 2
+    m_Bits: 1
 --- !u!114 &1050315764
 MonoBehaviour:
   m_ObjectHideFlags: 0
