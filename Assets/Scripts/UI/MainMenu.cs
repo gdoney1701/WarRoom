@@ -36,7 +36,6 @@ public class MainMenu : MonoBehaviour
 
         while (!loadingScene.isDone)
         {
-
             yield return null;
         }
 

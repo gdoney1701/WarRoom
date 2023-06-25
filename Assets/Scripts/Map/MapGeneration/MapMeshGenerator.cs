@@ -2,6 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using System.IO;
+using System.Threading.Tasks;
 
 namespace MapMeshGenerator
 {
@@ -165,15 +166,15 @@ namespace MapMeshGenerator
 
         public void OnEnable()
         {
-            MainMenu.sendMapData += GenerateMesh;
+            MainMenu.sendMapData += AsyncGenerateMap;
         }
 
         public void OnDisable()
         {
-            MainMenu.sendMapData -= GenerateMesh;
+            MainMenu.sendMapData -= AsyncGenerateMap;
         }
 
-        public void GenerateMesh(string saveDataPath)
+        async void AsyncGenerateMap(string saveDataPath)
         {
             MeshGenerationData data = new MeshGenerationData();
             SaveData loadedSave = new SaveData();
@@ -182,21 +183,19 @@ namespace MapMeshGenerator
             data.provinceList = GetProvinceData(out data.imageTexture, loadedSave);
             data.faceMaterial = faceMaterial;
             imagePixels = data.imageTexture.GetPixels32();
-            
-            //Read the input data json containing tile tags and tile colors
-            FindVertexPixels(data);
+
+            await Task.Run(() => FindVertexPixels(data));
 
             for (int i = 0; i < data.provinceList.Length; i++)
             {
                 data.mapTiles.Add(data.provinceList[i].Tag, TriangulateVertices(data.provinceList[i]));
             }
-            for(int i = 0; i < data.provinceList.Length; i++)
+            for (int i = 0; i < data.provinceList.Length; i++)
             {
                 data.AssignNeighbors(data.provinceList[i]);
             }
 
             data.columnArray = CreateVerticalGroups(data, 12);
-
 
             if (Application.isPlaying)
             {
