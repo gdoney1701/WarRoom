@@ -98,6 +98,10 @@ public class PlayerController : MonoBehaviour
 
     public void OnSelect(InputAction.CallbackContext context)
     {
+        if (UnityEngine.EventSystems.EventSystem.current.IsPointerOverGameObject())
+        {
+            return;
+        }
         if (context.performed)
         {
             Ray ray = mainCamera.ScreenPointToRay(Mouse.current.position.ReadValue());

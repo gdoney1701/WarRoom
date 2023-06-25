@@ -636,7 +636,6 @@ public class FactionLayoutEditor : EditorWindow
 
     private void LoadFactionIcon()
     {
-        Debug.Log("Loading Faction Icon");
         string path = belligerentData.WarParticipants[FactionIndex].IconPath;
         if (string.IsNullOrEmpty(path))
         {
