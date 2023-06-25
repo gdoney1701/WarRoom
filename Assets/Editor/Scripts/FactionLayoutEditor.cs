@@ -23,6 +23,7 @@ public class FactionLayoutEditor : EditorWindow
     private float _zoom = 1.1f;
     private Vector2 _zoomCoordsOrigin = Vector2.zero;
     private Color32 selectedColor = new Color32(255, 255, 255, 255);
+    private Sprite factionIcon;
     private Color32 SelectedColor
     {
         get { return selectedColor; }
@@ -66,11 +67,24 @@ public class FactionLayoutEditor : EditorWindow
     private Vector2 stackScroll = Vector2.zero;
 
     private int factionIndex = 0;
+    private int FactionIndex
+    {
+        get { return factionIndex; }
+        set
+        {
+            if(factionIndex != value)
+            {
+                factionIndex = value;
+                LoadFactionIcon();
+            }
+
+        }
+    }
 
 
     void AddSelectedStack()
     {
-        FactionData currentData = belligerentData.WarParticipants[factionIndex];
+        FactionData currentData = belligerentData.WarParticipants[FactionIndex];
 
         StackData newStack = new StackData("57");
         newStack.TileTag = selectedTag;
@@ -80,7 +94,7 @@ public class FactionLayoutEditor : EditorWindow
     }
     void AddSelectedOccupation()
     {
-        FactionData currentData = belligerentData.WarParticipants[factionIndex];
+        FactionData currentData = belligerentData.WarParticipants[FactionIndex];
 
         TileData newData = new TileData { TileColor = ColorToVector(selectedColor), TileTag = selectedTag };
 
@@ -358,10 +372,10 @@ public class FactionLayoutEditor : EditorWindow
     {
         GUILayout.BeginVertical(new GUIStyle("GroupBox"));
 
-        factionIndex = EditorGUILayout.Popup(factionIndex, BelligerentNames);
+        FactionIndex = EditorGUILayout.Popup(FactionIndex, BelligerentNames);
 
         GUILayout.BeginVertical(new GUIStyle("GroupBox"));
-        FactionData selectedFaction = belligerentData.WarParticipants[factionIndex];
+        FactionData selectedFaction = belligerentData.WarParticipants[FactionIndex];
 
         GUILayout.BeginHorizontal();
         EditorGUILayout.LabelField("Long Name: ", GUILayout.Width(80f));
@@ -389,12 +403,15 @@ public class FactionLayoutEditor : EditorWindow
         selectedFaction.AllianceID = EditorGUILayout.IntField(selectedFaction.AllianceID);
         GUILayout.EndHorizontal();
 
+        factionIcon = (Sprite)EditorGUILayout.ObjectField("Faction Icon:", factionIcon, typeof(Sprite), false);
+
         GUILayout.EndVertical();
 
         GUILayout.BeginHorizontal();
         GUILayout.FlexibleSpace();
         if (GUILayout.Button("Save"))
         {
+            belligerentData.WarParticipants[factionIndex].IconPath = AssetDatabase.GetAssetPath(factionIcon);
             belligerentData.SaveToFile(belligerentDataName);
             RefreshBelligerentPopup();
             if (!string.IsNullOrEmpty(belligerentDataName))
@@ -415,8 +432,8 @@ public class FactionLayoutEditor : EditorWindow
         }
         if(GUILayout.Button("Remove Current"))
         {
-            belligerentData.DecreaseArray(factionIndex);
-            factionIndex = 0;
+            belligerentData.DecreaseArray(FactionIndex);
+            FactionIndex = 0;
             RefreshBelligerentPopup();
             Repaint();
         }
@@ -429,7 +446,7 @@ public class FactionLayoutEditor : EditorWindow
     {
         GUILayout.BeginVertical(new GUIStyle("GroupBox"));
 
-        factionIndex = EditorGUILayout.Popup(factionIndex, BelligerentNames);
+        FactionIndex = EditorGUILayout.Popup(FactionIndex, BelligerentNames);
 
         armyToolbarInt = GUILayout.Toolbar(armyToolbarInt, armyToolbarStrings);
 
@@ -451,7 +468,7 @@ public class FactionLayoutEditor : EditorWindow
     {
         GUILayout.BeginVertical(new GUIStyle("GroupBox"));
         occupationScroll = GUILayout.BeginScrollView(occupationScroll);
-        FactionData currentFaction = belligerentData.WarParticipants[factionIndex];
+        FactionData currentFaction = belligerentData.WarParticipants[FactionIndex];
         for(int i = 0; i < currentFaction.TileControl.Length; i++)
         {
             GUILayout.BeginHorizontal();
@@ -480,7 +497,7 @@ public class FactionLayoutEditor : EditorWindow
     }
     private void DrawStacks()
     {
-        FactionData currentFaction = belligerentData.WarParticipants[factionIndex];
+        FactionData currentFaction = belligerentData.WarParticipants[FactionIndex];
         GUILayout.BeginVertical(new GUIStyle("GroupBox"));
         stackScroll = GUILayout.BeginScrollView(stackScroll);
 
@@ -606,6 +623,7 @@ public class FactionLayoutEditor : EditorWindow
         if (belligerentData.WarParticipants.Length != 0)
         {
             RefreshBelligerentPopup();
+            LoadFactionIcon();
         }
         else
         {
@@ -614,6 +632,20 @@ public class FactionLayoutEditor : EditorWindow
                 belligerentDataName = string.Empty;
             }
         }
+    }
+
+    private void LoadFactionIcon()
+    {
+        Debug.Log("Loading Faction Icon");
+        string path = belligerentData.WarParticipants[FactionIndex].IconPath;
+        if (string.IsNullOrEmpty(path))
+        {
+            factionIcon = null;
+            return;
+        }
+
+        factionIcon = (Sprite)AssetDatabase.LoadAssetAtPath(path, typeof(Sprite));
+        Repaint();
     }
 
     private void ImportMapData(bool newData = false)

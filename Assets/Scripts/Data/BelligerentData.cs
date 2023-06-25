@@ -75,6 +75,7 @@ public class FactionData
     public Vector3Int Color = Vector3Int.zero;
     public string ID = "hre";
     public int AllianceID = 0;
+    public string IconPath = string.Empty;
 
     public TileData[] TileControl = new TileData[] { new TileData()};
     public StackData[] StackArray = new StackData[] { new StackData("hre") };

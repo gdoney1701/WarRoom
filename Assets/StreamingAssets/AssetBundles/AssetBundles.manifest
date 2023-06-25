@@ -1,7 +1,10 @@
 ManifestFileVersion: 0
-CRC: 1579364863
+CRC: 410359152
 AssetBundleManifest:
   AssetBundleInfos:
     Info_0:
       Name: textures/maps
+      Dependencies: {}
+    Info_1:
+      Name: icons/flags
       Dependencies: {}

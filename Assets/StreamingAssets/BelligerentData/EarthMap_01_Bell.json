@@ -3,12 +3,13 @@
         {
             "LongName": "United States",
             "Color": {
-                "x": 104,
-                "y": 192,
-                "z": 148
+                "x": 94,
+                "y": 154,
+                "z": 124
             },
             "ID": "usa",
             "AllianceID": 0,
+            "IconPath": "Assets/Art/UI/Icons/icon_us.png",
             "TileControl": [
                 {
                     "TileColor": {
@@ -123,12 +124,13 @@
         {
             "LongName": "Great Britain",
             "Color": {
-                "x": 231,
-                "y": 228,
-                "z": 169
+                "x": 204,
+                "y": 202,
+                "z": 146
             },
             "ID": "gb",
             "AllianceID": 0,
+            "IconPath": "Assets/Art/UI/Icons/icon_uk.png",
             "TileControl": [
                 {
                     "TileColor": {
@@ -233,6 +235,7 @@
             },
             "ID": "ussr",
             "AllianceID": 0,
+            "IconPath": "Assets/Art/UI/Icons/icon_ussr.png",
             "TileControl": [
                 {
                     "TileColor": {
@@ -327,6 +330,7 @@
             },
             "ID": "ger",
             "AllianceID": 1,
+            "IconPath": "Assets/Art/UI/Icons/icon_ger.png",
             "TileControl": [
                 {
                     "TileColor": {
@@ -431,6 +435,7 @@
             },
             "ID": "ita",
             "AllianceID": 1,
+            "IconPath": "Assets/Art/UI/Icons/icon_Italy.png",
             "TileControl": [
                 {
                     "TileColor": {

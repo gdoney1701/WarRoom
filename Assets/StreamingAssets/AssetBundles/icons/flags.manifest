@@ -1,0 +1,23 @@
+ManifestFileVersion: 0
+CRC: 3421938890
+Hashes:
+  AssetFileHash:
+    serializedVersion: 2
+    Hash: de11e5b96dcf2e437dfc0151291fcdd7
+  TypeTreeHash:
+    serializedVersion: 2
+    Hash: c21d61fe394c58399df3c6fb5c7c99b3
+HashAppended: 0
+ClassTypes:
+- Class: 28
+  Script: {instanceID: 0}
+- Class: 213
+  Script: {instanceID: 0}
+SerializeReferenceClassIdentifiers: []
+Assets:
+- Assets/Art/UI/Icons/icon_ussr.png
+- Assets/Art/UI/Icons/icon_uk.png
+- Assets/Art/UI/Icons/icon_ger.png
+- Assets/Art/UI/Icons/icon_us.png
+- Assets/Art/UI/Icons/icon_Italy.png
+Dependencies: []
