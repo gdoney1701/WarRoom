@@ -9,7 +9,7 @@ namespace MapMeshGenerator
     public class MeshGenerationData
     {
         //Container class for input textures and materials. Could potentially be made redundant
-        public Texture2D imageTexture;
+        public Vector2Int imageScale;
         public Material faceMaterial;
         public Vector2[] vertexPositions = new Vector2[0];
         public Color32[] outlinePixels = new Color32[0];
@@ -149,8 +149,9 @@ namespace MapMeshGenerator
         private bool useTestGeo;
 
         Color32[] imagePixels = new Color32[0];
-        Vector2Int imageScale = Vector2Int.zero;
+        //Vector2Int imageScale = Vector2Int.zero;
         float maxImageLength = 0;
+        MeshGenerationData meshData;
 
         public delegate void OnMapLoad(MeshGenerationData data, SaveData saveData);
         public static event OnMapLoad onMapLoad;
@@ -176,26 +177,26 @@ namespace MapMeshGenerator
 
         async void AsyncGenerateMap(string saveDataPath)
         {
-            MeshGenerationData data = new MeshGenerationData();
+            meshData = new MeshGenerationData();
             SaveData loadedSave = new SaveData();
             loadedSave.LoadFromFile(saveDataPath);
 
-            data.provinceList = GetProvinceData(out data.imageTexture, loadedSave);
-            data.faceMaterial = faceMaterial;
-            imagePixels = data.imageTexture.GetPixels32();
+            GetProvinceData(meshData, loadedSave);
+            meshData.faceMaterial = faceMaterial;
 
-            await Task.Run(() => FindVertexPixels(data));
 
-            for (int i = 0; i < data.provinceList.Length; i++)
+            await Task.Run(() => FindVertexPixels(meshData));
+
+            for (int i = 0; i < meshData.provinceList.Length; i++)
             {
-                data.mapTiles.Add(data.provinceList[i].Tag, TriangulateVertices(data.provinceList[i]));
+                meshData.mapTiles.Add(meshData.provinceList[i].Tag, TriangulateVertices(meshData.provinceList[i]));
             }
-            for (int i = 0; i < data.provinceList.Length; i++)
+            for (int i = 0; i < meshData.provinceList.Length; i++)
             {
-                data.AssignNeighbors(data.provinceList[i]);
+                meshData.AssignNeighbors(meshData.provinceList[i]);
             }
 
-            data.columnArray = CreateVerticalGroups(data, 12);
+            meshData.columnArray = CreateVerticalGroups(meshData, 12);
 
             if (Application.isPlaying)
             {
@@ -203,28 +204,28 @@ namespace MapMeshGenerator
 
                 tileContainer.transform.localScale = new Vector3(0.1f, 0.1f, 0.1f);
 
-                onMapLoad?.Invoke(data, loadedSave);
+                onMapLoad?.Invoke(meshData, loadedSave);
             }
         }
 
-        private ProvinceData[] GetProvinceData(out Texture2D inputTexture, SaveData loadedData)
+        private void GetProvinceData(MeshGenerationData data, SaveData loadedData)
         {
             MapColorData mapData = loadedData.loadedMapData;
 
             var assetBundle = AssetBundle.LoadFromFile(Path.Combine(Application.streamingAssetsPath, "AssetBundles/textures/maps"));
-            inputTexture = assetBundle.LoadAsset<Texture2D>(mapData.MapTexturePath);
-            imageScale.x = inputTexture.width;
-            imageScale.y = inputTexture.height;
+            Texture2D loadedTexture = assetBundle.LoadAsset<Texture2D>(mapData.MapTexturePath);
+            data.imageScale.x = loadedTexture.width;
+            data.imageScale.y = loadedTexture.height;
+            imagePixels = loadedTexture.GetPixels32();
 
-            maxImageLength = Mathf.Max(imageScale.x, imageScale.y);
-
+            maxImageLength = Mathf.Max(data.imageScale.x, data.imageScale.y);
             ProvinceData[] newData = new ProvinceData[mapData.TileList.Count];
             for(int i = 0; i<newData.Length; i++)
             {
                 newData[i] = TileDataToProvinceData(mapData.TileList[i]);
             }
 
-            return newData;
+            data.provinceList = newData;
         }
 
         private ProvinceData TileDataToProvinceData(TileData tileData)
@@ -471,11 +472,11 @@ namespace MapMeshGenerator
         //Checks to make sure that the UV's can pull useable indices
         private bool ValidUVCheck(Vector2Int start)
         {
-            if(start.x < 0 || start.x >= imageScale.x)
+            if(start.x < 0 || start.x >= meshData.imageScale.x)
             {
                 return false;
             }
-            if(start.y < 0 || start.y >= imageScale.y)
+            if(start.y < 0 || start.y >= meshData.imageScale.y)
             {
                 return false;
             }
@@ -485,15 +486,15 @@ namespace MapMeshGenerator
         private Vector2Int ConvertIndexToUV(int i)
         {
             Vector2Int result = Vector2Int.zero;
-            float r = (float)i / imageScale.x;
+            float r = (float)i / meshData.imageScale.x;
             result.y = Mathf.FloorToInt(r);
-            result.x = Mathf.RoundToInt((r - result.y) * imageScale.x);
+            result.x = Mathf.RoundToInt((r - result.y) * meshData.imageScale.x);
             return result;
         }
 
         private int ConvertUVToIndex(Vector2Int input)
         {
-            return (input.y * imageScale.x) + input.x;
+            return (input.y * meshData.imageScale.x) + input.x;
         }
 
         private Vector2Int[] GetNeighbors(Vector2Int start)
@@ -516,7 +517,7 @@ namespace MapMeshGenerator
         private bool CheckForColorEdge(Vector2Int inputUV, Color32 pixelColor)
         {
             //Check the top and bottom pixels
-            if(inputUV.y - 1 >= 0 && inputUV.y + 1 < imageScale.y)
+            if(inputUV.y - 1 >= 0 && inputUV.y + 1 < meshData.imageScale.y)
             {
                 if (!imagePixels[ConvertUVToIndex(new Vector2Int(inputUV.x, inputUV.y + 1))].Equals(pixelColor))
                 {
@@ -529,7 +530,7 @@ namespace MapMeshGenerator
             }
 
             //Check the left and right pixels
-            if (inputUV.x - 1 >= 0 && inputUV.x + 1 < imageScale.x)
+            if (inputUV.x - 1 >= 0 && inputUV.x + 1 < meshData.imageScale.x)
             {
                 if (!imagePixels[ConvertUVToIndex(new Vector2Int(inputUV.x - 1, inputUV.y))].Equals(pixelColor))
                 {
@@ -666,7 +667,7 @@ namespace MapMeshGenerator
 
         GameObject[] CreateVerticalGroups(MeshGenerationData data, int columnNumber)
         {
-            float columnWidth = imageScale.x / columnNumber;
+            float columnWidth = data.imageScale.x / columnNumber;
             GameObject[] columnContainer = new GameObject[columnNumber];
             for(int i = 0; i < columnNumber; i++)
             {

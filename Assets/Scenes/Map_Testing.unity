@@ -137,7 +137,7 @@ GameObject:
   - component: {fileID: 100820363}
   - component: {fileID: 100820362}
   m_Layer: 5
-  m_Name: Image
+  m_Name: Background
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -179,7 +179,7 @@ MonoBehaviour:
   m_BlockingObjects: 0
   m_BlockingMask:
     serializedVersion: 2
-    m_Bits: 0
+    m_Bits: 2147483647
 --- !u!223 &100820363
 Canvas:
   m_ObjectHideFlags: 0
@@ -816,7 +816,7 @@ GameObject:
   - component: {fileID: 871276304}
   - component: {fileID: 871276303}
   m_Layer: 5
-  m_Name: Image
+  m_Name: Background
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -1364,6 +1364,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 1377889695}
+  - component: {fileID: 1377889696}
   m_Layer: 5
   m_Name: DisableGroup
   m_TagString: Untagged
@@ -1394,6 +1395,18 @@ RectTransform:
   m_AnchoredPosition: {x: 0, y: 0}
   m_SizeDelta: {x: 100, y: 100}
   m_Pivot: {x: 0.5, y: 0.5}
+--- !u!225 &1377889696
+CanvasGroup:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1377889694}
+  m_Enabled: 1
+  m_Alpha: 1
+  m_Interactable: 1
+  m_BlocksRaycasts: 1
+  m_IgnoreParentGroups: 1
 --- !u!1 &1407729784
 GameObject:
   m_ObjectHideFlags: 0
@@ -1841,6 +1854,7 @@ GameObject:
   m_Component:
   - component: {fileID: 1996102985}
   - component: {fileID: 1996102986}
+  - component: {fileID: 1996102987}
   m_Layer: 5
   m_Name: LoadingScreen
   m_TagString: Untagged
@@ -1884,6 +1898,18 @@ MonoBehaviour:
   rotateComponent: {fileID: 1572491467}
   rotationSpeed: 90
   disableGroup: {fileID: 1407729784}
+--- !u!225 &1996102987
+CanvasGroup:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1996102984}
+  m_Enabled: 1
+  m_Alpha: 1
+  m_Interactable: 1
+  m_BlocksRaycasts: 1
+  m_IgnoreParentGroups: 0
 --- !u!1 &2050763137
 GameObject:
   m_ObjectHideFlags: 0

@@ -63,7 +63,7 @@ public class PlayerController : MonoBehaviour
     void RegisterMapObjects(MapMeshGenerator.MeshGenerationData data, SaveData loadedSave)
     {
         mapColumns = data.columnArray;
-        maxDistance = data.imageTexture.width;
+        maxDistance = data.imageScale.x;
         columnWidth = (int)maxDistance / mapColumns.Length;
         Debug.Log(columnWidth);
         readyToMove = true;
