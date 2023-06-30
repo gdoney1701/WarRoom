@@ -324,9 +324,9 @@
         {
             "LongName": "Germany",
             "Color": {
-                "x": 115,
-                "y": 115,
-                "z": 115
+                "x": 48,
+                "y": 48,
+                "z": 48
             },
             "ID": "ger",
             "AllianceID": 1,
