@@ -42,7 +42,6 @@ GameObject:
   - component: {fileID: 3220649756088310186}
   - component: {fileID: 3220649756088310191}
   - component: {fileID: 3220649756088310188}
-  - component: {fileID: 3220649756088310189}
   m_Layer: 7
   m_Name: Canvas
   m_TagString: Untagged
@@ -115,23 +114,6 @@ MonoBehaviour:
   m_DefaultSpriteDPI: 96
   m_DynamicPixelsPerUnit: 1
   m_PresetInfoIsWorld: 1
---- !u!114 &3220649756088310189
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 3220649756088310187}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: dc42784cf147c0c48a680349fa168899, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  m_IgnoreReversedGraphics: 1
-  m_BlockingObjects: 0
-  m_BlockingMask:
-    serializedVersion: 2
-    m_Bits: 4294967295
 --- !u!1 &3220649756697780392
 GameObject:
   m_ObjectHideFlags: 0
@@ -277,6 +259,7 @@ GameObject:
   m_Component:
   - component: {fileID: 3220649757148521295}
   - component: {fileID: 3220649757148521292}
+  - component: {fileID: 1332912200506779246}
   m_Layer: 7
   m_Name: StackPrefab
   m_TagString: Untagged
@@ -317,3 +300,18 @@ MonoBehaviour:
     type: 3}
   visualParent: {fileID: 3220649755432153427}
   stackID: {fileID: 3220649756697780395}
+  stackCollider: {fileID: 1332912200506779246}
+  ownerID: 
+--- !u!65 &1332912200506779246
+BoxCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3220649757148521293}
+  m_Material: {fileID: 0}
+  m_IsTrigger: 0
+  m_Enabled: 1
+  serializedVersion: 2
+  m_Size: {x: 1, y: 1, z: 1}
+  m_Center: {x: 0, y: 0, z: 0}

@@ -31,12 +31,39 @@
                     "processors": "",
                     "interactions": "",
                     "initialStateCheck": true
+                },
+                {
+                    "name": "Select_Add",
+                    "type": "Button",
+                    "id": "fd0d1f8e-55af-4d70-a14e-5f9a2b7b1655",
+                    "expectedControlType": "Button",
+                    "processors": "",
+                    "interactions": "",
+                    "initialStateCheck": false
+                },
+                {
+                    "name": "Select_Drag",
+                    "type": "PassThrough",
+                    "id": "a959b231-55c6-4ebd-8b94-52e6bd52f3b1",
+                    "expectedControlType": "Button",
+                    "processors": "",
+                    "interactions": "",
+                    "initialStateCheck": false
+                },
+                {
+                    "name": "Mouse_Movement",
+                    "type": "PassThrough",
+                    "id": "3a72a646-c619-42f1-b0b6-fa590ad1114e",
+                    "expectedControlType": "Vector2",
+                    "processors": "",
+                    "interactions": "",
+                    "initialStateCheck": false
                 }
             ],
             "bindings": [
                 {
                     "name": "",
-                    "id": "be0b0308-80be-4511-84da-3dc8df608f22",
+                    "id": "d3ee863a-7233-4aa1-a01a-93717227ce2e",
                     "path": "<Mouse>/leftButton",
                     "interactions": "",
                     "processors": "",
@@ -86,6 +113,61 @@
                     "processors": "",
                     "groups": "",
                     "action": "Zoom",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "One Modifier",
+                    "id": "07996216-44a3-4a79-aae1-72e6956221e5",
+                    "path": "OneModifier",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "",
+                    "action": "Select_Add",
+                    "isComposite": true,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "modifier",
+                    "id": "358106de-a1c5-4f16-9cc3-e048c3dcd299",
+                    "path": "<Keyboard>/shift",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "",
+                    "action": "Select_Add",
+                    "isComposite": false,
+                    "isPartOfComposite": true
+                },
+                {
+                    "name": "binding",
+                    "id": "c2b3ccb4-3883-4eeb-abeb-5ca598805fb5",
+                    "path": "<Mouse>/leftButton",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "",
+                    "action": "Select_Add",
+                    "isComposite": false,
+                    "isPartOfComposite": true
+                },
+                {
+                    "name": "",
+                    "id": "67f96276-84da-4d46-8472-871bd85e33e8",
+                    "path": "<Mouse>/leftButton",
+                    "interactions": "Hold",
+                    "processors": "",
+                    "groups": "",
+                    "action": "Select_Drag",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "02dcd2b1-81c4-46ce-8177-a84f8029b7af",
+                    "path": "<Mouse>/delta",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "",
+                    "action": "Mouse_Movement",
                     "isComposite": false,
                     "isPartOfComposite": false
                 }

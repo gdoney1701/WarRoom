@@ -126,6 +126,15 @@ public class FactionData
         }
         StackArray = newArray;
     }
+
+    public Color32 VectorToColor()
+    {
+        return new Color32((byte)Color.x, (byte)Color.y, (byte)Color.z, 255);
+    }
+    public void ColorToVector(Color32 entry)
+    {
+        Color = new Vector3Int(entry.r, entry.g, entry.b);
+    }
 }
 
 [System.Serializable]

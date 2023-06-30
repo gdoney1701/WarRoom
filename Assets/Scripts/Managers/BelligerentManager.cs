@@ -35,24 +35,17 @@ public class BelligerentManager : MonoBehaviour
                 tempStack.transform.localPosition = Vector3.zero;
 
                 StackManager tempManager = tempStack.GetComponent<StackManager>();
-                tempManager.UpdateVisuals(VectorToColor(currentFaction.Color), currentFaction.StackArray[i]);
+                tempManager.InitializeStack(currentFaction, i);
             }
 
             for(int i = 0; i < currentFaction.TileControl.Length; i++)
             {
                 MapTile occupiedTile = data.mapTiles[currentFaction.TileControl[i].TileTag];
-                Color32 convertedColor = VectorToColor(currentFaction.Color);
+                Color32 convertedColor = currentFaction.VectorToColor();
                 occupiedTile.SetOccupationVisuals(convertedColor, convertedColor);
             }
         }
     }
 
-    private Color32 VectorToColor(Vector3Int entry)
-    {
-        return new Color32((byte)entry.x, (byte)entry.y, (byte)entry.z, 255);
-    }
-    private Vector3Int ColorToVector(Color32 entry)
-    {
-        return new Vector3Int(entry.r, entry.g, entry.b);
-    }
+
 }
