@@ -14,8 +14,11 @@ public class StackManager : MonoBehaviour
     private TextMeshProUGUI stackID;
     [SerializeField]
     private BoxCollider stackCollider;
+    [SerializeField]
+    private Material selectionMaterial;
 
     private string stackLongTag;
+    private GameObject outLine = null;
 
     public string StackLongTag
     {
@@ -66,6 +69,14 @@ public class StackManager : MonoBehaviour
         stackID.gameObject.transform.Translate(0, counter * 0.25f + 0.125f, 0, Space.World);
 
         UpdateCollider(stackTotal + 1) ;
+
+        if(outLine != null)
+        {
+            outLine.GetComponent<MeshRenderer>().material = selectionMaterial;
+            outLine.transform.localScale = new Vector3(1.125f, landVisual.transform.localScale.y * (stackTotal+1), 1.125f);
+            outLine.transform.localPosition = new Vector3(0, ((stackTotal + 1) * landVisual.transform.localScale.y + 0.05f) / 2f, 0);
+            outLine.SetActive(false);
+        }
     }
 
     private void UpdateCollider(int stackHeight)
@@ -90,8 +101,24 @@ public class StackManager : MonoBehaviour
         ownerID = faction.ID;
         localData = faction.StackArray[stackDataIndex];
         stackLongTag = localData.TroopLongTag;
+        SelectionManager.Instance.AvailableUnits.Add(this);
+        if(outLine != null)
+        {
+            Destroy(outLine);
+        }
+        outLine = Instantiate(landVisual);
+        outLine.transform.SetParent(visualParent);
 
         UpdateVisuals(faction.VectorToColor());
+    }
+
+    public void OnSelect()
+    {
+        outLine.SetActive(true);
+    }
+    public void OnDeselect()
+    {
+        outLine.SetActive(false);
     }
 
 }

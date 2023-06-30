@@ -11,26 +11,4 @@ public class TurnManager : MonoBehaviour
     //    4 - Territory Resolution
     //    5 - Refit and Redeploy <- not going to be part of current goal
 
-    private MapTile selectedTile;
-
-    private void OnEnable()
-    {
-        PlayerController.onTileSelect += SelectTile;
-    }
-
-    private void OnDisable()
-    {
-        PlayerController.onTileSelect -= SelectTile;
-    }
-
-    void SelectTile(MapTile data)
-    {
-        if(selectedTile != null)
-        {
-            selectedTile.SetSelectedVisuals(false);
-        }
-
-        selectedTile = data;
-        selectedTile.SetSelectedVisuals(true);
-    }
 }

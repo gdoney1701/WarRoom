@@ -24,30 +24,12 @@ public class PlayerController : MonoBehaviour
     private Camera mainCamera;
     private float neutralHeight;
 
-    public delegate void OnTileSelect(MapTile selectedTile);
-    public static event OnTileSelect onTileSelect;
-
-    private MapTile selectedTile;
-    public MapTile SelectedTile
-    {
-        get { return selectedTile; }
-        set
-        {
-            if(selectedTile == null | value != selectedTile)
-            {
-                selectedTile = value;
-                onTileSelect?.Invoke(value);
-            }
-        }
-    }
-
     private void Awake()
     {
         mainCamera = Camera.main;
         neutralHeight = (maxCameraHeight + minCameraHeight) / 2;
+        playerInput.enabled = false;
     }
-
-
 
     private void OnEnable()
     {
@@ -65,9 +47,9 @@ public class PlayerController : MonoBehaviour
         mapColumns = data.columnArray;
         maxDistance = data.imageScale.x;
         columnWidth = (int)maxDistance / mapColumns.Length;
-        Debug.Log(columnWidth);
         readyToMove = true;
         zOffset = 0;
+        playerInput.enabled = true;
     }
 
     public void OnCameraMove(InputAction.CallbackContext context)
@@ -98,31 +80,24 @@ public class PlayerController : MonoBehaviour
 
     public void OnSelect(InputAction.CallbackContext context)
     {
-        if (UnityEngine.EventSystems.EventSystem.current.IsPointerOverGameObject())
+        if (context.canceled)
         {
-            return;
-        }
-        if (context.performed)
-        {
-            Ray ray = mainCamera.ScreenPointToRay(Mouse.current.position.ReadValue());
-            RaycastHit hit;
-            if (Physics.Raycast(ray, out hit, 100f, 1 << 6))
-            {
-                try
-                {
-                    SelectedTile = hit.collider.GetComponentInParent<MapTile>();
-                    Debug.Log(selectedTile.TileName);
-                }
-                catch
-                {
-                    Debug.LogError("No Viable MapTile script");
-                }
-            }
-            else
-            {
-                SelectedTile = null;
-            }
+            SelectionManager.Instance.DeselectAll();
+            SelectionManager.Instance.DeselectTile();
 
+            RaycastHit hit;
+            if (Physics.Raycast(mainCamera.ScreenPointToRay(Mouse.current.position.ReadValue()), out hit, 100f, clickMask))
+            {
+
+                if (hit.collider.TryGetComponent(out MapTile mapTile))
+                {
+                    SelectionManager.Instance.SelectTile(mapTile);
+                }
+                else if(hit.collider.TryGetComponent(out StackManager stackManager))
+                {
+                    SelectionManager.Instance.SelectUnits(stackManager);
+                }
+            }
         }
 
     }

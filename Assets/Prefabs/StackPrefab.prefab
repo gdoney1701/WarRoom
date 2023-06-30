@@ -301,6 +301,7 @@ MonoBehaviour:
   visualParent: {fileID: 3220649755432153427}
   stackID: {fileID: 3220649756697780395}
   stackCollider: {fileID: 1332912200506779246}
+  selectionMaterial: {fileID: 2100000, guid: 46eac0bda81649441ba736d7e8d4d89c, type: 2}
   ownerID: 
 --- !u!65 &1332912200506779246
 BoxCollider:

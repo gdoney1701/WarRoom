@@ -58,17 +58,14 @@ public class MapTile : MonoBehaviour
         }
     }
 
-    public void SetSelectedVisuals(bool isSelected)
+    public void OnSelect()
     {
-        if (isSelected)
-        {
-            borderRenderer.material.SetFloat("_Selected", 1);
-        }
-        else
-        {
-            borderRenderer.material.SetFloat("_Selected", 0);
-        }
+        borderRenderer.material.SetFloat("_Selected", 1);
+    }
 
+    public void OnDeselect()
+    {
+        borderRenderer.material.SetFloat("_Selected", 0);
     }
 
     public void SetOccupationVisuals(Color32 backgroundColor, Color32 secondaryColor)
