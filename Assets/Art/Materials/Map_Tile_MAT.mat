@@ -7,12 +7,12 @@ Material:
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_Name: Selected_Stack_MAT
-  m_Shader: {fileID: -6465566751694194690, guid: 510fce0f7e215ab4097185db56ae9d7e,
+  m_Name: Map_Tile_MAT
+  m_Shader: {fileID: -6465566751694194690, guid: f04ae7268baaf5b4f9b28dfa701bf119,
     type: 3}
   m_ValidKeywords: []
   m_InvalidKeywords: []
-  m_LightmapFlags: 4
+  m_LightmapFlags: 2
   m_EnableInstancingVariants: 0
   m_DoubleSidedGI: 0
   m_CustomRenderQueue: -1
@@ -37,10 +37,13 @@ Material:
     m_Floats:
     - _QueueControl: 0
     - _QueueOffset: 0
+    - _Tiling: 350
     m_Colors:
-    - _SelectionColor: {r: 3.560784, g: 1.960784, b: 0.5960785, a: 1}
+    - _BaseColor: {r: 0.6226415, g: 0.6226415, b: 0.6226415, a: 1}
+    - _RimColor: {r: 1, g: 1, b: 1, a: 1}
+    - _SecondaryColor: {r: 0.44339618, g: 0.44339618, b: 0.44339618, a: 1}
   m_BuildTextureStacks: []
---- !u!114 &7740737562208365371
+--- !u!114 &1978893872112925476
 MonoBehaviour:
   m_ObjectHideFlags: 11
   m_CorrespondingSourceObject: {fileID: 0}

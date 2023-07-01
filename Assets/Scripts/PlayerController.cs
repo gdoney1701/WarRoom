@@ -34,12 +34,14 @@ public class PlayerController : MonoBehaviour
     private void OnEnable()
     {
         MapMeshGenerator.MapMeshGenerator.onMapLoad += RegisterMapObjects;
+        PopulateButtons.onGameReady += AllowInput;
         mainCamera = Camera.main;
     }
 
     private void OnDisable()
     {
         MapMeshGenerator.MapMeshGenerator.onMapLoad -= RegisterMapObjects;
+        PopulateButtons.onGameReady -= AllowInput;
     }
 
     void RegisterMapObjects(MapMeshGenerator.MeshGenerationData data, SaveData loadedSave)
@@ -49,6 +51,10 @@ public class PlayerController : MonoBehaviour
         columnWidth = (int)maxDistance / mapColumns.Length;
         readyToMove = true;
         zOffset = 0;
+    }
+
+    void AllowInput()
+    {
         playerInput.enabled = true;
     }
 

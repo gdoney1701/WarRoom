@@ -155,10 +155,6 @@ namespace MapMeshGenerator
 
         public delegate void OnMapLoad(MeshGenerationData data, SaveData saveData);
         public static event OnMapLoad onMapLoad;
-        //private void Start()
-        //{
-        //    GenerateMesh();
-        //}
 
         public void Awake()
         {
