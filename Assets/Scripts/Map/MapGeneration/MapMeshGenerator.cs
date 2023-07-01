@@ -133,12 +133,8 @@ namespace MapMeshGenerator
 
     public class MapMeshGenerator : MonoBehaviour
     {
-        //[SerializeField]
-        //private Texture2D inputTexture;
         [SerializeField]
         private Material faceMaterial;
-        //[SerializeField]
-        //private string colorDataPath = "SmallMapDemo";
         [SerializeField]
         private GameObject tileContainer;
         [SerializeField]
@@ -155,11 +151,6 @@ namespace MapMeshGenerator
 
         public delegate void OnMapLoad(MeshGenerationData data, SaveData saveData);
         public static event OnMapLoad onMapLoad;
-
-        public void Awake()
-        {
-            
-        }
 
         public void OnEnable()
         {
@@ -196,10 +187,7 @@ namespace MapMeshGenerator
 
             if (Application.isPlaying)
             {
-                //float uniScale = (mapScale * 64f) / inputTexture.width;
-
                 tileContainer.transform.localScale = new Vector3(0.1f, 0.1f, 0.1f);
-
                 onMapLoad?.Invoke(meshData, loadedSave);
             }
         }
@@ -442,26 +430,6 @@ namespace MapMeshGenerator
                     }
                 }
             }
-            //Doesn't work because some Non Main Points don't have corresponding UV points on the other edge loop
-
-            //if (!isMainPoint)
-            //{
-            //    Debug.LogWarning(string.Format("Point {0} has no corner neighbors, attempting adjacent", startPos));
-            //    for(int i = 3; i > 0; i--)
-            //    {
-            //        Color32 adjacentColor = imagePixels[ConvertUVToIndex(neighbors[i])];
-            //        Debug.Log(string.Format("Point {0}, Neighbor {1} has color {2}", startPos, neighbors[i], adjacentColor));
-            //        if (!adjacentColor.Equals(baseColor))
-            //        {
-            //            isMainPoint = true;
-            //            mainPointUV.Add(new Vector2(
-            //                (neighbors[i].x + startPos.x) / 2f,
-            //                (neighbors[i].y + startPos.y) / 2f
-            //                ));
-            //            break;
-            //        }
-            //    }
-            //}
             return isMainPoint;
         }
 
