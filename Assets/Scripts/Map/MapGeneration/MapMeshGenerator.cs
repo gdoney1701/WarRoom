@@ -47,7 +47,7 @@ namespace MapMeshGenerator
             Center = new Vector2((min.x + max.x) / 2, (min.y + max.y) / 2);
 
             Radius = Vector2.Distance(Center, max);
-            Dist = SignedDistance(vertices);
+            Dist = SDFHelperMethods.SignedDistance(vertices, Center);
             CellMax = Dist + Radius;
         }
         public Vector2 MaxPoint { get; set; }
@@ -56,54 +56,6 @@ namespace MapMeshGenerator
         public float Radius { get; set; }
         public float Dist { get; set; }
         public float CellMax { get; set; }
-
-        float SignedDistance(Vector2[] vertices)
-        {
-            bool inside = false;
-            float minDistSq = float.MaxValue;
-
-            for (int i = 0, j = vertices.Length - 1; i < vertices.Length; j = i++)
-            {
-                Vector2 a = vertices[i];
-                Vector2 b = vertices[j];
-
-                if ((((a.y <= Center.y) && (Center.y < b.y)) ||
-                    ((b.y <= Center.y) && (Center.y < a.y))) &&
-                    (Center.x < (b.x - a.x) * (Center.y - a.y) / (b.y - a.y) + a.x))
-                    inside = !inside;
-                minDistSq = Mathf.Min(minDistSq, SegmentDistance(a, b, Center));
-            }
-
-            return (inside ? 1 : -1) * Mathf.Sqrt(minDistSq);
-        }
-        float SegmentDistance(Vector2 a, Vector2 b, Vector2 p)
-        {
-            float x = a.x;
-            float y = a.y;
-            float dx = b.x - x;
-            float dy = b.y - y;
-
-            if (dx != 0 || dy != 0)
-            {
-                float t = ((p.x - x) * dx + (p.y - y) * dy) / (dx * dx + dy * dy);
-
-                if (t > 1)
-                {
-                    x = b.x;
-                    y = b.y;
-                }
-                else if (t > 0)
-                {
-                    x += dx * t;
-                    y += dy * t;
-                }
-            }
-
-            dx = p.x - x;
-            dy = p.y - y;
-
-            return dx * dx + dy * dy;
-        }
 
         public void SubdivideCell(Vector2[]vertices, Queue<SDFCell> CellQueue)
         {
@@ -514,19 +466,19 @@ namespace MapMeshGenerator
             Vector2[] vertices2D = new Vector2[provinceData.EdgeVertices.Length];
             Vector3[] vertices = new Vector3[provinceData.EdgeVertices.Length];
 
-            Vector2 minPoint = provinceData.EdgeVertices[0].Pos;
-            Vector2 maxPoint = provinceData.EdgeVertices[0].Pos;
+            //Vector2 minPoint = provinceData.EdgeVertices[0].Pos;
+            //Vector2 maxPoint = provinceData.EdgeVertices[0].Pos;
 
             for(int i = 0; i < provinceData.EdgeVertices.Length; i++)
             {
                 vertices2D[i] = provinceData.EdgeVertices[i].Pos;
                 vertices[i] = new Vector3(vertices2D[i].x, 0, vertices2D[i].y);
 
-                minPoint = Vector2.Min(minPoint, vertices2D[i]);
-                maxPoint = Vector2.Max(maxPoint, vertices2D[i]);               
+                //minPoint = Vector2.Min(minPoint, vertices2D[i]);
+                //maxPoint = Vector2.Max(maxPoint, vertices2D[i]);               
             }
-            provinceData.MaxPoint = maxPoint;
-            provinceData.MinPoint = minPoint;
+            //provinceData.MaxPoint = maxPoint;
+            //provinceData.MinPoint = minPoint;
 
             Triangulator tr = new Triangulator(vertices2D);
             int[] indices = tr.Triangulate();
@@ -541,25 +493,27 @@ namespace MapMeshGenerator
             msh.RecalculateNormals();
             msh.RecalculateBounds();
             msh.RecalculateTangents();
-            msh.uv = GenerateUVs(vertices2D, minPoint, maxPoint);
+            msh.uv = GenerateUVs(vertices2D, msh.bounds);
             msh.uv2 = GenerateUVs(vertices2D, new Vector2(0,0), new Vector2(maxImageLength, maxImageLength)) ;
+
+            Texture2D sdf = CreateRuntimeSDF(vertices2D, msh.bounds);
 
             GameObject newTile = Instantiate(tilePrefab, tileContainer.transform);
             newTile.transform.position = Vector3.zero;
             MapTile mapTile = newTile.GetComponent<MapTile>();
 
             mapTile.InitializePrefab(
-                provinceData, msh, faceMaterial, CalculatePOI(vertices2D,minPoint, maxPoint), maxPoint, minPoint);
+                provinceData, msh, faceMaterial, CalculatePOI(vertices2D, msh.bounds), msh.bounds, sdf);
 
             return mapTile;
         }
-        
+
         Vector2[] GenerateUVs(Vector2[] vertices2D, Vector2 minPoint, Vector2 maxPoint)
         {
             Vector2[] uvs = new Vector2[vertices2D.Length];
             float uvScale = Mathf.Max(maxPoint.x - minPoint.x, maxPoint.y - minPoint.y);
 
-            for(int i = 0; i < vertices2D.Length; i++)
+            for (int i = 0; i < vertices2D.Length; i++)
             {
                 uvs[i] = new Vector2((vertices2D[i].x - minPoint.x) / uvScale, (vertices2D[i].y - minPoint.y) / uvScale);
             }
@@ -567,13 +521,51 @@ namespace MapMeshGenerator
             return uvs;
         }
 
-        Vector3 CalculatePOI(Vector2[] vertices, Vector2 minPoint, Vector2 maxPoint)
+        Vector2[] GenerateUVs(Vector2[] vertices2D, Bounds bounds)
         {
-            float uvScale = Mathf.Max(maxPoint.x - minPoint.x, maxPoint.y - minPoint.y);
-            Vector2 uvMaxPoint = new Vector2(minPoint.x + uvScale, minPoint.y + uvScale);
+            Vector2[] uvs = new Vector2[vertices2D.Length];
+
+            for (int i = 0; i < vertices2D.Length; i++)
+            {
+                uvs[i] = new Vector2((vertices2D[i].x - bounds.min.x) / bounds.size.x, (vertices2D[i].y - bounds.min.z) / bounds.size.z);
+            }
+
+            return uvs;
+        }
+
+        public Texture2D CreateRuntimeSDF(Vector2[] points, Bounds meshBounds)
+        {
+            int textureSize = 64;
+            Texture2D result = new Texture2D(textureSize, textureSize);
+
+            for (int y = 0; y < textureSize; y++)
+            {
+                for (int x = 0; x < textureSize; x++)
+                {
+                    Vector2 worldSpace = ConvertUVToPos(new Vector2(x, y), meshBounds, textureSize);
+                    float signedDistance = SDFHelperMethods.SignedDistance(points, worldSpace) / 10f;
+                    float newColor = signedDistance > 0 ? signedDistance : 0;
+                    result.SetPixel(x, y, new Color(newColor, newColor, newColor));
+                }
+            }
+
+            result.Apply();
+            return result;
+        }
+
+        Vector2 ConvertUVToPos(Vector2 uvInput, Bounds bounds, int textureSize)
+        {
+            Vector2 result = new Vector2((float)uvInput.x / textureSize * bounds.size.x + bounds.min.x, (float)uvInput.y / textureSize * bounds.size.z + bounds.min.z);
+            return result;
+        }
+
+        Vector3 CalculatePOI(Vector2[] vertices, Bounds bounds)
+        {
+            //float uvScale = Mathf.Max(maxPoint.x - minPoint.x, maxPoint.y - minPoint.y);
+            //Vector2 uvMaxPoint = new Vector2(minPoint.x + uvScale, minPoint.y + uvScale);
             bool foundInterior = false;
 
-            SDFCell initialCell = new SDFCell(minPoint, uvMaxPoint, vertices);
+            SDFCell initialCell = new SDFCell(new Vector2(bounds.min.x, bounds.min.z), new Vector2(bounds.max.x, bounds.max.z), vertices);
             SDFCell bestCell = initialCell;
 
             Queue<SDFCell> frontier = new Queue<SDFCell>();
