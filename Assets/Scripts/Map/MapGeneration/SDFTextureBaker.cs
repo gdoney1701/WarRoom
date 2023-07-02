@@ -8,6 +8,12 @@ public class SDFTextureBaker: MonoBehaviour
     Material testMAT;
     [SerializeField]
     int textureSize = 32;
+    [SerializeField]
+    int edgeSoftner = 10;
+    [SerializeField]
+    Vector2 xOffset = Vector2.zero;
+    [SerializeField]
+    Vector2 yOffset = Vector2.zero;
 
     private void Awake()
     {
@@ -49,6 +55,7 @@ public class SDFTextureBaker: MonoBehaviour
         msh.uv = GenerateUVs(vertices2D, msh.bounds);
 
         GameObject newTile = new GameObject();
+        newTile.name = string.Format("{0}_Tile", gameObject.name);
 
         var mR = newTile.AddComponent<MeshRenderer>();
         var mF = newTile.AddComponent<MeshFilter>();
@@ -86,7 +93,7 @@ public class SDFTextureBaker: MonoBehaviour
             for(int x = 0; x < textureSize; x++)
             {
                 Vector2 worldSpace = ConvertUVToPos(new Vector2(x, y), meshBounds);
-                float signedDistance = SDFHelperMethods.SignedDistance(points, worldSpace);
+                float signedDistance = SDFHelperMethods.SignedDistance(points, worldSpace) / edgeSoftner;
 
                 float newColor = signedDistance > 0 ? signedDistance : 0;
                 //Debug.Log(string.Format("New SDF Value = {0}", newColor));
@@ -107,7 +114,9 @@ public class SDFTextureBaker: MonoBehaviour
 
     Vector2 ConvertUVToPos(Vector2 uvInput, Bounds bounds)
     {
-        Vector2 result = new Vector2(uvInput.x / textureSize * bounds.size.x + bounds.min.x, uvInput.y / textureSize * bounds.size.z + bounds.min.z);
+        float xMod = uvInput.x > (textureSize / 2) ? uvInput.x + xOffset.x : uvInput.x + xOffset.y;
+        float yMod = uvInput.y > (textureSize / 2) ? uvInput.y + yOffset.x : uvInput.y + yOffset.y;
+        Vector2 result = new Vector2(xMod / textureSize * bounds.size.x + bounds.min.x, yMod / textureSize * bounds.size.z + bounds.min.z);
         return result;
     }
 

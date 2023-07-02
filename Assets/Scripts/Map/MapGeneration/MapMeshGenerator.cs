@@ -496,6 +496,7 @@ namespace MapMeshGenerator
             msh.uv = GenerateUVs(vertices2D, msh.bounds);
             msh.uv2 = GenerateUVs(vertices2D, new Vector2(0,0), new Vector2(maxImageLength, maxImageLength)) ;
 
+            provinceData.MaxPoint = new Vector2(msh.bounds.max.x, msh.bounds.max.z);
             Texture2D sdf = CreateRuntimeSDF(vertices2D, msh.bounds);
 
             GameObject newTile = Instantiate(tilePrefab, tileContainer.transform);
@@ -542,8 +543,8 @@ namespace MapMeshGenerator
             {
                 for (int x = 0; x < textureSize; x++)
                 {
-                    Vector2 worldSpace = ConvertUVToPos(new Vector2(x, y), meshBounds, textureSize);
-                    float signedDistance = SDFHelperMethods.SignedDistance(points, worldSpace) / 10f;
+                    Vector2 worldSpace = ConvertUVToPos(new Vector2(x + 0.5f, y + 0.5f), meshBounds, textureSize);
+                    float signedDistance = SDFHelperMethods.SignedDistance(points, worldSpace) / 30f;
                     float newColor = signedDistance > 0 ? signedDistance : 0;
                     result.SetPixel(x, y, new Color(newColor, newColor, newColor));
                 }

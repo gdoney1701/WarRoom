@@ -356,6 +356,285 @@ Transform:
   m_Father: {fileID: 0}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!1 &1033509999
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 1033510001}
+  - component: {fileID: 1033510000}
+  m_Layer: 0
+  m_Name: SDF_Tester_06
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!114 &1033510000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1033509999}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 8c60b9df5ffe6bc47a1962bbd478ca05, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  meshPoints:
+  - {x: 701.5, y: 807.5}
+  - {x: 709.5, y: 809.5}
+  - {x: 714.5, y: 809.5}
+  - {x: 725.5, y: 822.5}
+  - {x: 732.5, y: 833.5}
+  - {x: 739.5, y: 838.5}
+  - {x: 739.5, y: 843.5}
+  - {x: 747.5, y: 845.5}
+  - {x: 754.5, y: 845.5}
+  - {x: 755.5, y: 854.5}
+  - {x: 755.5, y: 861.5}
+  - {x: 757.5, y: 872.5}
+  - {x: 758.5, y: 881.5}
+  - {x: 753.5, y: 884.5}
+  - {x: 750.5, y: 892.5}
+  - {x: 753.5, y: 899.5}
+  - {x: 756.5, y: 904.5}
+  - {x: 756.5, y: 909.5}
+  - {x: 751.5, y: 909.5}
+  - {x: 745.5, y: 901.5}
+  - {x: 741.5, y: 895.5}
+  - {x: 733.5, y: 891.5}
+  - {x: 729.5, y: 885.5}
+  - {x: 723.5, y: 882.5}
+  - {x: 720.5, y: 879.5}
+  - {x: 716.5, y: 877.5}
+  - {x: 707.5, y: 877.5}
+  - {x: 709.5, y: 872.5}
+  - {x: 717.5, y: 868.5}
+  - {x: 722.5, y: 858.5}
+  - {x: 721.5, y: 852.5}
+  - {x: 720.5, y: 846.5}
+  - {x: 715.5, y: 845.5}
+  - {x: 708.5, y: 845.5}
+  - {x: 702.5, y: 846.5}
+  - {x: 697.5, y: 846.5}
+  - {x: 689.5, y: 845.5}
+  - {x: 689.5, y: 839.5}
+  - {x: 689.5, y: 834.5}
+  - {x: 690.5, y: 828.5}
+  - {x: 688.5, y: 819.5}
+  - {x: 690.5, y: 811.5}
+  - {x: 696.5, y: 812.5}
+  testMAT: {fileID: 2100000, guid: c43d8d1235dff1845bda1da37023b108, type: 2}
+  textureSize: 128
+  edgeSoftner: 30
+  xOffset: {x: 0.5, y: 0.5}
+  yOffset: {x: 0.5, y: 0.5}
+--- !u!4 &1033510001
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1033509999}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 0}
+  m_RootOrder: 5
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!1 &1121091772
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 1121091774}
+  - component: {fileID: 1121091773}
+  m_Layer: 0
+  m_Name: SDF_Tester_05
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!114 &1121091773
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1121091772}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 8c60b9df5ffe6bc47a1962bbd478ca05, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  meshPoints:
+  - {x: 701.5, y: 807.5}
+  - {x: 709.5, y: 809.5}
+  - {x: 714.5, y: 809.5}
+  - {x: 725.5, y: 822.5}
+  - {x: 732.5, y: 833.5}
+  - {x: 739.5, y: 838.5}
+  - {x: 739.5, y: 843.5}
+  - {x: 747.5, y: 845.5}
+  - {x: 754.5, y: 845.5}
+  - {x: 755.5, y: 854.5}
+  - {x: 755.5, y: 861.5}
+  - {x: 757.5, y: 872.5}
+  - {x: 758.5, y: 881.5}
+  - {x: 753.5, y: 884.5}
+  - {x: 750.5, y: 892.5}
+  - {x: 753.5, y: 899.5}
+  - {x: 756.5, y: 904.5}
+  - {x: 756.5, y: 909.5}
+  - {x: 751.5, y: 909.5}
+  - {x: 745.5, y: 901.5}
+  - {x: 741.5, y: 895.5}
+  - {x: 733.5, y: 891.5}
+  - {x: 729.5, y: 885.5}
+  - {x: 723.5, y: 882.5}
+  - {x: 720.5, y: 879.5}
+  - {x: 716.5, y: 877.5}
+  - {x: 707.5, y: 877.5}
+  - {x: 709.5, y: 872.5}
+  - {x: 717.5, y: 868.5}
+  - {x: 722.5, y: 858.5}
+  - {x: 721.5, y: 852.5}
+  - {x: 720.5, y: 846.5}
+  - {x: 715.5, y: 845.5}
+  - {x: 708.5, y: 845.5}
+  - {x: 702.5, y: 846.5}
+  - {x: 697.5, y: 846.5}
+  - {x: 689.5, y: 845.5}
+  - {x: 689.5, y: 839.5}
+  - {x: 689.5, y: 834.5}
+  - {x: 690.5, y: 828.5}
+  - {x: 688.5, y: 819.5}
+  - {x: 690.5, y: 811.5}
+  - {x: 696.5, y: 812.5}
+  testMAT: {fileID: 2100000, guid: c43d8d1235dff1845bda1da37023b108, type: 2}
+  textureSize: 32
+  edgeSoftner: 30
+  xOffset: {x: 0.5, y: 0.5}
+  yOffset: {x: 0.5, y: 0.5}
+--- !u!4 &1121091774
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1121091772}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 0}
+  m_RootOrder: 4
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!1 &1344180833
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 1344180835}
+  - component: {fileID: 1344180834}
+  m_Layer: 0
+  m_Name: SDF_Tester_04
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!114 &1344180834
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1344180833}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 8c60b9df5ffe6bc47a1962bbd478ca05, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  meshPoints:
+  - {x: 701.5, y: 807.5}
+  - {x: 709.5, y: 809.5}
+  - {x: 714.5, y: 809.5}
+  - {x: 725.5, y: 822.5}
+  - {x: 732.5, y: 833.5}
+  - {x: 739.5, y: 838.5}
+  - {x: 739.5, y: 843.5}
+  - {x: 747.5, y: 845.5}
+  - {x: 754.5, y: 845.5}
+  - {x: 755.5, y: 854.5}
+  - {x: 755.5, y: 861.5}
+  - {x: 757.5, y: 872.5}
+  - {x: 758.5, y: 881.5}
+  - {x: 753.5, y: 884.5}
+  - {x: 750.5, y: 892.5}
+  - {x: 753.5, y: 899.5}
+  - {x: 756.5, y: 904.5}
+  - {x: 756.5, y: 909.5}
+  - {x: 751.5, y: 909.5}
+  - {x: 745.5, y: 901.5}
+  - {x: 741.5, y: 895.5}
+  - {x: 733.5, y: 891.5}
+  - {x: 729.5, y: 885.5}
+  - {x: 723.5, y: 882.5}
+  - {x: 720.5, y: 879.5}
+  - {x: 716.5, y: 877.5}
+  - {x: 707.5, y: 877.5}
+  - {x: 709.5, y: 872.5}
+  - {x: 717.5, y: 868.5}
+  - {x: 722.5, y: 858.5}
+  - {x: 721.5, y: 852.5}
+  - {x: 720.5, y: 846.5}
+  - {x: 715.5, y: 845.5}
+  - {x: 708.5, y: 845.5}
+  - {x: 702.5, y: 846.5}
+  - {x: 697.5, y: 846.5}
+  - {x: 689.5, y: 845.5}
+  - {x: 689.5, y: 839.5}
+  - {x: 689.5, y: 834.5}
+  - {x: 690.5, y: 828.5}
+  - {x: 688.5, y: 819.5}
+  - {x: 690.5, y: 811.5}
+  - {x: 696.5, y: 812.5}
+  testMAT: {fileID: 2100000, guid: c43d8d1235dff1845bda1da37023b108, type: 2}
+  textureSize: 64
+  edgeSoftner: 30
+  xOffset: {x: 0.5, y: 0.5}
+  yOffset: {x: 0.5, y: 0.5}
+--- !u!4 &1344180835
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1344180833}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 0}
+  m_RootOrder: 3
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &1411090663
 GameObject:
   m_ObjectHideFlags: 0
@@ -372,7 +651,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!114 &1411090664
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -386,15 +665,18 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   meshPoints:
-  - {x: 16.39, y: 6.21}
-  - {x: 18.39, y: 5.71}
-  - {x: 22.39, y: 8.21}
-  - {x: 24.39, y: 11.21}
-  - {x: 20.39, y: 13.21}
-  - {x: 19.39, y: 10.21}
-  - {x: 15.89, y: 11.21}
+  - {x: 2, y: 1}
+  - {x: 8, y: 1}
+  - {x: 16, y: 6}
+  - {x: 40, y: 24}
+  - {x: 12, y: 16}
+  - {x: 10, y: 10}
+  - {x: 1.5, y: 6}
   testMAT: {fileID: 2100000, guid: c43d8d1235dff1845bda1da37023b108, type: 2}
-  textureSize: 32
+  textureSize: 64
+  edgeSoftner: 10
+  xOffset: {x: 0, y: 0}
+  yOffset: {x: 0, y: 0}
 --- !u!4 &1411090665
 Transform:
   m_ObjectHideFlags: 0
