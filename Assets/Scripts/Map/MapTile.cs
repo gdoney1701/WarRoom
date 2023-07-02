@@ -13,8 +13,8 @@ public class MapTile : MonoBehaviour
     private TextMeshProUGUI tileTagUI;
     [SerializeField]
     private Transform centerContainer;
-    [SerializeField]
-    private LineRenderer borderRenderer;
+    //[SerializeField]
+    //private LineRenderer borderRenderer;
     [SerializeField]
     private MeshCollider meshCollider;
 
@@ -52,21 +52,21 @@ public class MapTile : MonoBehaviour
 
         TileName = provinceData.Tag;
 
-        borderRenderer.positionCount = provinceData.EdgeVertices.Length;
-        for (int i = 0; i < provinceData.EdgeVertices.Length; i++)
-        {
-            borderRenderer.SetPosition(i, provinceData.EdgeVertices[i].Pos);
-        }
+        //borderRenderer.positionCount = provinceData.EdgeVertices.Length;
+        //for (int i = 0; i < provinceData.EdgeVertices.Length; i++)
+        //{
+        //    borderRenderer.SetPosition(i, provinceData.EdgeVertices[i].Pos);
+        //}
     }
 
     public void OnSelect()
     {
-        borderRenderer.material.SetFloat("_Selected", 1);
+        meshRenderer.material.SetFloat("_IsSelected", 1);
     }
 
     public void OnDeselect()
     {
-        borderRenderer.material.SetFloat("_Selected", 0);
+        meshRenderer.material.SetFloat("_IsSelected", 0);
     }
 
     public void SetOccupationVisuals(Color32 backgroundColor, Color32 secondaryColor)
