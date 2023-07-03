@@ -2,6 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.InputSystem;
+using UnityEngine.EventSystems;
 
 public class PlayerController : MonoBehaviour
 {
@@ -14,7 +15,9 @@ public class PlayerController : MonoBehaviour
     [SerializeField]
     private float maxZoomSpeed = 20f;
     [SerializeField]
-    private LayerMask clickMask;
+    private LayerMask selectMask;
+    [SerializeField]
+    private LayerMask orderMask;
 
     private GameObject[] mapColumns;
     private bool readyToMove = false;
@@ -23,6 +26,10 @@ public class PlayerController : MonoBehaviour
     private int columnWidth;
     private Camera mainCamera;
     private float neutralHeight;
+    private bool canIssueOrder = false;
+
+    public delegate void SendOrder(MapTile mapTile);
+    public static event SendOrder sendOrder;
 
     private void Awake()
     {
@@ -35,6 +42,7 @@ public class PlayerController : MonoBehaviour
     {
         MapMeshGenerator.MapMeshGenerator.onMapLoad += RegisterMapObjects;
         PopulateButtons.onGameReady += AllowInput;
+        TurnManager.updatePhase += UpdateControls;
         mainCamera = Camera.main;
     }
 
@@ -42,6 +50,19 @@ public class PlayerController : MonoBehaviour
     {
         MapMeshGenerator.MapMeshGenerator.onMapLoad -= RegisterMapObjects;
         PopulateButtons.onGameReady -= AllowInput;
+        TurnManager.updatePhase -= UpdateControls;
+    }
+
+    void UpdateControls(TurnPhase turnPhase)
+    {
+        if(turnPhase == TurnPhase.Order)
+        {
+            canIssueOrder = true;
+        }
+        else
+        {
+            canIssueOrder = false;
+        }
     }
 
     void RegisterMapObjects(MapMeshGenerator.MeshGenerationData data, SaveData loadedSave)
@@ -83,16 +104,30 @@ public class PlayerController : MonoBehaviour
         }
     }
 
+    public void OnIssueOrder(InputAction.CallbackContext context)
+    {
+        if (canIssueOrder && context.canceled && SelectionManager.Instance.SelectedUnits.Count > 0
+            && !EventSystem.current.IsPointerOverGameObject())
+        {
+            RaycastHit hit;
+            if(Physics.Raycast(mainCamera.ScreenPointToRay(Mouse.current.position.ReadValue()), out hit, 100f, orderMask) &&
+                hit.collider.TryGetComponent(out MapTile foundTile))
+            {
+                sendOrder?.Invoke(foundTile);
+            }
+        }
+    }
+
 
     public void OnSelect(InputAction.CallbackContext context)
     {
-        if (context.canceled)
+        if (context.canceled && !EventSystem.current.IsPointerOverGameObject())
         {
             SelectionManager.Instance.DeselectAll();
             SelectionManager.Instance.DeselectTile();
 
             RaycastHit hit;
-            if (Physics.Raycast(mainCamera.ScreenPointToRay(Mouse.current.position.ReadValue()), out hit, 100f, clickMask))
+            if (Physics.Raycast(mainCamera.ScreenPointToRay(Mouse.current.position.ReadValue()), out hit, 100f, selectMask))
             {
 
                 if (hit.collider.TryGetComponent(out MapTile mapTile))

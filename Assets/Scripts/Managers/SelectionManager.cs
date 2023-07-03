@@ -24,11 +24,11 @@ public class SelectionManager
 
     private SelectionManager() { }
 
-    private HashSet<StackManager> selectedUnits = new HashSet<StackManager>();
+    private List<StackManager> selectedUnits = new List<StackManager>();
     public List<StackManager> AvailableUnits = new List<StackManager>();
     private MapTile selectedTile = null;
 
-    public HashSet<StackManager> SelectedUnits
+    public List<StackManager> SelectedUnits
     {
         get { return selectedUnits; }
     }

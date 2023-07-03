@@ -81,4 +81,9 @@ public class MapTile : MonoBehaviour
             meshRenderer.material.SetColor("_SecondaryColor", backgroundColor);
         }
     }
+
+    public void OnOrderTarget()
+    {
+
+    }
 }

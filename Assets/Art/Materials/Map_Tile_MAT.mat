@@ -39,15 +39,17 @@ Material:
         m_Offset: {x: 0, y: 0}
     m_Ints: []
     m_Floats:
-    - _BorderSize: 0.02
+    - _BorderSize: 0.03
+    - _IsSelected: 0
     - _QueueControl: 0
     - _QueueOffset: 0
     - _Tiling: 350
     m_Colors:
     - _BaseColor: {r: 0.6226415, g: 0.6226415, b: 0.6226415, a: 1}
-    - _BorderColor: {r: 0.07188273, g: 0.8584906, b: 0.02024742, a: 0}
+    - _BorderColor: {r: 1, g: 1, b: 1, a: 1}
     - _RimColor: {r: 1, g: 1, b: 1, a: 1}
     - _SecondaryColor: {r: 0.44339618, g: 0.44339618, b: 0.44339618, a: 1}
+    - _SelectionColor: {r: 3.169811, g: 2.145673, b: 0.2242791, a: 0}
   m_BuildTextureStacks: []
 --- !u!114 &1978893872112925476
 MonoBehaviour:

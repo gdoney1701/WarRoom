@@ -91,10 +91,6 @@ namespace MapMeshGenerator
         private GameObject tileContainer;
         [SerializeField]
         private GameObject tilePrefab;
-        [SerializeField]
-        private GameObject testVertex;
-        [SerializeField]
-        private bool useTestGeo;
 
         Color32[] imagePixels = new Color32[0];
         //Vector2Int imageScale = Vector2Int.zero;
@@ -278,29 +274,29 @@ namespace MapMeshGenerator
                 result[i] = new EdgeVertex(pos, GetUVColorsFromVertex(pos, baseColor));
             }
 
-            //For debug purposes
-            if (useTestGeo)
-            {
-                GameObject testContainer = new GameObject();
-                testContainer.name = string.Format("{0} Container", baseColor);
-                testVertex.transform.position = Vector3.zero;
-                for (int i = 0; i < result.Length; i++)
-                {
-                    GameObject testVert = Instantiate(testVertex);
-                    testVert.transform.position = new Vector3(result[i].Pos.x, 0, result[i].Pos.y);
-                    testVert.transform.SetParent(testContainer.transform);
-                    testVert.name = string.Format("MainPoint_{0}_{1}", result[i].Pos, i);
-                    //Debug.Log(result[i].Pos);
-                }
-                for (int i = 0; i < uvInput.Length; i++)
-                {
-                    GameObject testVert = Instantiate(testVertex);
-                    testVert.transform.position = new Vector3(uvInput[i].x, 0, uvInput[i].y);
-                    testVert.transform.SetParent(testContainer.transform);
-                    testVert.name = string.Format("UVPoint_{0}_{1}", uvInput[i], i);
-                    //Debug.Log(uvInput[i]);
-                }
-            }
+            ////For debug purposes
+            //if (useTestGeo)
+            //{
+            //    GameObject testContainer = new GameObject();
+            //    testContainer.name = string.Format("{0} Container", baseColor);
+            //    testVertex.transform.position = Vector3.zero;
+            //    for (int i = 0; i < result.Length; i++)
+            //    {
+            //        GameObject testVert = Instantiate(testVertex);
+            //        testVert.transform.position = new Vector3(result[i].Pos.x, 0, result[i].Pos.y);
+            //        testVert.transform.SetParent(testContainer.transform);
+            //        testVert.name = string.Format("MainPoint_{0}_{1}", result[i].Pos, i);
+            //        //Debug.Log(result[i].Pos);
+            //    }
+            //    for (int i = 0; i < uvInput.Length; i++)
+            //    {
+            //        GameObject testVert = Instantiate(testVertex);
+            //        testVert.transform.position = new Vector3(uvInput[i].x, 0, uvInput[i].y);
+            //        testVert.transform.SetParent(testContainer.transform);
+            //        testVert.name = string.Format("UVPoint_{0}_{1}", uvInput[i], i);
+            //        //Debug.Log(uvInput[i]);
+            //    }
+            //}
 
             return result;
         }

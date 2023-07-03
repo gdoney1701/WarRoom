@@ -25,6 +25,11 @@ public class StackManager : MonoBehaviour
         get { return stackLongTag; }
     }
 
+    public string ShortTag
+    {
+        get { return localData.TroopNumberID; }
+    }
+
     private StackData localData;
     public StackData LocalData
     {
