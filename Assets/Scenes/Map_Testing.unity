@@ -3548,7 +3548,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   rotateComponent: {fileID: 1572491467}
-  rotationSpeed: 90
+  rotationSpeed: -90
   disableGroup: {fileID: 1407729784}
 --- !u!225 &1996102987
 CanvasGroup:

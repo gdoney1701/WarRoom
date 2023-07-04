@@ -20,6 +20,16 @@ public class MapTile : MonoBehaviour
 
     private Color32 ownColor;
     private Color32[] neighborColors;
+    private Bounds meshBounds;
+
+    public Bounds MeshBounds
+    {
+        get { return meshBounds; }
+        set
+        {
+            meshBounds = value;
+        }
+    }
 
     private MapTile[] neighbors;
 
@@ -35,28 +45,26 @@ public class MapTile : MonoBehaviour
     }
 
 
-    public void InitializePrefab(ProvinceData provinceData, Mesh msh, Material mat, Vector3 center, Bounds bounds, Texture2D sdf)
+    public void InitializePrefab(ProvinceData provinceData, Mesh msh, Material mat, Bounds bounds)
     {
-
-        centerContainer.localPosition = center * centerContainer.localScale.x;
         gameObject.name = provinceData.Tag;
-
         float minDiameter = Mathf.Min(bounds.size.x, bounds.size.z);
+        MeshBounds = bounds;
+
         tileTagUI.text = provinceData.Tag;
         tileTagUI.gameObject.transform.localScale = new Vector3(minDiameter / 10f, minDiameter / 10f, minDiameter / 10f);
 
         meshFilter.mesh = msh;
         meshRenderer.material = mat;
-        meshRenderer.material.SetTexture("_BorderTex", sdf);
         meshCollider.sharedMesh = msh;
-
         TileName = provinceData.Tag;
+    }
 
-        //borderRenderer.positionCount = provinceData.EdgeVertices.Length;
-        //for (int i = 0; i < provinceData.EdgeVertices.Length; i++)
-        //{
-        //    borderRenderer.SetPosition(i, provinceData.EdgeVertices[i].Pos);
-        //}
+    public void InitializeSDFValues(Vector3 center, Texture2D sdf)
+    {
+        centerContainer.localPosition = center * centerContainer.localScale.x;
+        meshRenderer.material.SetTexture("_BorderTex", sdf);
+
     }
 
     public void OnSelect()

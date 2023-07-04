@@ -46,6 +46,8 @@ public class ProvinceData
         VertexOrder = new List<int>();
         MaxPoint = Vector2.zero;
         MinPoint = Vector2.zero;
+
+        CollapseEdgeVertex();
     }
     public Color32 ProvinceColor { get; }
     public string Tag { get; }
@@ -54,6 +56,16 @@ public class ProvinceData
     public string[] NeighborTags { get; set; }
     public Vector2 MaxPoint { get; set; }
     public Vector2 MinPoint { get; set; }
+    public Vector2[] VertexPoints { get; set; }
+
+    public void CollapseEdgeVertex()
+    {
+        VertexPoints = new Vector2[EdgeVertices.Length];
+        for(int i = 0; i < EdgeVertices.Length; i++)
+        {
+            VertexPoints[i] = EdgeVertices[i].Pos;
+        }
+    }
 }
 public struct EdgeVertex
 {

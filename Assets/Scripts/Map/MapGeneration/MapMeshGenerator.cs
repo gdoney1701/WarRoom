@@ -43,7 +43,6 @@ namespace MapMeshGenerator
         {
             MaxPoint = max;
             MinPoint = min;
-            //Debug.LogError(string.Format("Max {0}, Min {1}, Center {2}", max, min, (max + min) / 2));
             Center = new Vector2((min.x + max.x) / 2, (min.y + max.y) / 2);
 
             Radius = Vector2.Distance(Center, max);
@@ -85,12 +84,20 @@ namespace MapMeshGenerator
 
     public class MapMeshGenerator : MonoBehaviour
     {
+
+        public class SDFPacket
+        {
+            public Vector3 POI;
+            public Color[] pixelColors;
+        }
         [SerializeField]
         private Material faceMaterial;
         [SerializeField]
         private GameObject tileContainer;
         [SerializeField]
         private GameObject tilePrefab;
+        [SerializeField]
+        private int sdfTextureSize = 64;
 
         Color32[] imagePixels = new Color32[0];
         //Vector2Int imageScale = Vector2Int.zero;
@@ -126,9 +133,18 @@ namespace MapMeshGenerator
             {
                 meshData.mapTiles.Add(meshData.provinceList[i].Tag, TriangulateVertices(meshData.provinceList[i]));
             }
-            for (int i = 0; i < meshData.provinceList.Length; i++)
+
+            SDFPacket[] sdfCalculation = new SDFPacket[meshData.provinceList.Length];
+            await Task.Run(() => sdfCalculation = AsyncCalculateSDF());
+
+            for(int i = 0; i < meshData.provinceList.Length; i++)
             {
-                meshData.AssignNeighbors(meshData.provinceList[i]);
+                MapTile currentTile = meshData.mapTiles[meshData.provinceList[i].Tag];
+                Texture2D sdfTex = new Texture2D(sdfTextureSize, sdfTextureSize);
+                sdfTex.SetPixels(sdfCalculation[i].pixelColors);
+                sdfTex.Apply();
+
+                currentTile.InitializeSDFValues(sdfCalculation[i].POI, sdfTex);
             }
 
             meshData.columnArray = CreateVerticalGroups(meshData, 12);
@@ -459,22 +475,14 @@ namespace MapMeshGenerator
 
         private MapTile TriangulateVertices(ProvinceData provinceData)
         {
-            Vector2[] vertices2D = new Vector2[provinceData.EdgeVertices.Length];
+            provinceData.CollapseEdgeVertex();
+            Vector2[] vertices2D = provinceData.VertexPoints;
             Vector3[] vertices = new Vector3[provinceData.EdgeVertices.Length];
-
-            //Vector2 minPoint = provinceData.EdgeVertices[0].Pos;
-            //Vector2 maxPoint = provinceData.EdgeVertices[0].Pos;
 
             for(int i = 0; i < provinceData.EdgeVertices.Length; i++)
             {
-                vertices2D[i] = provinceData.EdgeVertices[i].Pos;
-                vertices[i] = new Vector3(vertices2D[i].x, 0, vertices2D[i].y);
-
-                //minPoint = Vector2.Min(minPoint, vertices2D[i]);
-                //maxPoint = Vector2.Max(maxPoint, vertices2D[i]);               
+                vertices[i] = new Vector3(vertices2D[i].x, 0, vertices2D[i].y);              
             }
-            //provinceData.MaxPoint = maxPoint;
-            //provinceData.MinPoint = minPoint;
 
             Triangulator tr = new Triangulator(vertices2D);
             int[] indices = tr.Triangulate();
@@ -493,14 +501,14 @@ namespace MapMeshGenerator
             msh.uv2 = GenerateUVs(vertices2D, new Vector2(0,0), new Vector2(maxImageLength, maxImageLength)) ;
 
             provinceData.MaxPoint = new Vector2(msh.bounds.max.x, msh.bounds.max.z);
-            Texture2D sdf = CreateRuntimeSDF(vertices2D, msh.bounds);
+            //Texture2D sdf = CreateRuntimeSDF(vertices2D, msh.bounds);
 
             GameObject newTile = Instantiate(tilePrefab, tileContainer.transform);
             newTile.transform.position = Vector3.zero;
             MapTile mapTile = newTile.GetComponent<MapTile>();
 
             mapTile.InitializePrefab(
-                provinceData, msh, faceMaterial, CalculatePOI(vertices2D, msh.bounds), msh.bounds, sdf);
+                provinceData, msh, faceMaterial, msh.bounds);
 
             return mapTile;
         }
@@ -530,23 +538,38 @@ namespace MapMeshGenerator
             return uvs;
         }
 
-        public Texture2D CreateRuntimeSDF(Vector2[] points, Bounds meshBounds)
+        public SDFPacket[] AsyncCalculateSDF()
         {
-            int textureSize = 64;
-            Texture2D result = new Texture2D(textureSize, textureSize);
-
-            for (int y = 0; y < textureSize; y++)
+            ProvinceData[] provinces = meshData.provinceList;
+            SDFPacket[] result = new SDFPacket[provinces.Length];
+            for (int i = 0; i < provinces.Length; i++)
             {
-                for (int x = 0; x < textureSize; x++)
+                Vector3 poi = CalculatePOI(provinces[i].VertexPoints, meshData.mapTiles[provinces[i].Tag].MeshBounds);
+                Color[] colors = CreateRuntimeSDF(provinces[i].VertexPoints, meshData.mapTiles[provinces[i].Tag].MeshBounds);
+
+                result[i] = new SDFPacket { pixelColors = colors, POI = poi };
+
+                meshData.AssignNeighbors(provinces[i]);
+            }
+            return result;
+        }
+
+        public Color[] CreateRuntimeSDF(Vector2[] points, Bounds meshBounds)
+        {
+            //Texture2D result = new Texture2D(textureSize, textureSize);
+            Color[] result = new Color[sdfTextureSize * sdfTextureSize];
+
+            for (int y = 0; y < sdfTextureSize; y++)
+            {
+                for (int x = 0; x < sdfTextureSize; x++)
                 {
-                    Vector2 worldSpace = ConvertUVToPos(new Vector2(x + 0.5f, y + 0.5f), meshBounds, textureSize);
+                    Vector2 worldSpace = ConvertUVToPos(new Vector2(x + 0.5f, y + 0.5f), meshBounds, sdfTextureSize);
                     float signedDistance = SDFHelperMethods.SignedDistance(points, worldSpace) / 30f;
                     float newColor = signedDistance > 0 ? signedDistance : 0;
-                    result.SetPixel(x, y, new Color(newColor, newColor, newColor));
+
+                    result[y * sdfTextureSize + x] = new Color(newColor, newColor, newColor);
                 }
             }
-
-            result.Apply();
             return result;
         }
 
@@ -581,7 +604,6 @@ namespace MapMeshGenerator
                 }
                 if (currentCell.Dist >= bestCell.Dist)
                 {
-                    //Debug.LogWarning(string.Format("New Best Cell Found: {0} from {1}", currentCell, bestCell));
                     bestCell = currentCell;               
                 }
                     
@@ -594,7 +616,6 @@ namespace MapMeshGenerator
 
                 if(fallBack > 64)
                 {
-                    //Debug.LogWarning("Had to Fall Back after 32 iterations");
                     break;
                 }
             }
