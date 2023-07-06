@@ -13,8 +13,6 @@ public class TurnManager : MonoBehaviour
     //    4 - Territory Resolution
     //    5 - Refit and Redeploy <- not going to be part of current goal
 
-    OrdersManager currentOrders;
-
     private void OnEnable()
     {
         PopulateButtons.onGameReady += StartGame;
@@ -46,7 +44,7 @@ public class TurnManager : MonoBehaviour
     public delegate void UpdateTurnPhase(TurnPhase phase);
     public static event UpdateTurnPhase updatePhase;
 
-    public void StartGame()
+    public void StartGame(FactionData faction)
     {
         //TODO --- Serialize the last turn order, for now we'll always default to the Order phase of turn 0
 
@@ -79,25 +77,35 @@ public class TurnManager : MonoBehaviour
     private void StartOrder()
     {
         int orderAmount = 6;
-        currentOrders = new OrdersManager(orderAmount);
+        OrdersManager.Instance.InitializeOrderArray(orderAmount);
         orderPhase.InitializeOrders(orderAmount);
     }
 
     private void AcceptOrder(MapTile mapTile)
     {
         StackManager selectedStack = SelectionManager.Instance.SelectedUnits[0];
-        if(currentOrders.OrdersContainStack(selectedStack, out int presentAt))
+        if(OrdersManager.Instance.OrdersContainStack(selectedStack, out int presentAt))
         {
-            orderPhase.ReviseOrder(presentAt, selectedStack.ShortTag, mapTile.TileName);
-            currentOrders.ChangeOrders(presentAt, selectedStack, mapTile);
-            return;
+            if(selectedStack.CurrentTileTag == mapTile.TileName)
+            {
+                orderPhase.ClearEntry(presentAt);
+                OrdersManager.Instance.Orders[presentAt].ClearOrderPair();
+                return;
+            }
+            else
+            {
+                orderPhase.ReviseOrder(presentAt, selectedStack.ShortTag, mapTile.TileName);
+                OrdersManager.Instance.ChangeOrders(presentAt, selectedStack, mapTile);
+                return;
+            }
+
         }
         int newOrderIndex = orderPhase.SetNewOrder(
             selectedStack.ShortTag, mapTile.TileName
             );
         if(newOrderIndex != int.MinValue)
         {
-            currentOrders.ChangeOrders(newOrderIndex, selectedStack, mapTile);
+            OrdersManager.Instance.ChangeOrders(newOrderIndex, selectedStack, mapTile);
         }
 
     }

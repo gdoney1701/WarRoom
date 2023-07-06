@@ -36,10 +36,21 @@ public class StackManager : MonoBehaviour
         get { return localData; }
     }
 
-    public string ownerID;
+    private string ownerID;
     public string OwnerID
     {
         get { return ownerID; }
+    }
+
+    private string currentTileTag;
+
+    public string CurrentTileTag
+    {
+        get { return currentTileTag; }
+        set
+        {
+            currentTileTag = value;
+        }
     }
 
     private GameObject[] stackVisuals;
@@ -105,6 +116,8 @@ public class StackManager : MonoBehaviour
     {
         ownerID = faction.ID;
         localData = faction.StackArray[stackDataIndex];
+        currentTileTag = localData.TileTag;
+        Debug.Log(currentTileTag);
         stackLongTag = localData.TroopLongTag;
         SelectionManager.Instance.AvailableUnits.Add(this);
         if(outLine != null)

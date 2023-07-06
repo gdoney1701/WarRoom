@@ -22,10 +22,10 @@ namespace MapMeshGenerator
 
         public void AssignNeighbors(ProvinceData inputData)
         {
-            mapTiles[inputData.Tag].Neighbors = new MapTile[inputData.NeighborTags.Length];
+            mapTiles[inputData.Data.TileTag].Neighbors = new MapTile[inputData.NeighborTags.Length];
             for(int i = 0; i < inputData.NeighborTags.Length; i++)
             {
-                mapTiles[inputData.Tag].Neighbors[i] = mapTiles[inputData.NeighborTags[i]];
+                mapTiles[inputData.Data.TileTag].Neighbors[i] = mapTiles[inputData.NeighborTags[i]];
             }
         }
 
@@ -131,7 +131,7 @@ namespace MapMeshGenerator
 
             for (int i = 0; i < meshData.provinceList.Length; i++)
             {
-                meshData.mapTiles.Add(meshData.provinceList[i].Tag, TriangulateVertices(meshData.provinceList[i]));
+                meshData.mapTiles.Add(meshData.provinceList[i].Data.TileTag, TriangulateVertices(meshData.provinceList[i]));
             }
 
             SDFPacket[] sdfCalculation = new SDFPacket[meshData.provinceList.Length];
@@ -139,7 +139,7 @@ namespace MapMeshGenerator
 
             for(int i = 0; i < meshData.provinceList.Length; i++)
             {
-                MapTile currentTile = meshData.mapTiles[meshData.provinceList[i].Tag];
+                MapTile currentTile = meshData.mapTiles[meshData.provinceList[i].Data.TileTag];
                 Texture2D sdfTex = new Texture2D(sdfTextureSize, sdfTextureSize);
                 sdfTex.SetPixels(sdfCalculation[i].pixelColors);
                 sdfTex.Apply();
@@ -180,8 +180,8 @@ namespace MapMeshGenerator
         {
             return new ProvinceData(
                 new Color32((byte)tileData.TileColor.x, (byte)tileData.TileColor.y, (byte)tileData.TileColor.z, 255),
-                tileData.TileTag,
-                new EdgeVertex[0]
+                new EdgeVertex[0],
+                tileData
                 );
         }
 
@@ -208,7 +208,7 @@ namespace MapMeshGenerator
                     sortedProvinces[colorIterative].NeighborTags = new string[neighborColors.Length];
                     for(int j = 0; j < neighborColors.Length; j++)
                     {
-                        sortedProvinces[colorIterative].NeighborTags[j] = sortedProvinces[neighborColors[j]].Tag;
+                        sortedProvinces[colorIterative].NeighborTags[j] = sortedProvinces[neighborColors[j]].Data.TileTag;
                     }
                     foundColors.Add(colorIterative);
                 }
@@ -489,7 +489,7 @@ namespace MapMeshGenerator
 
             Mesh msh = new Mesh
             {
-                name = string.Format("Province Mesh {0}", provinceData.Tag)
+                name = string.Format("Province Mesh {0}", provinceData.Data.TileTag)
             };
 
             msh.vertices = vertices;
@@ -544,8 +544,8 @@ namespace MapMeshGenerator
             SDFPacket[] result = new SDFPacket[provinces.Length];
             for (int i = 0; i < provinces.Length; i++)
             {
-                Vector3 poi = CalculatePOI(provinces[i].VertexPoints, meshData.mapTiles[provinces[i].Tag].MeshBounds);
-                Color[] colors = CreateRuntimeSDF(provinces[i].VertexPoints, meshData.mapTiles[provinces[i].Tag].MeshBounds);
+                Vector3 poi = CalculatePOI(provinces[i].VertexPoints, meshData.mapTiles[provinces[i].Data.TileTag].MeshBounds);
+                Color[] colors = CreateRuntimeSDF(provinces[i].VertexPoints, meshData.mapTiles[provinces[i].Data.TileTag].MeshBounds);
 
                 result[i] = new SDFPacket { pixelColors = colors, POI = poi };
 
@@ -654,7 +654,7 @@ namespace MapMeshGenerator
             for(int i = 0; i < data.provinceList.Length; i++)
             {
                 int index = Mathf.FloorToInt(data.provinceList[i].MaxPoint.x / columnWidth);
-                data.mapTiles[data.provinceList[i].Tag].transform.SetParent(columnContainer[index].transform);
+                data.mapTiles[data.provinceList[i].Data.TileTag].transform.SetParent(columnContainer[index].transform);
             }
             return columnContainer;
         }

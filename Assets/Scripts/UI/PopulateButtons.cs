@@ -13,7 +13,7 @@ public class PopulateButtons : MonoBehaviour
     [SerializeField]
     GameObject disableGroup;
 
-    public delegate void OnGameReady();
+    public delegate void OnGameReady(FactionData faction);
     public static event OnGameReady onGameReady;
 
     private void OnEnable()
@@ -30,7 +30,7 @@ public class PopulateButtons : MonoBehaviour
     public void ClickButton(FactionData faction)
     {
         Debug.Log(string.Format("You Selected {0}", faction.LongName));
-        onGameReady?.Invoke();
+        onGameReady?.Invoke(faction);
         disableGroup.SetActive(false);
     }
 

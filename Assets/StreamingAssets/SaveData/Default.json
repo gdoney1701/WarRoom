@@ -18,7 +18,12 @@
                             "y": 119,
                             "z": 214
                         },
-                        "TileTag": "N3"
+                        "TileTag": "N3",
+                        "TileName": "Caprica City",
+                        "Stress": 1,
+                        "Iron": 1,
+                        "Oil": 1,
+                        "OSR": 1
                     },
                     {
                         "TileColor": {
@@ -26,7 +31,12 @@
                             "y": 7,
                             "z": 81
                         },
-                        "TileTag": "N6"
+                        "TileTag": "N6",
+                        "TileName": "Caprica City",
+                        "Stress": 1,
+                        "Iron": 1,
+                        "Oil": 1,
+                        "OSR": 1
                     },
                     {
                         "TileColor": {
@@ -34,7 +44,12 @@
                             "y": 95,
                             "z": 150
                         },
-                        "TileTag": "N5"
+                        "TileTag": "N5",
+                        "TileName": "Caprica City",
+                        "Stress": 1,
+                        "Iron": 1,
+                        "Oil": 1,
+                        "OSR": 1
                     },
                     {
                         "TileColor": {
@@ -42,7 +57,12 @@
                             "y": 198,
                             "z": 140
                         },
-                        "TileTag": "N7"
+                        "TileTag": "N7",
+                        "TileName": "Caprica City",
+                        "Stress": 1,
+                        "Iron": 1,
+                        "Oil": 1,
+                        "OSR": 1
                     },
                     {
                         "TileColor": {
@@ -50,7 +70,12 @@
                             "y": 80,
                             "z": 178
                         },
-                        "TileTag": "N8"
+                        "TileTag": "N8",
+                        "TileName": "Caprica City",
+                        "Stress": 1,
+                        "Iron": 1,
+                        "Oil": 1,
+                        "OSR": 1
                     },
                     {
                         "TileColor": {
@@ -58,7 +83,12 @@
                             "y": 198,
                             "z": 44
                         },
-                        "TileTag": "N10"
+                        "TileTag": "N10",
+                        "TileName": "Caprica City",
+                        "Stress": 1,
+                        "Iron": 1,
+                        "Oil": 1,
+                        "OSR": 1
                     },
                     {
                         "TileColor": {
@@ -66,7 +96,12 @@
                             "y": 64,
                             "z": 132
                         },
-                        "TileTag": "N14"
+                        "TileTag": "N14",
+                        "TileName": "Caprica City",
+                        "Stress": 1,
+                        "Iron": 1,
+                        "Oil": 1,
+                        "OSR": 1
                     }
                 ],
                 "StackArray": [
@@ -139,7 +174,12 @@
                             "y": 56,
                             "z": 3
                         },
-                        "TileTag": "E2"
+                        "TileTag": "E2",
+                        "TileName": "Caprica City",
+                        "Stress": 1,
+                        "Iron": 1,
+                        "Oil": 1,
+                        "OSR": 1
                     },
                     {
                         "TileColor": {
@@ -147,7 +187,12 @@
                             "y": 62,
                             "z": 96
                         },
-                        "TileTag": "E3"
+                        "TileTag": "E3",
+                        "TileName": "Caprica City",
+                        "Stress": 1,
+                        "Iron": 1,
+                        "Oil": 1,
+                        "OSR": 1
                     },
                     {
                         "TileColor": {
@@ -155,7 +200,12 @@
                             "y": 58,
                             "z": 50
                         },
-                        "TileTag": "E1"
+                        "TileTag": "E1",
+                        "TileName": "Caprica City",
+                        "Stress": 1,
+                        "Iron": 1,
+                        "Oil": 1,
+                        "OSR": 1
                     },
                     {
                         "TileColor": {
@@ -163,7 +213,12 @@
                             "y": 14,
                             "z": 36
                         },
-                        "TileTag": "F1"
+                        "TileTag": "F1",
+                        "TileName": "Caprica City",
+                        "Stress": 1,
+                        "Iron": 1,
+                        "Oil": 1,
+                        "OSR": 1
                     },
                     {
                         "TileColor": {
@@ -171,7 +226,12 @@
                             "y": 153,
                             "z": 16
                         },
-                        "TileTag": "A1"
+                        "TileTag": "A1",
+                        "TileName": "Caprica City",
+                        "Stress": 1,
+                        "Iron": 1,
+                        "Oil": 1,
+                        "OSR": 1
                     }
                 ],
                 "StackArray": [
@@ -244,7 +304,12 @@
                             "y": 70,
                             "z": 49
                         },
-                        "TileTag": "E8"
+                        "TileTag": "E8",
+                        "TileName": "Caprica City",
+                        "Stress": 1,
+                        "Iron": 1,
+                        "Oil": 1,
+                        "OSR": 1
                     },
                     {
                         "TileColor": {
@@ -252,7 +317,12 @@
                             "y": 5,
                             "z": 117
                         },
-                        "TileTag": "A14"
+                        "TileTag": "A14",
+                        "TileName": "Caprica City",
+                        "Stress": 1,
+                        "Iron": 1,
+                        "Oil": 1,
+                        "OSR": 1
                     },
                     {
                         "TileColor": {
@@ -260,7 +330,12 @@
                             "y": 191,
                             "z": 95
                         },
-                        "TileTag": "A4"
+                        "TileTag": "A4",
+                        "TileName": "Caprica City",
+                        "Stress": 1,
+                        "Iron": 1,
+                        "Oil": 1,
+                        "OSR": 1
                     },
                     {
                         "TileColor": {
@@ -268,7 +343,12 @@
                             "y": 224,
                             "z": 186
                         },
-                        "TileTag": "A10"
+                        "TileTag": "A10",
+                        "TileName": "Caprica City",
+                        "Stress": 1,
+                        "Iron": 1,
+                        "Oil": 1,
+                        "OSR": 1
                     },
                     {
                         "TileColor": {
@@ -276,7 +356,12 @@
                             "y": 116,
                             "z": 183
                         },
-                        "TileTag": "A3"
+                        "TileTag": "A3",
+                        "TileName": "Caprica City",
+                        "Stress": 1,
+                        "Iron": 1,
+                        "Oil": 1,
+                        "OSR": 1
                     }
                 ],
                 "StackArray": [
@@ -339,7 +424,12 @@
                             "y": 133,
                             "z": 252
                         },
-                        "TileTag": "E4"
+                        "TileTag": "E4",
+                        "TileName": "Caprica City",
+                        "Stress": 1,
+                        "Iron": 1,
+                        "Oil": 1,
+                        "OSR": 1
                     },
                     {
                         "TileColor": {
@@ -347,7 +437,12 @@
                             "y": 98,
                             "z": 178
                         },
-                        "TileTag": "F2"
+                        "TileTag": "F2",
+                        "TileName": "Caprica City",
+                        "Stress": 1,
+                        "Iron": 1,
+                        "Oil": 1,
+                        "OSR": 1
                     },
                     {
                         "TileColor": {
@@ -355,7 +450,12 @@
                             "y": 0,
                             "z": 16
                         },
-                        "TileTag": "E7"
+                        "TileTag": "E7",
+                        "TileName": "Caprica City",
+                        "Stress": 1,
+                        "Iron": 1,
+                        "Oil": 1,
+                        "OSR": 1
                     },
                     {
                         "TileColor": {
@@ -363,7 +463,12 @@
                             "y": 23,
                             "z": 196
                         },
-                        "TileTag": "F5"
+                        "TileTag": "F5",
+                        "TileName": "Caprica City",
+                        "Stress": 1,
+                        "Iron": 1,
+                        "Oil": 1,
+                        "OSR": 1
                     },
                     {
                         "TileColor": {
@@ -371,7 +476,12 @@
                             "y": 127,
                             "z": 12
                         },
-                        "TileTag": "E5"
+                        "TileTag": "E5",
+                        "TileName": "Caprica City",
+                        "Stress": 1,
+                        "Iron": 1,
+                        "Oil": 1,
+                        "OSR": 1
                     }
                 ],
                 "StackArray": [
@@ -444,7 +554,12 @@
                             "y": 99,
                             "z": 21
                         },
-                        "TileTag": "E6"
+                        "TileTag": "E6",
+                        "TileName": "Caprica City",
+                        "Stress": 1,
+                        "Iron": 1,
+                        "Oil": 1,
+                        "OSR": 1
                     }
                 ],
                 "StackArray": [
@@ -470,7 +585,12 @@
                     "y": 58,
                     "z": 50
                 },
-                "TileTag": "E1"
+                "TileTag": "E1",
+                "TileName": "France",
+                "Stress": 1,
+                "Iron": 1,
+                "Oil": 1,
+                "OSR": 1
             },
             {
                 "TileColor": {
@@ -478,7 +598,12 @@
                     "y": 56,
                     "z": 3
                 },
-                "TileTag": "E2"
+                "TileTag": "E2",
+                "TileName": "Britain",
+                "Stress": 1,
+                "Iron": 1,
+                "Oil": 1,
+                "OSR": 1
             },
             {
                 "TileColor": {
@@ -486,7 +611,12 @@
                     "y": 62,
                     "z": 96
                 },
-                "TileTag": "E3"
+                "TileTag": "E3",
+                "TileName": "Ireland",
+                "Stress": 1,
+                "Iron": 1,
+                "Oil": 1,
+                "OSR": 1
             },
             {
                 "TileColor": {
@@ -494,7 +624,12 @@
                     "y": 133,
                     "z": 252
                 },
-                "TileTag": "E4"
+                "TileTag": "E4",
+                "TileName": "Germany",
+                "Stress": 1,
+                "Iron": 1,
+                "Oil": 1,
+                "OSR": 1
             },
             {
                 "TileColor": {
@@ -502,7 +637,12 @@
                     "y": 127,
                     "z": 12
                 },
-                "TileTag": "E5"
+                "TileTag": "E5",
+                "TileName": "East Europe",
+                "Stress": 1,
+                "Iron": 1,
+                "Oil": 1,
+                "OSR": 1
             },
             {
                 "TileColor": {
@@ -510,7 +650,12 @@
                     "y": 99,
                     "z": 21
                 },
-                "TileTag": "E6"
+                "TileTag": "E6",
+                "TileName": "The Balkans",
+                "Stress": 1,
+                "Iron": 1,
+                "Oil": 1,
+                "OSR": 1
             },
             {
                 "TileColor": {
@@ -518,7 +663,12 @@
                     "y": 0,
                     "z": 16
                 },
-                "TileTag": "E7"
+                "TileTag": "E7",
+                "TileName": "Scandenavia",
+                "Stress": 1,
+                "Iron": 1,
+                "Oil": 1,
+                "OSR": 1
             },
             {
                 "TileColor": {
@@ -526,7 +676,12 @@
                     "y": 153,
                     "z": 16
                 },
-                "TileTag": "A1"
+                "TileTag": "A1",
+                "TileName": "Anatolia",
+                "Stress": 1,
+                "Iron": 1,
+                "Oil": 1,
+                "OSR": 1
             },
             {
                 "TileColor": {
@@ -534,7 +689,12 @@
                     "y": 14,
                     "z": 36
                 },
-                "TileTag": "F1"
+                "TileTag": "F1",
+                "TileName": "Egypt",
+                "Stress": 1,
+                "Iron": 1,
+                "Oil": 1,
+                "OSR": 1
             },
             {
                 "TileColor": {
@@ -542,7 +702,12 @@
                     "y": 98,
                     "z": 178
                 },
-                "TileTag": "F2"
+                "TileTag": "F2",
+                "TileName": "Maghreb",
+                "Stress": 1,
+                "Iron": 1,
+                "Oil": 1,
+                "OSR": 1
             },
             {
                 "TileColor": {
@@ -550,7 +715,12 @@
                     "y": 112,
                     "z": 70
                 },
-                "TileTag": "F3"
+                "TileTag": "F3",
+                "TileName": "Sahara",
+                "Stress": 1,
+                "Iron": 1,
+                "Oil": 1,
+                "OSR": 1
             },
             {
                 "TileColor": {
@@ -558,7 +728,12 @@
                     "y": 131,
                     "z": 221
                 },
-                "TileTag": "F4"
+                "TileTag": "F4",
+                "TileName": "Chad",
+                "Stress": 1,
+                "Iron": 1,
+                "Oil": 1,
+                "OSR": 1
             },
             {
                 "TileColor": {
@@ -566,7 +741,12 @@
                     "y": 23,
                     "z": 196
                 },
-                "TileTag": "F5"
+                "TileTag": "F5",
+                "TileName": "Ivory Coast",
+                "Stress": 1,
+                "Iron": 1,
+                "Oil": 1,
+                "OSR": 1
             },
             {
                 "TileColor": {
@@ -574,7 +754,12 @@
                     "y": 100,
                     "z": 214
                 },
-                "TileTag": "F6"
+                "TileTag": "F6",
+                "TileName": "Saudi Arabia",
+                "Stress": 1,
+                "Iron": 1,
+                "Oil": 1,
+                "OSR": 1
             },
             {
                 "TileColor": {
@@ -582,7 +767,12 @@
                     "y": 16,
                     "z": 27
                 },
-                "TileTag": "F7"
+                "TileTag": "F7",
+                "TileName": "Horn of Africa",
+                "Stress": 1,
+                "Iron": 1,
+                "Oil": 1,
+                "OSR": 1
             },
             {
                 "TileColor": {
@@ -590,7 +780,12 @@
                     "y": 217,
                     "z": 31
                 },
-                "TileTag": "F8"
+                "TileTag": "F8",
+                "TileName": "Congo",
+                "Stress": 1,
+                "Iron": 1,
+                "Oil": 1,
+                "OSR": 1
             },
             {
                 "TileColor": {
@@ -598,7 +793,12 @@
                     "y": 226,
                     "z": 56
                 },
-                "TileTag": "F9"
+                "TileTag": "F9",
+                "TileName": "Zimbabwe",
+                "Stress": 1,
+                "Iron": 1,
+                "Oil": 1,
+                "OSR": 1
             },
             {
                 "TileColor": {
@@ -606,7 +806,12 @@
                     "y": 109,
                     "z": 16
                 },
-                "TileTag": "F10"
+                "TileTag": "F10",
+                "TileName": "Angola",
+                "Stress": 1,
+                "Iron": 1,
+                "Oil": 1,
+                "OSR": 1
             },
             {
                 "TileColor": {
@@ -614,7 +819,12 @@
                     "y": 173,
                     "z": 173
                 },
-                "TileTag": "F11"
+                "TileTag": "F11",
+                "TileName": "South Africa",
+                "Stress": 1,
+                "Iron": 1,
+                "Oil": 1,
+                "OSR": 1
             },
             {
                 "TileColor": {
@@ -622,7 +832,12 @@
                     "y": 170,
                     "z": 234
                 },
-                "TileTag": "F12"
+                "TileTag": "F12",
+                "TileName": "Madagascar",
+                "Stress": 1,
+                "Iron": 1,
+                "Oil": 1,
+                "OSR": 1
             },
             {
                 "TileColor": {
@@ -630,7 +845,12 @@
                     "y": 219,
                     "z": 83
                 },
-                "TileTag": "A2"
+                "TileTag": "A2",
+                "TileName": "Persia",
+                "Stress": 1,
+                "Iron": 1,
+                "Oil": 1,
+                "OSR": 1
             },
             {
                 "TileColor": {
@@ -638,7 +858,12 @@
                     "y": 116,
                     "z": 183
                 },
-                "TileTag": "A3"
+                "TileTag": "A3",
+                "TileName": "Central Asia",
+                "Stress": 1,
+                "Iron": 1,
+                "Oil": 1,
+                "OSR": 1
             },
             {
                 "TileColor": {
@@ -646,7 +871,12 @@
                     "y": 191,
                     "z": 95
                 },
-                "TileTag": "A4"
+                "TileTag": "A4",
+                "TileName": "The Caucuses",
+                "Stress": 1,
+                "Iron": 1,
+                "Oil": 1,
+                "OSR": 1
             },
             {
                 "TileColor": {
@@ -654,7 +884,12 @@
                     "y": 40,
                     "z": 99
                 },
-                "TileTag": "A5"
+                "TileTag": "A5",
+                "TileName": "India",
+                "Stress": 1,
+                "Iron": 1,
+                "Oil": 1,
+                "OSR": 1
             },
             {
                 "TileColor": {
@@ -662,7 +897,12 @@
                     "y": 2,
                     "z": 44
                 },
-                "TileTag": "A6"
+                "TileTag": "A6",
+                "TileName": "Tibet",
+                "Stress": 1,
+                "Iron": 1,
+                "Oil": 1,
+                "OSR": 1
             },
             {
                 "TileColor": {
@@ -670,7 +910,12 @@
                     "y": 78,
                     "z": 188
                 },
-                "TileTag": "A7"
+                "TileTag": "A7",
+                "TileName": "Indochina",
+                "Stress": 1,
+                "Iron": 1,
+                "Oil": 1,
+                "OSR": 1
             },
             {
                 "TileColor": {
@@ -678,7 +923,12 @@
                     "y": 92,
                     "z": 14
                 },
-                "TileTag": "A8"
+                "TileTag": "A8",
+                "TileName": "East China",
+                "Stress": 1,
+                "Iron": 1,
+                "Oil": 1,
+                "OSR": 1
             },
             {
                 "TileColor": {
@@ -686,7 +936,12 @@
                     "y": 76,
                     "z": 43
                 },
-                "TileTag": "A9"
+                "TileTag": "A9",
+                "TileName": "Caprica City",
+                "Stress": 1,
+                "Iron": 1,
+                "Oil": 1,
+                "OSR": 1
             },
             {
                 "TileColor": {
@@ -694,7 +949,12 @@
                     "y": 162,
                     "z": 197
                 },
-                "TileTag": "O1"
+                "TileTag": "O1",
+                "TileName": "Sumatra",
+                "Stress": 1,
+                "Iron": 1,
+                "Oil": 1,
+                "OSR": 1
             },
             {
                 "TileColor": {
@@ -702,7 +962,12 @@
                     "y": 150,
                     "z": 129
                 },
-                "TileTag": "O2"
+                "TileTag": "O2",
+                "TileName": "Brunei",
+                "Stress": 1,
+                "Iron": 1,
+                "Oil": 1,
+                "OSR": 1
             },
             {
                 "TileColor": {
@@ -710,7 +975,12 @@
                     "y": 202,
                     "z": 190
                 },
-                "TileTag": "O3"
+                "TileTag": "O3",
+                "TileName": "Majapahit",
+                "Stress": 1,
+                "Iron": 1,
+                "Oil": 1,
+                "OSR": 1
             },
             {
                 "TileColor": {
@@ -718,7 +988,12 @@
                     "y": 234,
                     "z": 152
                 },
-                "TileTag": "O4"
+                "TileTag": "O4",
+                "TileName": "New Guinea",
+                "Stress": 1,
+                "Iron": 1,
+                "Oil": 1,
+                "OSR": 1
             },
             {
                 "TileColor": {
@@ -726,7 +1001,12 @@
                     "y": 29,
                     "z": 45
                 },
-                "TileTag": "O5"
+                "TileTag": "O5",
+                "TileName": "East Australia",
+                "Stress": 1,
+                "Iron": 1,
+                "Oil": 1,
+                "OSR": 1
             },
             {
                 "TileColor": {
@@ -734,7 +1014,12 @@
                     "y": 35,
                     "z": 15
                 },
-                "TileTag": "O6"
+                "TileTag": "O6",
+                "TileName": "West Australia",
+                "Stress": 1,
+                "Iron": 1,
+                "Oil": 1,
+                "OSR": 1
             },
             {
                 "TileColor": {
@@ -742,7 +1027,12 @@
                     "y": 211,
                     "z": 95
                 },
-                "TileTag": "O7"
+                "TileTag": "O7",
+                "TileName": "New Zealand",
+                "Stress": 1,
+                "Iron": 1,
+                "Oil": 1,
+                "OSR": 1
             },
             {
                 "TileColor": {
@@ -750,7 +1040,12 @@
                     "y": 70,
                     "z": 49
                 },
-                "TileTag": "E8"
+                "TileTag": "E8",
+                "TileName": "Russia",
+                "Stress": 1,
+                "Iron": 1,
+                "Oil": 1,
+                "OSR": 1
             },
             {
                 "TileColor": {
@@ -758,7 +1053,12 @@
                     "y": 224,
                     "z": 186
                 },
-                "TileTag": "A10"
+                "TileTag": "A10",
+                "TileName": "Pontic Steppe",
+                "Stress": 1,
+                "Iron": 1,
+                "Oil": 1,
+                "OSR": 1
             },
             {
                 "TileColor": {
@@ -766,7 +1066,12 @@
                     "y": 31,
                     "z": 198
                 },
-                "TileTag": "E9"
+                "TileTag": "E9",
+                "TileName": "Iceland",
+                "Stress": 1,
+                "Iron": 1,
+                "Oil": 1,
+                "OSR": 1
             },
             {
                 "TileColor": {
@@ -774,7 +1079,12 @@
                     "y": 24,
                     "z": 216
                 },
-                "TileTag": "O8"
+                "TileTag": "O8",
+                "TileName": "The Phillipines",
+                "Stress": 1,
+                "Iron": 1,
+                "Oil": 1,
+                "OSR": 1
             },
             {
                 "TileColor": {
@@ -782,7 +1092,12 @@
                     "y": 198,
                     "z": 29
                 },
-                "TileTag": "A11"
+                "TileTag": "A11",
+                "TileName": "Japan",
+                "Stress": 1,
+                "Iron": 1,
+                "Oil": 1,
+                "OSR": 1
             },
             {
                 "TileColor": {
@@ -790,7 +1105,12 @@
                     "y": 49,
                     "z": 216
                 },
-                "TileTag": "A12"
+                "TileTag": "A12",
+                "TileName": "Manchu",
+                "Stress": 1,
+                "Iron": 1,
+                "Oil": 1,
+                "OSR": 1
             },
             {
                 "TileColor": {
@@ -798,7 +1118,12 @@
                     "y": 119,
                     "z": 107
                 },
-                "TileTag": "A13"
+                "TileTag": "A13",
+                "TileName": "Mongolia",
+                "Stress": 1,
+                "Iron": 1,
+                "Oil": 1,
+                "OSR": 1
             },
             {
                 "TileColor": {
@@ -806,7 +1131,12 @@
                     "y": 5,
                     "z": 117
                 },
-                "TileTag": "A14"
+                "TileTag": "A14",
+                "TileName": "Arkhangelsk",
+                "Stress": 1,
+                "Iron": 1,
+                "Oil": 1,
+                "OSR": 1
             },
             {
                 "TileColor": {
@@ -814,7 +1144,12 @@
                     "y": 192,
                     "z": 133
                 },
-                "TileTag": "A15"
+                "TileTag": "A15",
+                "TileName": "Berezov",
+                "Stress": 1,
+                "Iron": 1,
+                "Oil": 1,
+                "OSR": 1
             },
             {
                 "TileColor": {
@@ -822,7 +1157,12 @@
                     "y": 205,
                     "z": 234
                 },
-                "TileTag": "A16"
+                "TileTag": "A16",
+                "TileName": "Ural",
+                "Stress": 1,
+                "Iron": 1,
+                "Oil": 1,
+                "OSR": 1
             },
             {
                 "TileColor": {
@@ -830,7 +1170,12 @@
                     "y": 79,
                     "z": 56
                 },
-                "TileTag": "A17"
+                "TileTag": "A17",
+                "TileName": "West Siberia",
+                "Stress": 1,
+                "Iron": 1,
+                "Oil": 1,
+                "OSR": 1
             },
             {
                 "TileColor": {
@@ -838,7 +1183,12 @@
                     "y": 17,
                     "z": 20
                 },
-                "TileTag": "A18"
+                "TileTag": "A18",
+                "TileName": "East Siberia",
+                "Stress": 1,
+                "Iron": 1,
+                "Oil": 1,
+                "OSR": 1
             },
             {
                 "TileColor": {
@@ -846,7 +1196,12 @@
                     "y": 28,
                     "z": 117
                 },
-                "TileTag": "A19"
+                "TileTag": "A19",
+                "TileName": "Kamchatka",
+                "Stress": 1,
+                "Iron": 1,
+                "Oil": 1,
+                "OSR": 1
             },
             {
                 "TileColor": {
@@ -854,7 +1209,12 @@
                     "y": 114,
                     "z": 62
                 },
-                "TileTag": "N1"
+                "TileTag": "N1",
+                "TileName": "Greenland",
+                "Stress": 1,
+                "Iron": 1,
+                "Oil": 1,
+                "OSR": 1
             },
             {
                 "TileColor": {
@@ -862,7 +1222,12 @@
                     "y": 252,
                     "z": 30
                 },
-                "TileTag": "N2"
+                "TileTag": "N2",
+                "TileName": "Quebec",
+                "Stress": 1,
+                "Iron": 1,
+                "Oil": 1,
+                "OSR": 1
             },
             {
                 "TileColor": {
@@ -870,7 +1235,12 @@
                     "y": 119,
                     "z": 214
                 },
-                "TileTag": "N3"
+                "TileTag": "N3",
+                "TileName": "North East",
+                "Stress": 1,
+                "Iron": 1,
+                "Oil": 1,
+                "OSR": 1
             },
             {
                 "TileColor": {
@@ -878,7 +1248,12 @@
                     "y": 7,
                     "z": 48
                 },
-                "TileTag": "N4"
+                "TileTag": "N4",
+                "TileName": "Ontario",
+                "Stress": 1,
+                "Iron": 1,
+                "Oil": 1,
+                "OSR": 1
             },
             {
                 "TileColor": {
@@ -886,7 +1261,12 @@
                     "y": 95,
                     "z": 150
                 },
-                "TileTag": "N5"
+                "TileTag": "N5",
+                "TileName": "Central USA",
+                "Stress": 1,
+                "Iron": 1,
+                "Oil": 1,
+                "OSR": 1
             },
             {
                 "TileColor": {
@@ -894,7 +1274,12 @@
                     "y": 7,
                     "z": 81
                 },
-                "TileTag": "N6"
+                "TileTag": "N6",
+                "TileName": "South USA",
+                "Stress": 1,
+                "Iron": 1,
+                "Oil": 1,
+                "OSR": 1
             },
             {
                 "TileColor": {
@@ -902,7 +1287,12 @@
                     "y": 198,
                     "z": 140
                 },
-                "TileTag": "N7"
+                "TileTag": "N7",
+                "TileName": "The Rockies",
+                "Stress": 1,
+                "Iron": 1,
+                "Oil": 1,
+                "OSR": 1
             },
             {
                 "TileColor": {
@@ -910,7 +1300,12 @@
                     "y": 80,
                     "z": 178
                 },
-                "TileTag": "N8"
+                "TileTag": "N8",
+                "TileName": "California",
+                "Stress": 1,
+                "Iron": 1,
+                "Oil": 1,
+                "OSR": 1
             },
             {
                 "TileColor": {
@@ -918,7 +1313,12 @@
                     "y": 99,
                     "z": 85
                 },
-                "TileTag": "N9"
+                "TileTag": "N9",
+                "TileName": "Alberta",
+                "Stress": 1,
+                "Iron": 1,
+                "Oil": 1,
+                "OSR": 1
             },
             {
                 "TileColor": {
@@ -926,7 +1326,12 @@
                     "y": 198,
                     "z": 44
                 },
-                "TileTag": "N10"
+                "TileTag": "N10",
+                "TileName": "Washington",
+                "Stress": 1,
+                "Iron": 1,
+                "Oil": 1,
+                "OSR": 1
             },
             {
                 "TileColor": {
@@ -934,7 +1339,12 @@
                     "y": 127,
                     "z": 40
                 },
-                "TileTag": "N11"
+                "TileTag": "N11",
+                "TileName": "Cascadia",
+                "Stress": 1,
+                "Iron": 1,
+                "Oil": 1,
+                "OSR": 1
             },
             {
                 "TileColor": {
@@ -942,7 +1352,12 @@
                     "y": 86,
                     "z": 112
                 },
-                "TileTag": "N12"
+                "TileTag": "N12",
+                "TileName": "Northwest Territories",
+                "Stress": 1,
+                "Iron": 1,
+                "Oil": 1,
+                "OSR": 1
             },
             {
                 "TileColor": {
@@ -950,7 +1365,12 @@
                     "y": 57,
                     "z": 255
                 },
-                "TileTag": "N13"
+                "TileTag": "N13",
+                "TileName": "Nunavut",
+                "Stress": 1,
+                "Iron": 1,
+                "Oil": 1,
+                "OSR": 1
             },
             {
                 "TileColor": {
@@ -958,7 +1378,12 @@
                     "y": 64,
                     "z": 132
                 },
-                "TileTag": "N14"
+                "TileTag": "N14",
+                "TileName": "Alaska",
+                "Stress": 1,
+                "Iron": 1,
+                "Oil": 1,
+                "OSR": 1
             },
             {
                 "TileColor": {
@@ -966,7 +1391,12 @@
                     "y": 41,
                     "z": 12
                 },
-                "TileTag": "N15"
+                "TileTag": "N15",
+                "TileName": "Mexico",
+                "Stress": 1,
+                "Iron": 1,
+                "Oil": 1,
+                "OSR": 1
             },
             {
                 "TileColor": {
@@ -974,7 +1404,12 @@
                     "y": 240,
                     "z": 154
                 },
-                "TileTag": "N16"
+                "TileTag": "N16",
+                "TileName": "Panama",
+                "Stress": 1,
+                "Iron": 1,
+                "Oil": 1,
+                "OSR": 1
             },
             {
                 "TileColor": {
@@ -982,7 +1417,12 @@
                     "y": 180,
                     "z": 172
                 },
-                "TileTag": "N17"
+                "TileTag": "N17",
+                "TileName": "Haiti",
+                "Stress": 1,
+                "Iron": 1,
+                "Oil": 1,
+                "OSR": 1
             },
             {
                 "TileColor": {
@@ -990,7 +1430,12 @@
                     "y": 117,
                     "z": 239
                 },
-                "TileTag": "N18"
+                "TileTag": "N18",
+                "TileName": "Cuba",
+                "Stress": 1,
+                "Iron": 1,
+                "Oil": 1,
+                "OSR": 1
             },
             {
                 "TileColor": {
@@ -998,7 +1443,12 @@
                     "y": 0,
                     "z": 88
                 },
-                "TileTag": "O9"
+                "TileTag": "O9",
+                "TileName": "Moluccas",
+                "Stress": 1,
+                "Iron": 1,
+                "Oil": 1,
+                "OSR": 1
             },
             {
                 "TileColor": {
@@ -1006,7 +1456,12 @@
                     "y": 47,
                     "z": 3
                 },
-                "TileTag": "S1"
+                "TileTag": "S1",
+                "TileName": "Peru",
+                "Stress": 1,
+                "Iron": 1,
+                "Oil": 1,
+                "OSR": 1
             },
             {
                 "TileColor": {
@@ -1014,7 +1469,12 @@
                     "y": 28,
                     "z": 163
                 },
-                "TileTag": "S2"
+                "TileTag": "S2",
+                "TileName": "Colombia",
+                "Stress": 1,
+                "Iron": 1,
+                "Oil": 1,
+                "OSR": 1
             },
             {
                 "TileColor": {
@@ -1022,7 +1482,12 @@
                     "y": 242,
                     "z": 145
                 },
-                "TileTag": "S3"
+                "TileTag": "S3",
+                "TileName": "Brazil",
+                "Stress": 1,
+                "Iron": 1,
+                "Oil": 1,
+                "OSR": 1
             },
             {
                 "TileColor": {
@@ -1030,7 +1495,12 @@
                     "y": 239,
                     "z": 103
                 },
-                "TileTag": "S4"
+                "TileTag": "S4",
+                "TileName": "Argentina",
+                "Stress": 1,
+                "Iron": 1,
+                "Oil": 1,
+                "OSR": 1
             }
         ],
         "MapTexturePath": "Assets/Art/Textures/EarthMap_01.bmp"

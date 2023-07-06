@@ -84,6 +84,7 @@ public class PhaseOrderUI : MonoBehaviour
     {
         availableOrders[entryIndex].orderEntry.ResetEntry();
         availableOrders[entryIndex].orderSet = false;
+        OrdersManager.Instance.Orders[entryIndex].ClearOrderPair();
     }
 
     public void ReviseOrder(int index, string unitTag, string destTag)

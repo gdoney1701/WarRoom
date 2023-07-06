@@ -27,6 +27,7 @@ public class PlayerController : MonoBehaviour
     private Camera mainCamera;
     private float neutralHeight;
     private bool canIssueOrder = false;
+    private string playerFaction;
 
     public delegate void SendOrder(MapTile mapTile);
     public static event SendOrder sendOrder;
@@ -74,9 +75,10 @@ public class PlayerController : MonoBehaviour
         zOffset = 0;
     }
 
-    void AllowInput()
+    void AllowInput(FactionData factionData)
     {
         playerInput.enabled = true;
+        playerFaction = factionData.ID;
     }
 
     public void OnCameraMove(InputAction.CallbackContext context)
@@ -134,7 +136,7 @@ public class PlayerController : MonoBehaviour
                 {
                     SelectionManager.Instance.SelectTile(mapTile);
                 }
-                else if(hit.collider.TryGetComponent(out StackManager stackManager))
+                else if(hit.collider.TryGetComponent(out StackManager stackManager) & stackManager.OwnerID == playerFaction)
                 {
                     SelectionManager.Instance.SelectUnits(stackManager);
                 }

@@ -4,6 +4,25 @@ using UnityEngine;
 
 public class OrdersManager
 {
+    private static OrdersManager _instance;
+    public static OrdersManager Instance
+    {
+        get
+        {
+            if(_instance == null)
+            {
+                _instance = new OrdersManager();
+            }
+            return _instance;
+        }
+
+        private set
+        {
+            _instance = value;
+        }
+    }
+    
+
     private int OrderAmount = 6;
 
     public class OrderPairs
@@ -24,12 +43,11 @@ public class OrdersManager
         get { return orders; }
     }
 
-    public OrdersManager(int newOrderTotal)
+    public void InitializeOrderArray(int orderAmount)
     {
-        OrderAmount = newOrderTotal;
-        orders = new OrderPairs[OrderAmount];
+        OrderAmount = orderAmount;
+        orders = new OrderPairs[orderAmount];
     }
-
     public void ChangeOrders(int index, StackManager stack, MapTile tile)
     {
         Orders[index] = new OrderPairs() { Destination = tile, Unit = stack };

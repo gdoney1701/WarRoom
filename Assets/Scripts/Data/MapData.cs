@@ -35,13 +35,19 @@ public class TileData
 {
     public Vector3Int TileColor = Vector3Int.zero;
     public string TileTag = "Z100";
+    public string TileName = "Caprica City";
+
+    public int Stress = 1;
+    public int Iron = 1;
+    public int Oil = 1;
+    public int OSR = 1;
 }
 public class ProvinceData
 {
-    public ProvinceData(Color32 provinceColor, string tag, EdgeVertex[] inputVertices)
+    public ProvinceData(Color32 provinceColor, EdgeVertex[] inputVertices, TileData tileData)
     {
+        Data = tileData;
         ProvinceColor = provinceColor;
-        Tag = tag;
         EdgeVertices = inputVertices;
         VertexOrder = new List<int>();
         MaxPoint = Vector2.zero;
@@ -49,8 +55,8 @@ public class ProvinceData
 
         CollapseEdgeVertex();
     }
+    public TileData Data { get; set; }
     public Color32 ProvinceColor { get; }
-    public string Tag { get; }
     public EdgeVertex[] EdgeVertices { get; set; }
     public List<int> VertexOrder { get; set; } //Indices of EdgePixels in clockwise rotation from the top left pixel
     public string[] NeighborTags { get; set; }

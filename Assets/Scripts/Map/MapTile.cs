@@ -13,6 +13,10 @@ public class MapTile : MonoBehaviour
     private TextMeshProUGUI tileTagUI;
     [SerializeField]
     private Transform centerContainer;
+    [SerializeField]
+    private GameObject pooledTileResource;
+    [SerializeField]
+    private Transform resourceParent;
     //[SerializeField]
     //private LineRenderer borderRenderer;
     [SerializeField]
@@ -47,17 +51,43 @@ public class MapTile : MonoBehaviour
 
     public void InitializePrefab(ProvinceData provinceData, Mesh msh, Material mat, Bounds bounds)
     {
-        gameObject.name = provinceData.Tag;
+        gameObject.name = provinceData.Data.TileTag;
         float minDiameter = Mathf.Min(bounds.size.x, bounds.size.z);
         MeshBounds = bounds;
 
-        tileTagUI.text = provinceData.Tag;
+        tileTagUI.text = provinceData.Data.TileTag;
         tileTagUI.gameObject.transform.localScale = new Vector3(minDiameter / 10f, minDiameter / 10f, minDiameter / 10f);
 
         meshFilter.mesh = msh;
         meshRenderer.material = mat;
         meshCollider.sharedMesh = msh;
-        TileName = provinceData.Tag;
+        TileName = provinceData.Data.TileTag;
+
+        if (provinceData.Data.Stress != 0)
+        {
+            InitializeResources(Color.white, provinceData.Data.Stress);
+        }
+        if (provinceData.Data.OSR != 0)
+        {
+            InitializeResources(Color.yellow, provinceData.Data.OSR);
+        }
+        if (provinceData.Data.Iron != 0)
+        {
+            InitializeResources(Color.blue, provinceData.Data.Iron);
+        }
+        if (provinceData.Data.Oil != 0)
+        {
+            InitializeResources(Color.red, provinceData.Data.Oil);
+        }
+
+    }
+
+    public void InitializeResources(Color backgroundColor, int index)
+    {
+        GameObject input = Instantiate(pooledTileResource, resourceParent);
+        TileResourceUI tileResource = input.GetComponent<TileResourceUI>();
+        tileResource.SetVisuals(backgroundColor, index);
+        input.SetActive(true);
     }
 
     public void InitializeSDFValues(Vector3 center, Texture2D sdf)

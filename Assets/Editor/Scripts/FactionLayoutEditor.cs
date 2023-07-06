@@ -330,11 +330,25 @@ public class FactionLayoutEditor : EditorWindow
         for (int i = 0; i < mapColorData.TileList.Count; i++)
         {
             GUILayout.BeginHorizontal();
-            mapColorData.TileList[i].TileTag = EditorGUILayout.TextField(mapColorData.TileList[i].TileTag, GUILayout.Width(50f));
-            mapColorData.TileList[i].TileColor =
-                ColorToVector(EditorGUILayout.ColorField(
-                    VectorToColor(mapColorData.TileList[i].TileColor))
-                );
+            mapColorData.TileList[i].TileTag = EditorGUILayout.TextField(mapColorData.TileList[i].TileTag, GUILayout.Width(40f));
+            mapColorData.TileList[i].TileName = EditorGUILayout.TextField(mapColorData.TileList[i].TileName, GUILayout.Width(85f));
+
+            mapColorData.TileList[i].TileColor = 
+                ColorToVector(
+                    EditorGUILayout.ColorField(
+                        VectorToColor(mapColorData.TileList[i].TileColor)
+                        )
+                    );
+
+            mapColorData.TileList[i].Stress = EditorGUILayout.IntField(mapColorData.TileList[i].Stress, GUILayout.Width(30));
+            GUI.backgroundColor = Color.yellow;
+            mapColorData.TileList[i].OSR = EditorGUILayout.IntField(mapColorData.TileList[i].OSR, GUILayout.Width(30));
+            GUI.backgroundColor = Color.blue;
+            mapColorData.TileList[i].Iron = EditorGUILayout.IntField(mapColorData.TileList[i].Iron, GUILayout.Width(30));
+            GUI.backgroundColor = Color.red;
+            mapColorData.TileList[i].Oil = EditorGUILayout.IntField(mapColorData.TileList[i].Iron, GUILayout.Width(30));
+            GUI.backgroundColor = Color.white;
+
             if (GUILayout.Button("-", new GUIStyle("minibutton"), GUILayout.Width(40f)))
             {
                 RemoveTile(i);
