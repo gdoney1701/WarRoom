@@ -13,6 +13,29 @@ public class PhaseOrderUI : MonoBehaviour
     private Transform orderContainer;
     [SerializeField]
     private Button confirmButton;
+    [SerializeField]
+    private InputField oilBidField;
+
+    private int totalOilReservce = 0;
+    private int oilBid = 0;
+    public int OilBid
+    {
+        get { return oilBid; }
+        set
+        {
+            if(value != oilBid)
+            {
+                if(value > totalOilReservce)
+                {
+                    oilBid = totalOilReservce;
+                }
+                else
+                {
+                    oilBid = value;
+                }
+            }
+        }
+    }
 
     public class OrderData
     {
