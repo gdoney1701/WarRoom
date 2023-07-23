@@ -16,6 +16,8 @@ public class StackManager : MonoBehaviour
     private BoxCollider stackCollider;
     [SerializeField]
     private Material selectionMaterial;
+    [SerializeField]
+    private LineRenderer moveVector;
 
     private string stackLongTag;
     private GameObject outLine = null;
@@ -128,6 +130,23 @@ public class StackManager : MonoBehaviour
         outLine.transform.SetParent(visualParent);
 
         UpdateVisuals(faction.VectorToColor());
+    }
+
+    public void OnSetMove(Vector3 destination)
+    {
+        moveVector.gameObject.SetActive(true);
+        moveVector.positionCount = 2;
+        moveVector.SetPositions(new Vector3[2]
+        {
+            Vector3.zero,
+            moveVector.gameObject.transform.InverseTransformPoint(destination)
+        });
+    }
+
+    public void OnClearMove()
+    {
+        moveVector.gameObject.SetActive(false);
+        moveVector.positionCount = 1;
     }
 
     public void OnSelect()

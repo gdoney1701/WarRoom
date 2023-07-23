@@ -88,18 +88,21 @@ public class TurnManager : MonoBehaviour
         {
             if(selectedStack.CurrentTileTag == mapTile.TileName)
             {
+                selectedStack.OnClearMove();
                 orderPhase.ClearEntry(presentAt);
                 OrdersManager.Instance.Orders[presentAt].ClearOrderPair();
                 return;
             }
             else
             {
+                selectedStack.OnSetMove(mapTile.CenterContainer.position);
                 orderPhase.ReviseOrder(presentAt, selectedStack.ShortTag, mapTile.TileName);
                 OrdersManager.Instance.ChangeOrders(presentAt, selectedStack, mapTile);
                 return;
             }
 
         }
+        selectedStack.OnSetMove(mapTile.CenterContainer.position);
         int newOrderIndex = orderPhase.SetNewOrder(
             selectedStack.ShortTag, mapTile.TileName
             );
