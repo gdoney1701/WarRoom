@@ -1,9 +1,9 @@
 ManifestFileVersion: 0
-CRC: 3968275059
+CRC: 2544926749
 Hashes:
   AssetFileHash:
     serializedVersion: 2
-    Hash: b55480cba281444038fcd83310032a72
+    Hash: 6c1002d72402528207282f266cc7a8bc
   TypeTreeHash:
     serializedVersion: 2
     Hash: b0363f7088f9761414f730641bf9a24b
@@ -14,5 +14,6 @@ ClassTypes:
 SerializeReferenceClassIdentifiers: []
 Assets:
 - Assets/Art/Textures/TestMap_7.bmp
+- Assets/Art/Textures/DonutTest.bmp
 - Assets/Art/Textures/EarthMap_01.bmp
 Dependencies: []
