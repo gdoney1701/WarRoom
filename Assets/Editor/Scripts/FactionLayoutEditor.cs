@@ -6,13 +6,12 @@ using UnityEditor;
 public class FactionLayoutEditor : EditorWindow
 {
 
-    private string mapDataName = "EarthMap_01_Demo";
-    private string belligerentDataName = "EarthMap_01_Bell";
-
+    //private string mapDataName = "EarthMap_01_Demo";
+    //private string belligerentDataName = "EarthMap_01_Bell";
     private Dictionary<Vector3Int, string> loadedMapData = new Dictionary<Vector3Int, string>();
     private Texture2D mapTexture;
-    private MapColorData mapColorData = new MapColorData();
-    private BelligerentData belligerentData = new BelligerentData();
+    //private MapColorData mapColorData = new MapColorData();
+    //private BelligerentData belligerentData = new BelligerentData();
     private SaveData saveData = new SaveData();
     private string[] BelligerentNames = new string[0];
 
@@ -55,7 +54,7 @@ public class FactionLayoutEditor : EditorWindow
 
     private int toolbarInt = 0;
     private int armyToolbarInt = 0;
-    private string[] toolbarStrings = { "Tag", "Belligerent", "Faction", "Save State" };
+    private string[] toolbarStrings = { "Tag", "Belligerent", "Faction" };
     private string[] armyToolbarStrings = { "Occupation", "Stacks" };
 
     private string saveBelligerentPath = "EarthMap_01_Bell";
@@ -84,7 +83,7 @@ public class FactionLayoutEditor : EditorWindow
 
     void AddSelectedStack()
     {
-        FactionData currentData = belligerentData.WarParticipants[FactionIndex];
+        FactionData currentData = saveData.saveBelligerents.WarParticipants[FactionIndex];
 
         StackData newStack = new StackData("57");
         newStack.TileTag = selectedTag;
@@ -94,7 +93,7 @@ public class FactionLayoutEditor : EditorWindow
     }
     void AddSelectedOccupation()
     {
-        FactionData currentData = belligerentData.WarParticipants[FactionIndex];
+        FactionData currentData = saveData.saveBelligerents.WarParticipants[FactionIndex];
 
         TileData newData = new TileData { TileColor = ColorToVector(selectedColor), TileTag = selectedTag };
 
@@ -172,39 +171,27 @@ public class FactionLayoutEditor : EditorWindow
         GUILayout.BeginHorizontal();
 
         GUILayout.Space(20f);
-        EditorGUILayout.LabelField("Map Data File:", new GUIStyle("BoldLabel"), GUILayout.Width(100f));
-        mapDataName = EditorGUILayout.TextField(mapDataName, GUILayout.Width(150f));
+        EditorGUILayout.LabelField("Save Data File:", new GUIStyle("BoldLabel"), GUILayout.Width(100f));
+        saveDataPath = EditorGUILayout.TextField(saveDataPath, GUILayout.Width(150f));
         if(GUILayout.Button("Load"))
         {
-            if (!string.IsNullOrEmpty(mapDataName))
+            if (!string.IsNullOrEmpty(saveDataPath))
             {
-                ImportMapData();
+                //REPLACE saveData
+                ImportSaveData();
             }
         }
         if (GUILayout.Button("New"))
         {
-            if (!string.IsNullOrEmpty(mapDataName))
+            if (!string.IsNullOrEmpty(saveDataPath))
             {
-                ImportMapData(true);
+                //REPLACE saveData
+                ImportSaveData(true);
             }
         }
-
-        GUILayout.Space(20f);
-        EditorGUILayout.LabelField("Belligerent Data File:", new GUIStyle("BoldLabel"), GUILayout.Width(150f));
-        belligerentDataName = EditorGUILayout.TextField(belligerentDataName, GUILayout.Width(150f));
-        if (GUILayout.Button("Load"))
+        if (GUILayout.Button("Save"))
         {
-            if (!string.IsNullOrEmpty(belligerentDataName))
-            {
-                ImportBelligerentData();
-            }
-        }
-        if (GUILayout.Button("New"))
-        {
-            if (!string.IsNullOrEmpty(belligerentDataName))
-            {
-                ImportBelligerentData(true);
-            }
+            saveData.SaveToFile(saveDataPath);
         }
 
         GUILayout.EndHorizontal();
@@ -306,9 +293,9 @@ public class FactionLayoutEditor : EditorWindow
                 case 2:
                     DrawArmyTab();
                     break;
-                case 3:
-                    DrawSaveTab();
-                    break;
+                //case 3:
+                //    DrawSaveTab();
+                //    break;
 
             }
             GUILayout.EndVertical();
@@ -327,26 +314,26 @@ public class FactionLayoutEditor : EditorWindow
         GUILayout.EndHorizontal();
         GUILayout.BeginVertical(new GUIStyle("GroupBox"));
         tileScrollView = GUILayout.BeginScrollView(tileScrollView);
-        for (int i = 0; i < mapColorData.TileList.Count; i++)
+        for (int i = 0; i < saveData.loadedMapData.TileList.Count; i++)
         {
             GUILayout.BeginHorizontal();
-            mapColorData.TileList[i].TileTag = EditorGUILayout.TextField(mapColorData.TileList[i].TileTag, GUILayout.Width(40f));
-            mapColorData.TileList[i].TileName = EditorGUILayout.TextField(mapColorData.TileList[i].TileName, GUILayout.Width(85f));
+            saveData.loadedMapData.TileList[i].TileTag = EditorGUILayout.TextField(saveData.loadedMapData.TileList[i].TileTag, GUILayout.Width(40f));
+            saveData.loadedMapData.TileList[i].TileName = EditorGUILayout.TextField(saveData.loadedMapData.TileList[i].TileName, GUILayout.Width(85f));
 
-            mapColorData.TileList[i].TileColor = 
+            saveData.loadedMapData.TileList[i].TileColor = 
                 ColorToVector(
                     EditorGUILayout.ColorField(
-                        VectorToColor(mapColorData.TileList[i].TileColor)
+                        VectorToColor(saveData.loadedMapData.TileList[i].TileColor)
                         )
                     );
 
-            mapColorData.TileList[i].Stress = EditorGUILayout.IntField(mapColorData.TileList[i].Stress, GUILayout.Width(30));
+            saveData.loadedMapData.TileList[i].Stress = EditorGUILayout.IntField(saveData.loadedMapData.TileList[i].Stress, GUILayout.Width(30));
             GUI.backgroundColor = Color.yellow;
-            mapColorData.TileList[i].OSR = EditorGUILayout.IntField(mapColorData.TileList[i].OSR, GUILayout.Width(30));
+            saveData.loadedMapData.TileList[i].OSR = EditorGUILayout.IntField(saveData.loadedMapData.TileList[i].OSR, GUILayout.Width(30));
             GUI.backgroundColor = Color.blue;
-            mapColorData.TileList[i].Iron = EditorGUILayout.IntField(mapColorData.TileList[i].Iron, GUILayout.Width(30));
+            saveData.loadedMapData.TileList[i].Iron = EditorGUILayout.IntField(saveData.loadedMapData.TileList[i].Iron, GUILayout.Width(30));
             GUI.backgroundColor = Color.red;
-            mapColorData.TileList[i].Oil = EditorGUILayout.IntField(mapColorData.TileList[i].Iron, GUILayout.Width(30));
+            saveData.loadedMapData.TileList[i].Oil = EditorGUILayout.IntField(saveData.loadedMapData.TileList[i].Iron, GUILayout.Width(30));
             GUI.backgroundColor = Color.white;
 
             if (GUILayout.Button("-", new GUIStyle("minibutton"), GUILayout.Width(40f)))
@@ -359,16 +346,6 @@ public class FactionLayoutEditor : EditorWindow
         GUILayout.EndVertical();
 
         GUILayout.BeginHorizontal();
-        if(GUILayout.Button("Save Map Data"))
-        {
-            mapColorData.MapTexturePath = AssetDatabase.GetAssetPath(mapTexture);
-            mapColorData.SaveToFile(mapDataName);
-            if (!string.IsNullOrEmpty(mapDataName))
-            {
-                ImportMapData();
-            }
-            Repaint();
-        }
         GUILayout.FlexibleSpace();
         if (GUILayout.Button("+", new GUIStyle("minibutton")))
         {
@@ -376,7 +353,7 @@ public class FactionLayoutEditor : EditorWindow
         }
         if (GUILayout.Button("-", new GUIStyle("minibutton")))
         {
-            RemoveTile(mapColorData.TileList.Count - 1);
+            RemoveTile(saveData.loadedMapData.TileList.Count - 1);
         }
         GUILayout.EndHorizontal();
         GUILayout.EndVertical();
@@ -389,7 +366,7 @@ public class FactionLayoutEditor : EditorWindow
         FactionIndex = EditorGUILayout.Popup(FactionIndex, BelligerentNames);
 
         GUILayout.BeginVertical(new GUIStyle("GroupBox"));
-        FactionData selectedFaction = belligerentData.WarParticipants[FactionIndex];
+        FactionData selectedFaction = saveData.saveBelligerents.WarParticipants[FactionIndex];
 
         GUILayout.BeginHorizontal();
         EditorGUILayout.LabelField("Long Name: ", GUILayout.Width(80f));
@@ -423,30 +400,15 @@ public class FactionLayoutEditor : EditorWindow
 
         GUILayout.BeginHorizontal();
         GUILayout.FlexibleSpace();
-        if (GUILayout.Button("Save"))
-        {
-            belligerentData.WarParticipants[factionIndex].IconPath = AssetDatabase.GetAssetPath(factionIcon);
-            belligerentData.SaveToFile(belligerentDataName);
-            RefreshBelligerentPopup();
-            if (!string.IsNullOrEmpty(belligerentDataName))
-            {
-                ImportMapData();
-            }
-            Repaint();
-        }
         if(GUILayout.Button("New Entry"))
         {
-            belligerentData.IncreaseArray();
+            saveData.saveBelligerents.IncreaseArray();
             RefreshBelligerentPopup();
-            if (!string.IsNullOrEmpty(belligerentDataName))
-            {
-                ImportMapData();
-            }
             Repaint();
         }
         if(GUILayout.Button("Remove Current"))
         {
-            belligerentData.DecreaseArray(FactionIndex);
+            saveData.saveBelligerents.DecreaseArray(FactionIndex);
             FactionIndex = 0;
             RefreshBelligerentPopup();
             Repaint();
@@ -482,7 +444,7 @@ public class FactionLayoutEditor : EditorWindow
     {
         GUILayout.BeginVertical(new GUIStyle("GroupBox"));
         occupationScroll = GUILayout.BeginScrollView(occupationScroll);
-        FactionData currentFaction = belligerentData.WarParticipants[FactionIndex];
+        FactionData currentFaction = saveData.saveBelligerents.WarParticipants[FactionIndex];
         for(int i = 0; i < currentFaction.TileControl.Length; i++)
         {
             GUILayout.BeginHorizontal();
@@ -502,16 +464,12 @@ public class FactionLayoutEditor : EditorWindow
         GUILayout.EndScrollView();
         GUILayout.BeginHorizontal();
         GUILayout.FlexibleSpace();
-        if (GUILayout.Button("Save", GUILayout.Width(70f)))
-        {
-            belligerentData.SaveToFile(belligerentDataName);
-        }
         GUILayout.EndHorizontal();
         GUILayout.EndVertical();
     }
     private void DrawStacks()
     {
-        FactionData currentFaction = belligerentData.WarParticipants[FactionIndex];
+        FactionData currentFaction = saveData.saveBelligerents.WarParticipants[FactionIndex];
         GUILayout.BeginVertical(new GUIStyle("GroupBox"));
         stackScroll = GUILayout.BeginScrollView(stackScroll);
 
@@ -610,13 +568,13 @@ public class FactionLayoutEditor : EditorWindow
 
     private void RefreshBelligerentPopup()
     {
-        if (belligerentData.WarParticipants.Length != 0)
+        if (saveData.saveBelligerents.WarParticipants.Length != 0)
         {
-            BelligerentNames = new string[belligerentData.WarParticipants.Length];
+            BelligerentNames = new string[saveData.saveBelligerents.WarParticipants.Length];
             for (int i = 0; i < BelligerentNames.Length; i++)
             {
-                string newName = belligerentData.WarParticipants[i].LongName;
-                if(belligerentData.WarParticipants[i].LongName == new FactionData().LongName)
+                string newName = saveData.saveBelligerents.WarParticipants[i].LongName;
+                if(saveData.saveBelligerents.WarParticipants[i].LongName == new FactionData().LongName)
                 {
                     newName = string.Format("{0} ({1})", newName, i);
                 }
@@ -625,32 +583,9 @@ public class FactionLayoutEditor : EditorWindow
         }
     }
 
-    private void ImportBelligerentData(bool newData = false)
-    {
-        belligerentData = new BelligerentData();
-        if (!newData)
-        {
-            belligerentData.LoadFromFile(belligerentDataName);
-        }
-
-
-        if (belligerentData.WarParticipants.Length != 0)
-        {
-            RefreshBelligerentPopup();
-            LoadFactionIcon();
-        }
-        else
-        {
-            if (EditorUtility.DisplayDialog("Invalid Belligerent Data File", "Please Re-enter the File Name String", "OK"))
-            {
-                belligerentDataName = string.Empty;
-            }
-        }
-    }
-
     private void LoadFactionIcon()
     {
-        string path = belligerentData.WarParticipants[FactionIndex].IconPath;
+        string path = saveData.saveBelligerents.WarParticipants[FactionIndex].IconPath;
         if (string.IsNullOrEmpty(path))
         {
             factionIcon = null;
@@ -661,45 +596,45 @@ public class FactionLayoutEditor : EditorWindow
         Repaint();
     }
 
-    private void ImportMapData(bool newData = false)
+    private void ImportSaveData(bool newData = false)
     {
-        mapColorData = new MapColorData();
+        saveData = new SaveData();
         if (!newData)
         {
-            mapColorData.LoadFromFile(mapDataName);
+            saveData.LoadFromFile(saveDataPath);
+
         }
 
-        mapTexture = (Texture2D)AssetDatabase.LoadMainAssetAtPath(mapColorData.MapTexturePath);
+        mapTexture = (Texture2D)AssetDatabase.LoadMainAssetAtPath(saveData.loadedMapData.MapTexturePath);
 
-        if (mapColorData.TileList.Count != 0)
+        if (saveData.loadedMapData.TileList.Count != 0)
         {
             LoadedMapData.Clear();
-            for(int i = 0; i < mapColorData.TileList.Count; i++)
+            for(int i = 0; i < saveData.loadedMapData.TileList.Count; i++)
             {
-                if (!LoadedMapData.ContainsKey(mapColorData.TileList[i].TileColor))
+                if (!LoadedMapData.ContainsKey(saveData.loadedMapData.TileList[i].TileColor))
                 {
-                    LoadedMapData.Add(mapColorData.TileList[i].TileColor, mapColorData.TileList[i].TileTag);
+                    LoadedMapData.Add(saveData.loadedMapData.TileList[i].TileColor, saveData.loadedMapData.TileList[i].TileTag);
                 }
             }
 
-            mapTexture = (Texture2D)AssetDatabase.LoadMainAssetAtPath(mapColorData.MapTexturePath);
+            mapTexture = (Texture2D)AssetDatabase.LoadMainAssetAtPath(saveData.loadedMapData.MapTexturePath);
         }
-        else
+
+        if (saveData.saveBelligerents.WarParticipants.Length != 0)
         {
-            if(EditorUtility.DisplayDialog("Invalid Map Data File", "Please Re-enter the File Name String", "OK"))
-            {
-                mapDataName = string.Empty;
-            }
+            RefreshBelligerentPopup();
+            LoadFactionIcon();
         }
         Repaint();
     }
     private void AddTile()
     {
-        mapColorData.TileList.Add(new TileData());
+        saveData.loadedMapData.TileList.Add(new TileData());
     }
     private void RemoveTile(int removePoint)
     {
-        mapColorData.TileList.RemoveAt(removePoint);
+        saveData.loadedMapData.TileList.RemoveAt(removePoint);
     }
 
     private Color32 VectorToColor(Vector3Int entry)
