@@ -1,0 +1,463 @@
+{
+    "WarParticipants": [
+        {
+            "LongName": "United States",
+            "Color": {
+                "x": 94,
+                "y": 154,
+                "z": 124
+            },
+            "ID": "usa",
+            "AllianceID": 0,
+            "IconPath": "Assets/Art/UI/Icons/icon_us.png",
+            "TileControl": [
+                {
+                    "TileColor": {
+                        "x": 206,
+                        "y": 119,
+                        "z": 214
+                    },
+                    "TileTag": "N3"
+                },
+                {
+                    "TileColor": {
+                        "x": 22,
+                        "y": 7,
+                        "z": 81
+                    },
+                    "TileTag": "N6"
+                },
+                {
+                    "TileColor": {
+                        "x": 18,
+                        "y": 95,
+                        "z": 150
+                    },
+                    "TileTag": "N5"
+                },
+                {
+                    "TileColor": {
+                        "x": 3,
+                        "y": 198,
+                        "z": 140
+                    },
+                    "TileTag": "N7"
+                },
+                {
+                    "TileColor": {
+                        "x": 116,
+                        "y": 80,
+                        "z": 178
+                    },
+                    "TileTag": "N8"
+                },
+                {
+                    "TileColor": {
+                        "x": 221,
+                        "y": 198,
+                        "z": 44
+                    },
+                    "TileTag": "N10"
+                },
+                {
+                    "TileColor": {
+                        "x": 78,
+                        "y": 64,
+                        "z": 132
+                    },
+                    "TileTag": "N14"
+                }
+            ],
+            "StackArray": [
+                {
+                    "StackZone": 1,
+                    "RedTroopCount": 0,
+                    "BlueTroopCount": 2,
+                    "GreenTroopCount": 3,
+                    "YellowTroopCount": 2,
+                    "TileTag": "N3",
+                    "TroopLongTag": "usa_1_21",
+                    "TroopNumberID": "21"
+                },
+                {
+                    "StackZone": 1,
+                    "RedTroopCount": 0,
+                    "BlueTroopCount": 1,
+                    "GreenTroopCount": 0,
+                    "YellowTroopCount": 4,
+                    "TileTag": "N6",
+                    "TroopLongTag": "usa_1_58",
+                    "TroopNumberID": "58"
+                },
+                {
+                    "StackZone": 1,
+                    "RedTroopCount": 0,
+                    "BlueTroopCount": 1,
+                    "GreenTroopCount": 1,
+                    "YellowTroopCount": 1,
+                    "TileTag": "N5",
+                    "TroopLongTag": "usa_1_90",
+                    "TroopNumberID": "90"
+                },
+                {
+                    "StackZone": 1,
+                    "RedTroopCount": 0,
+                    "BlueTroopCount": 0,
+                    "GreenTroopCount": 0,
+                    "YellowTroopCount": 8,
+                    "TileTag": "N7",
+                    "TroopLongTag": "usa_1_17",
+                    "TroopNumberID": "17"
+                },
+                {
+                    "StackZone": 1,
+                    "RedTroopCount": 0,
+                    "BlueTroopCount": 3,
+                    "GreenTroopCount": 2,
+                    "YellowTroopCount": 3,
+                    "TileTag": "N8",
+                    "TroopLongTag": "usa_1_63",
+                    "TroopNumberID": "63"
+                }
+            ]
+        },
+        {
+            "LongName": "Great Britain",
+            "Color": {
+                "x": 204,
+                "y": 202,
+                "z": 146
+            },
+            "ID": "gb",
+            "AllianceID": 0,
+            "IconPath": "Assets/Art/UI/Icons/icon_uk.png",
+            "TileControl": [
+                {
+                    "TileColor": {
+                        "x": 21,
+                        "y": 56,
+                        "z": 3
+                    },
+                    "TileTag": "E2"
+                },
+                {
+                    "TileColor": {
+                        "x": 107,
+                        "y": 62,
+                        "z": 96
+                    },
+                    "TileTag": "E3"
+                },
+                {
+                    "TileColor": {
+                        "x": 16,
+                        "y": 58,
+                        "z": 50
+                    },
+                    "TileTag": "E1"
+                },
+                {
+                    "TileColor": {
+                        "x": 51,
+                        "y": 14,
+                        "z": 36
+                    },
+                    "TileTag": "F1"
+                },
+                {
+                    "TileColor": {
+                        "x": 163,
+                        "y": 153,
+                        "z": 16
+                    },
+                    "TileTag": "A1"
+                }
+            ],
+            "StackArray": [
+                {
+                    "StackZone": 1,
+                    "RedTroopCount": 0,
+                    "BlueTroopCount": 0,
+                    "GreenTroopCount": 4,
+                    "YellowTroopCount": 4,
+                    "TileTag": "E2",
+                    "TroopLongTag": "gb_1_53",
+                    "TroopNumberID": "53"
+                },
+                {
+                    "StackZone": 1,
+                    "RedTroopCount": 0,
+                    "BlueTroopCount": 2,
+                    "GreenTroopCount": 4,
+                    "YellowTroopCount": 2,
+                    "TileTag": "E1",
+                    "TroopLongTag": "gb_1_14",
+                    "TroopNumberID": "14"
+                },
+                {
+                    "StackZone": 1,
+                    "RedTroopCount": 0,
+                    "BlueTroopCount": 3,
+                    "GreenTroopCount": 0,
+                    "YellowTroopCount": 4,
+                    "TileTag": "E1",
+                    "TroopLongTag": "gb_1_12",
+                    "TroopNumberID": "12"
+                },
+                {
+                    "StackZone": 1,
+                    "RedTroopCount": 0,
+                    "BlueTroopCount": 0,
+                    "GreenTroopCount": 1,
+                    "YellowTroopCount": 3,
+                    "TileTag": "F1",
+                    "TroopLongTag": "gb_1_67",
+                    "TroopNumberID": "67"
+                },
+                {
+                    "StackZone": 1,
+                    "RedTroopCount": 0,
+                    "BlueTroopCount": 2,
+                    "GreenTroopCount": 1,
+                    "YellowTroopCount": 2,
+                    "TileTag": "A1",
+                    "TroopLongTag": "gb_1_42",
+                    "TroopNumberID": "42"
+                }
+            ]
+        },
+        {
+            "LongName": "Soviet Union",
+            "Color": {
+                "x": 128,
+                "y": 48,
+                "z": 48
+            },
+            "ID": "ussr",
+            "AllianceID": 0,
+            "IconPath": "Assets/Art/UI/Icons/icon_ussr.png",
+            "TileControl": [
+                {
+                    "TileColor": {
+                        "x": 188,
+                        "y": 70,
+                        "z": 49
+                    },
+                    "TileTag": "E8"
+                },
+                {
+                    "TileColor": {
+                        "x": 54,
+                        "y": 5,
+                        "z": 117
+                    },
+                    "TileTag": "A14"
+                },
+                {
+                    "TileColor": {
+                        "x": 103,
+                        "y": 191,
+                        "z": 95
+                    },
+                    "TileTag": "A4"
+                },
+                {
+                    "TileColor": {
+                        "x": 62,
+                        "y": 224,
+                        "z": 186
+                    },
+                    "TileTag": "A10"
+                },
+                {
+                    "TileColor": {
+                        "x": 80,
+                        "y": 116,
+                        "z": 183
+                    },
+                    "TileTag": "A3"
+                }
+            ],
+            "StackArray": [
+                {
+                    "StackZone": 1,
+                    "RedTroopCount": 0,
+                    "BlueTroopCount": 0,
+                    "GreenTroopCount": 0,
+                    "YellowTroopCount": 8,
+                    "TileTag": "E8",
+                    "TroopLongTag": "ussr_1_123",
+                    "TroopNumberID": "123"
+                },
+                {
+                    "StackZone": 1,
+                    "RedTroopCount": 0,
+                    "BlueTroopCount": 2,
+                    "GreenTroopCount": 2,
+                    "YellowTroopCount": 0,
+                    "TileTag": "A4",
+                    "TroopLongTag": "ussr_1_21",
+                    "TroopNumberID": "21"
+                },
+                {
+                    "StackZone": 1,
+                    "RedTroopCount": 0,
+                    "BlueTroopCount": 3,
+                    "GreenTroopCount": 0,
+                    "YellowTroopCount": 2,
+                    "TileTag": "A3",
+                    "TroopLongTag": "ussr_1_25",
+                    "TroopNumberID": "25"
+                },
+                {
+                    "StackZone": 1,
+                    "RedTroopCount": 0,
+                    "BlueTroopCount": 1,
+                    "GreenTroopCount": 5,
+                    "YellowTroopCount": 1,
+                    "TileTag": "A10",
+                    "TroopLongTag": "ussr_1_96",
+                    "TroopNumberID": "96"
+                }
+            ]
+        },
+        {
+            "LongName": "Germany",
+            "Color": {
+                "x": 48,
+                "y": 48,
+                "z": 48
+            },
+            "ID": "ger",
+            "AllianceID": 1,
+            "IconPath": "Assets/Art/UI/Icons/icon_ger.png",
+            "TileControl": [
+                {
+                    "TileColor": {
+                        "x": 103,
+                        "y": 133,
+                        "z": 252
+                    },
+                    "TileTag": "E4"
+                },
+                {
+                    "TileColor": {
+                        "x": 114,
+                        "y": 98,
+                        "z": 178
+                    },
+                    "TileTag": "F2"
+                },
+                {
+                    "TileColor": {
+                        "x": 137,
+                        "y": 0,
+                        "z": 16
+                    },
+                    "TileTag": "E7"
+                },
+                {
+                    "TileColor": {
+                        "x": 84,
+                        "y": 23,
+                        "z": 196
+                    },
+                    "TileTag": "F5"
+                },
+                {
+                    "TileColor": {
+                        "x": 73,
+                        "y": 127,
+                        "z": 12
+                    },
+                    "TileTag": "E5"
+                }
+            ],
+            "StackArray": [
+                {
+                    "StackZone": 1,
+                    "RedTroopCount": 0,
+                    "BlueTroopCount": 0,
+                    "GreenTroopCount": 4,
+                    "YellowTroopCount": 4,
+                    "TileTag": "E4",
+                    "TroopLongTag": "ger_1_69",
+                    "TroopNumberID": "69"
+                },
+                {
+                    "StackZone": 1,
+                    "RedTroopCount": 0,
+                    "BlueTroopCount": 0,
+                    "GreenTroopCount": 6,
+                    "YellowTroopCount": 1,
+                    "TileTag": "E5",
+                    "TroopLongTag": "ger_1_76",
+                    "TroopNumberID": "76"
+                },
+                {
+                    "StackZone": 1,
+                    "RedTroopCount": 0,
+                    "BlueTroopCount": 4,
+                    "GreenTroopCount": 0,
+                    "YellowTroopCount": 2,
+                    "TileTag": "E7",
+                    "TroopLongTag": "ger_1_23",
+                    "TroopNumberID": "23"
+                },
+                {
+                    "StackZone": 1,
+                    "RedTroopCount": 0,
+                    "BlueTroopCount": 2,
+                    "GreenTroopCount": 1,
+                    "YellowTroopCount": 5,
+                    "TileTag": "F2",
+                    "TroopLongTag": "ger_1_35",
+                    "TroopNumberID": "35"
+                },
+                {
+                    "StackZone": 1,
+                    "RedTroopCount": 0,
+                    "BlueTroopCount": 4,
+                    "GreenTroopCount": 1,
+                    "YellowTroopCount": 3,
+                    "TileTag": "F5",
+                    "TroopLongTag": "ger_1_86",
+                    "TroopNumberID": "86"
+                }
+            ]
+        },
+        {
+            "LongName": "Italy",
+            "Color": {
+                "x": 41,
+                "y": 154,
+                "z": 38
+            },
+            "ID": "ita",
+            "AllianceID": 1,
+            "IconPath": "Assets/Art/UI/Icons/icon_Italy.png",
+            "TileControl": [
+                {
+                    "TileColor": {
+                        "x": 163,
+                        "y": 99,
+                        "z": 21
+                    },
+                    "TileTag": "E6"
+                }
+            ],
+            "StackArray": [
+                {
+                    "StackZone": 1,
+                    "RedTroopCount": 0,
+                    "BlueTroopCount": 0,
+                    "GreenTroopCount": 0,
+                    "YellowTroopCount": 8,
+                    "TileTag": "E6",
+                    "TroopLongTag": "ita_1_111",
+                    "TroopNumberID": "111"
+                }
+            ]
+        }
+    ]
+}
