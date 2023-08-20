@@ -544,20 +544,19 @@ namespace MapMeshGenerator
             SDFPacket[] result = new SDFPacket[provinces.Length];
             for (int i = 0; i < provinces.Length; i++)
             {
-                Vector3 poi = CalculatePOI(provinces[i].VertexPoints, meshData.mapTiles[provinces[i].Data.TileTag].MeshBounds);
-                Color[] colors = CreateRuntimeSDF(provinces[i].VertexPoints, meshData.mapTiles[provinces[i].Data.TileTag].MeshBounds);
-
-                result[i] = new SDFPacket { pixelColors = colors, POI = poi };
-
+                result[i] = CreateRuntimeSDF(provinces[i].VertexPoints, meshData.mapTiles[provinces[i].Data.TileTag].MeshBounds);
                 meshData.AssignNeighbors(provinces[i]);
             }
             return result;
         }
 
-        public Color[] CreateRuntimeSDF(Vector2[] points, Bounds meshBounds)
+        public SDFPacket CreateRuntimeSDF(Vector2[] points, Bounds meshBounds)
         {
-            //Texture2D result = new Texture2D(textureSize, textureSize);
-            Color[] result = new Color[sdfTextureSize * sdfTextureSize];
+            SDFPacket result = new SDFPacket();
+            result.pixelColors = new Color[sdfTextureSize * sdfTextureSize];
+
+            float maxDistance = float.MinValue;
+            Vector2 poiUV = new Vector2(0, 0);
 
             for (int y = 0; y < sdfTextureSize; y++)
             {
@@ -567,9 +566,17 @@ namespace MapMeshGenerator
                     float signedDistance = SDFHelperMethods.SignedDistance(points, worldSpace) / 30f;
                     float newColor = signedDistance > 0 ? signedDistance : 0;
 
-                    result[y * sdfTextureSize + x] = new Color(newColor, newColor, newColor);
+                    if(signedDistance > maxDistance)
+                    {
+                        maxDistance = signedDistance;
+                        poiUV = new Vector2(x + 0.5f, y + 0.5f);
+                    }
+                    result.pixelColors[y * sdfTextureSize + x] = new Color(newColor, newColor, newColor);
                 }
             }
+
+            Vector2 finalPos = ConvertUVToPos(poiUV, meshBounds, sdfTextureSize);
+            result.POI = new Vector3(finalPos.x, 0, finalPos.y);
             return result;
         }
 
