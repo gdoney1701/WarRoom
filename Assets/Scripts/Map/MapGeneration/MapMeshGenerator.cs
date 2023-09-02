@@ -146,8 +146,14 @@ namespace MapMeshGenerator
 
                 currentTile.InitializeSDFValues(sdfCalculation[i].POI, sdfTex);
             }
-
-            meshData.columnArray = CreateVerticalGroups(meshData, 12);
+            if (loadedSave.loadedMapData.horizontalLooping)
+            {
+                meshData.columnArray = CreateVerticalGroups(meshData, 12);
+            }
+            else
+            {
+                meshData.columnArray = CreateVerticalGroups(meshData, 1);
+            }
 
             if (Application.isPlaying)
             {
@@ -586,51 +592,6 @@ namespace MapMeshGenerator
             return result;
         }
 
-        Vector3 CalculatePOI(Vector2[] vertices, Bounds bounds)
-        {
-            //float uvScale = Mathf.Max(maxPoint.x - minPoint.x, maxPoint.y - minPoint.y);
-            //Vector2 uvMaxPoint = new Vector2(minPoint.x + uvScale, minPoint.y + uvScale);
-            bool foundInterior = false;
-
-            SDFCell initialCell = new SDFCell(new Vector2(bounds.min.x, bounds.min.z), new Vector2(bounds.max.x, bounds.max.z), vertices);
-            SDFCell bestCell = initialCell;
-
-            Queue<SDFCell> frontier = new Queue<SDFCell>();
-            initialCell.SubdivideCell(vertices, frontier);
-            int fallBack = 0;
-            while(frontier.Count > 0)
-            {
-                SDFCell currentCell = frontier.Dequeue();
-                if (currentCell.Dist < 0 && foundInterior)
-                {
-                    continue;
-                }
-                else
-                {
-                    foundInterior = true;
-                }
-                if (currentCell.Dist >= bestCell.Dist)
-                {
-                    bestCell = currentCell;               
-                }
-                    
-
-                //if (currentCell.CellMax - bestCell.Dist <= 1)
-                //    continue;
-
-                currentCell.SubdivideCell(vertices, frontier);
-                fallBack++;
-
-                if(fallBack > 64)
-                {
-                    break;
-                }
-            }
-
-
-            return new Vector3(bestCell.Center.x, 0, bestCell.Center.y);
-        }
-
         Color32[] ExtractNeighborColors(ProvinceData provinceData)
         {
             List<Color32> uniqueNeighbors = new List<Color32>();
@@ -661,7 +622,15 @@ namespace MapMeshGenerator
             for(int i = 0; i < data.provinceList.Length; i++)
             {
                 int index = Mathf.FloorToInt(data.provinceList[i].MaxPoint.x / columnWidth);
-                data.mapTiles[data.provinceList[i].Data.TileTag].transform.SetParent(columnContainer[index].transform);
+                try
+                {
+                    data.mapTiles[data.provinceList[i].Data.TileTag].transform.SetParent(columnContainer[index].transform);
+                }
+                catch
+                {
+                    Debug.LogError(string.Format("Error in Creating Vertical Groups: {0}, {1}, {2}, {3}", data.provinceList.Length, i, index, columnContainer.Length));
+                }
+                
             }
             return columnContainer;
         }

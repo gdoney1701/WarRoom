@@ -28,6 +28,7 @@ public class PlayerController : MonoBehaviour
     private float neutralHeight;
     private bool canIssueOrder = false;
     private string playerFaction;
+    bool useHorizontalScroll = false;
 
     public delegate void SendOrder(MapTile mapTile);
     public static event SendOrder sendOrder;
@@ -69,6 +70,7 @@ public class PlayerController : MonoBehaviour
     void RegisterMapObjects(MapMeshGenerator.MeshGenerationData data, SaveData loadedSave)
     {
         mapColumns = data.columnArray;
+        useHorizontalScroll = loadedSave.loadedMapData.horizontalLooping;
         maxDistance = data.imageScale.x;
         columnWidth = (int)maxDistance / mapColumns.Length;
         readyToMove = true;
@@ -86,23 +88,32 @@ public class PlayerController : MonoBehaviour
         if (readyToMove)
         {
             Vector2 input = context.ReadValue<Vector2>();
-            mainCamera.ScreenToWorldPoint(input);
+            //mainCamera.ScreenToWorldPoint(input);
 
             zOffset += input.y;
-            for (int i = 0; i < mapColumns.Length; i++)
-            {         
-                float xOffset = mapColumns[i].transform.localPosition.x + input.x;
-                if(xOffset > maxDistance)
+            if (useHorizontalScroll)
+            {
+                for (int i = 0; i < mapColumns.Length; i++)
                 {
-                    xOffset -= maxDistance;
+                    float xOffset = mapColumns[i].transform.localPosition.x + input.x;
+                    if (xOffset > maxDistance)
+                    {
+                        xOffset -= maxDistance;
+                    }
+                    else if (xOffset < 0)
+                    {
+                        xOffset += maxDistance;
+                    }
+                    mapColumns[i].transform.localPosition = new Vector3(xOffset, 0, zOffset);
+
                 }
-                else if(xOffset < 0)
-                {
-                    xOffset += maxDistance;
-                }
-                mapColumns[i].transform.localPosition = new Vector3(xOffset, 0, zOffset);
-               
             }
+            else
+            {
+                float xOffset = mapColumns[0].transform.localPosition.x + input.x;
+                mapColumns[0].transform.localPosition = new Vector3(xOffset, 0, zOffset);
+            }
+
         }
     }
 

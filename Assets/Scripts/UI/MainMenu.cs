@@ -5,7 +5,7 @@ using UnityEngine.SceneManagement;
 
 public class MainMenu : MonoBehaviour
 {
-    private string saveGamePath = "Default";
+    private string saveGamePath = "Donut";
 
     public string SaveGamePath
     {

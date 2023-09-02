@@ -1,0 +1,284 @@
+{
+    "saveBelligerents": {
+        "WarParticipants": [
+            {
+                "LongName": "USSR",
+                "Color": {
+                    "x": 173,
+                    "y": 24,
+                    "z": 24
+                },
+                "ID": "ussr",
+                "AllianceID": 0,
+                "IconPath": "Assets/Art/UI/Icons/icon_ussr.png",
+                "TileControl": [
+                    {
+                        "TileColor": {
+                            "x": 118,
+                            "y": 83,
+                            "z": 198
+                        },
+                        "TileTag": "B1",
+                        "TileName": "Caprica City",
+                        "Stress": 1,
+                        "Iron": 1,
+                        "Oil": 1,
+                        "OSR": 1
+                    },
+                    {
+                        "TileColor": {
+                            "x": 68,
+                            "y": 14,
+                            "z": 104
+                        },
+                        "TileTag": "B5",
+                        "TileName": "Caprica City",
+                        "Stress": 1,
+                        "Iron": 1,
+                        "Oil": 1,
+                        "OSR": 1
+                    },
+                    {
+                        "TileColor": {
+                            "x": 91,
+                            "y": 27,
+                            "z": 39
+                        },
+                        "TileTag": "B4",
+                        "TileName": "Caprica City",
+                        "Stress": 1,
+                        "Iron": 1,
+                        "Oil": 1,
+                        "OSR": 1
+                    },
+                    {
+                        "TileColor": {
+                            "x": 127,
+                            "y": 123,
+                            "z": 3
+                        },
+                        "TileTag": "B3",
+                        "TileName": "Caprica City",
+                        "Stress": 1,
+                        "Iron": 1,
+                        "Oil": 1,
+                        "OSR": 1
+                    }
+                ],
+                "StackArray": [
+                    {
+                        "StackZone": 1,
+                        "RedTroopCount": 0,
+                        "BlueTroopCount": 0,
+                        "GreenTroopCount": 0,
+                        "YellowTroopCount": 0,
+                        "TileTag": "B1",
+                        "TroopLongTag": "ussr_1_57",
+                        "TroopNumberID": "57"
+                    }
+                ]
+            },
+            {
+                "LongName": "USA",
+                "Color": {
+                    "x": 58,
+                    "y": 183,
+                    "z": 120
+                },
+                "ID": "usa",
+                "AllianceID": 1,
+                "IconPath": "Assets/Art/UI/Icons/icon_us.png",
+                "TileControl": [
+                    {
+                        "TileColor": {
+                            "x": 229,
+                            "y": 135,
+                            "z": 4
+                        },
+                        "TileTag": "A3",
+                        "TileName": "Caprica City",
+                        "Stress": 1,
+                        "Iron": 1,
+                        "Oil": 1,
+                        "OSR": 1
+                    },
+                    {
+                        "TileColor": {
+                            "x": 7,
+                            "y": 51,
+                            "z": 9
+                        },
+                        "TileTag": "A1",
+                        "TileName": "Caprica City",
+                        "Stress": 1,
+                        "Iron": 1,
+                        "Oil": 1,
+                        "OSR": 1
+                    },
+                    {
+                        "TileColor": {
+                            "x": 206,
+                            "y": 234,
+                            "z": 21
+                        },
+                        "TileTag": "A2",
+                        "TileName": "Caprica City",
+                        "Stress": 1,
+                        "Iron": 1,
+                        "Oil": 1,
+                        "OSR": 1
+                    },
+                    {
+                        "TileColor": {
+                            "x": 3,
+                            "y": 3,
+                            "z": 127
+                        },
+                        "TileTag": "A4",
+                        "TileName": "Caprica City",
+                        "Stress": 1,
+                        "Iron": 1,
+                        "Oil": 1,
+                        "OSR": 1
+                    }
+                ],
+                "StackArray": [
+                    {
+                        "StackZone": 1,
+                        "RedTroopCount": 0,
+                        "BlueTroopCount": 0,
+                        "GreenTroopCount": 0,
+                        "YellowTroopCount": 0,
+                        "TileTag": "A1",
+                        "TroopLongTag": "usa_1_57",
+                        "TroopNumberID": "57"
+                    }
+                ]
+            }
+        ]
+    },
+    "loadedMapData": {
+        "TileList": [
+            {
+                "TileColor": {
+                    "x": 7,
+                    "y": 51,
+                    "z": 9
+                },
+                "TileTag": "A1",
+                "TileName": "North Hold",
+                "Stress": 1,
+                "Iron": 1,
+                "Oil": 1,
+                "OSR": 1
+            },
+            {
+                "TileColor": {
+                    "x": 206,
+                    "y": 234,
+                    "z": 21
+                },
+                "TileTag": "A2",
+                "TileName": "Oil Fields",
+                "Stress": 1,
+                "Iron": 1,
+                "Oil": 1,
+                "OSR": 1
+            },
+            {
+                "TileColor": {
+                    "x": 229,
+                    "y": 135,
+                    "z": 4
+                },
+                "TileTag": "A3",
+                "TileName": "The Reach",
+                "Stress": 1,
+                "Iron": 1,
+                "Oil": 1,
+                "OSR": 1
+            },
+            {
+                "TileColor": {
+                    "x": 3,
+                    "y": 3,
+                    "z": 127
+                },
+                "TileTag": "A4",
+                "TileName": "North Pass",
+                "Stress": 1,
+                "Iron": 1,
+                "Oil": 1,
+                "OSR": 1
+            },
+            {
+                "TileColor": {
+                    "x": 118,
+                    "y": 83,
+                    "z": 198
+                },
+                "TileTag": "B1",
+                "TileName": "South Pass",
+                "Stress": 1,
+                "Iron": 1,
+                "Oil": 1,
+                "OSR": 1
+            },
+            {
+                "TileColor": {
+                    "x": 178,
+                    "y": 82,
+                    "z": 99
+                },
+                "TileTag": "B2",
+                "TileName": "North Canyon",
+                "Stress": 1,
+                "Iron": 1,
+                "Oil": 1,
+                "OSR": 1
+            },
+            {
+                "TileColor": {
+                    "x": 127,
+                    "y": 123,
+                    "z": 3
+                },
+                "TileTag": "B3",
+                "TileName": "South Canyon",
+                "Stress": 1,
+                "Iron": 1,
+                "Oil": 1,
+                "OSR": 1
+            },
+            {
+                "TileColor": {
+                    "x": 91,
+                    "y": 27,
+                    "z": 39
+                },
+                "TileTag": "B4",
+                "TileName": "South Citadel",
+                "Stress": 1,
+                "Iron": 1,
+                "Oil": 1,
+                "OSR": 1
+            },
+            {
+                "TileColor": {
+                    "x": 68,
+                    "y": 14,
+                    "z": 104
+                },
+                "TileTag": "B5",
+                "TileName": "Iron Mines",
+                "Stress": 1,
+                "Iron": 1,
+                "Oil": 1,
+                "OSR": 1
+            }
+        ],
+        "MapTexturePath": "Assets/Art/Textures/DonutTest.bmp",
+        "horizontalLooping": false
+    },
+    "saveName": "Default"
+}

@@ -5,13 +5,8 @@ using UnityEditor;
 
 public class FactionLayoutEditor : EditorWindow
 {
-
-    //private string mapDataName = "EarthMap_01_Demo";
-    //private string belligerentDataName = "EarthMap_01_Bell";
     private Dictionary<Vector3Int, string> loadedMapData = new Dictionary<Vector3Int, string>();
     private Texture2D mapTexture;
-    //private MapColorData mapColorData = new MapColorData();
-    //private BelligerentData belligerentData = new BelligerentData();
     private SaveData saveData = new SaveData();
     private string[] BelligerentNames = new string[0];
 
@@ -23,6 +18,26 @@ public class FactionLayoutEditor : EditorWindow
     private Vector2 _zoomCoordsOrigin = Vector2.zero;
     private Color32 selectedColor = new Color32(255, 255, 255, 255);
     private Sprite factionIcon;
+    public Sprite FactionIcon
+    {
+        get { return factionIcon; }
+        set
+        {
+            if(value == factionIcon)
+            {
+                return;
+            }
+
+            if(value == null)
+            {
+                saveData.saveBelligerents.WarParticipants[FactionIndex].IconPath = string.Empty;
+                return;
+            }
+            saveData.saveBelligerents.WarParticipants[FactionIndex].IconPath = AssetDatabase.GetAssetPath(value);
+            factionIcon = value;
+
+        }
+    }
     private Color32 SelectedColor
     {
         get { return selectedColor; }
@@ -108,6 +123,10 @@ public class FactionLayoutEditor : EditorWindow
             }
             currentData.IncreaseTileArray(newData);
         }
+        else
+        {
+            currentData.IncreaseTileArray(newData);
+        }
 
         Repaint();
     }
@@ -190,7 +209,8 @@ public class FactionLayoutEditor : EditorWindow
             }
         }
         if (GUILayout.Button("Save"))
-        {
+        {     
+            saveData.loadedMapData.MapTexturePath = AssetDatabase.GetAssetPath(mapTexture);
             saveData.SaveToFile(saveDataPath);
         }
 
@@ -288,10 +308,10 @@ public class FactionLayoutEditor : EditorWindow
                     DrawTagTab();
                     break;
                 case 1:
-                    DrawFactionTab();
+                    DrawBelligerentTab();
                     break;
                 case 2:
-                    DrawArmyTab();
+                    DrawFactionTab();
                     break;
                 //case 3:
                 //    DrawSaveTab();
@@ -346,6 +366,7 @@ public class FactionLayoutEditor : EditorWindow
         GUILayout.EndVertical();
 
         GUILayout.BeginHorizontal();
+        saveData.loadedMapData.horizontalLooping = EditorGUILayout.Toggle("Horizontal Tiling: ", saveData.loadedMapData.horizontalLooping);
         GUILayout.FlexibleSpace();
         if (GUILayout.Button("+", new GUIStyle("minibutton")))
         {
@@ -359,7 +380,7 @@ public class FactionLayoutEditor : EditorWindow
         GUILayout.EndVertical();
     }
 
-    private void DrawFactionTab()
+    private void DrawBelligerentTab()
     {
         GUILayout.BeginVertical(new GUIStyle("GroupBox"));
 
@@ -394,7 +415,7 @@ public class FactionLayoutEditor : EditorWindow
         selectedFaction.AllianceID = EditorGUILayout.IntField(selectedFaction.AllianceID);
         GUILayout.EndHorizontal();
 
-        factionIcon = (Sprite)EditorGUILayout.ObjectField("Faction Icon:", factionIcon, typeof(Sprite), false);
+        FactionIcon = (Sprite)EditorGUILayout.ObjectField("Faction Icon:", FactionIcon, typeof(Sprite), false);
 
         GUILayout.EndVertical();
 
@@ -418,7 +439,7 @@ public class FactionLayoutEditor : EditorWindow
         GUILayout.EndVertical();
     }
 
-    private void DrawArmyTab()
+    private void DrawFactionTab()
     {
         GUILayout.BeginVertical(new GUIStyle("GroupBox"));
 
