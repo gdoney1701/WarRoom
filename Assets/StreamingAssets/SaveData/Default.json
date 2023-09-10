@@ -1503,7 +1503,8 @@
                 "OSR": 1
             }
         ],
-        "MapTexturePath": "Assets/Art/Textures/EarthMap_01.bmp"
+        "MapTexturePath": "Assets/Art/Textures/EarthMap_01.bmp",
+        "horizontalLooping": true
     },
     "saveName": "EarthMap_01_Demo"
 }

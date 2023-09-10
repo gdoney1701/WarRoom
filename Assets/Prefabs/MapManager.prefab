@@ -26,7 +26,7 @@ Transform:
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
-  m_ConstrainProportionsScale: 0
+  m_ConstrainProportionsScale: 1
   m_Children: []
   m_Father: {fileID: 4511474381729050069}
   m_RootOrder: 1
@@ -121,12 +121,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 9b8661e8fb6ace446a5e4189bb10dc57, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  inputTexture: {fileID: 2800000, guid: 6813a719254ad2544a958d369ba0fb17, type: 3}
   faceMaterial: {fileID: 2100000, guid: f9f83ebbcd41c3c4a819a54e3db800d1, type: 2}
-  colorDataPath: EuropeDemo
   tileContainer: {fileID: 4511474381645133095}
   tilePrefab: {fileID: 1262288821938751291, guid: abaa64d178b355e46a9dc0159fa942cf,
     type: 3}
-  testVertex: {fileID: 0}
-  useTestGeo: 0
-  mapScale: 0.5
+  sdfTextureSize: 64
+  mapLimiter: 120

@@ -33,11 +33,15 @@ public class PlayerController : MonoBehaviour
     public delegate void SendOrder(MapTile mapTile);
     public static event SendOrder sendOrder;
 
+    private float scrollInput = 0f;
+
     private void Awake()
     {
         mainCamera = Camera.main;
         neutralHeight = (maxCameraHeight + minCameraHeight) / 2;
         playerInput.enabled = false;
+        mainCamera.transform.localPosition = new Vector3(mainCamera.transform.localPosition.x, neutralHeight, mainCamera.transform.localPosition.z);
+        zoom = mainCamera.transform.localPosition.y;
     }
 
     private void OnEnable()
@@ -46,6 +50,50 @@ public class PlayerController : MonoBehaviour
         PopulateButtons.onGameReady += AllowInput;
         TurnManager.updatePhase += UpdateControls;
         mainCamera = Camera.main;
+    }
+
+    private void Update()
+    {
+        if (playerInput.enabled)
+        {
+            UpdateZoom();
+        }
+    }
+
+    public void OnZoom(InputAction.CallbackContext context)
+    {
+        scrollInput = context.ReadValue<Vector2>().normalized.y;
+        Debug.Log("Zooming: " + scrollInput);
+        //if (scrollInput.y != 0)
+        //{
+        //    float heightRatio = Mathf.Abs(neutralHeight - mainCamera.transform.position.y) / (maxCameraHeight - neutralHeight);
+        //    float scrollSpeed = Mathf.SmoothStep(maxZoomSpeed, maxZoomSpeed / 5, heightRatio) * Time.deltaTime;
+
+        //    if (scrollSpeed * -scrollInput.y + mainCamera.transform.position.y > maxCameraHeight ||
+        //        scrollSpeed * -scrollInput.y + mainCamera.transform.position.y < minCameraHeight)
+        //    {
+        //        return;
+        //    }
+
+        //    mainCamera.transform.Translate(new Vector3(0, -scrollInput.y * scrollSpeed, 0), Space.World);
+        //}
+
+    }
+    private float zoom;
+    private float zoomMultiplier = 4f;
+    private float zoomVelocity = 0f;
+    private float smoothTime = 0.25f;
+
+    private void UpdateZoom()
+    {
+        zoom -= scrollInput * zoomMultiplier;
+        zoom = Mathf.Clamp(zoom, minCameraHeight, maxCameraHeight);
+        Debug.Log("Target Zoom: " + zoom);
+        Vector3 newPosition = mainCamera.transform.localPosition;
+        newPosition.y = Mathf.SmoothDamp(newPosition.y, zoom, ref zoomVelocity, smoothTime);
+        Debug.Log("New Position: " + newPosition);
+        mainCamera.transform.localPosition = newPosition;
+
     }
 
     private void OnDisable()
@@ -153,25 +201,5 @@ public class PlayerController : MonoBehaviour
                 }
             }
         }
-
-    }
-
-    public void OnZoom(InputAction.CallbackContext context)
-    {
-        Vector2 scrollInput = context.ReadValue<Vector2>();
-        if(scrollInput.y != 0)
-        {
-            float heightRatio = Mathf.Abs(neutralHeight - mainCamera.transform.position.y) / (maxCameraHeight - neutralHeight);
-            float scrollSpeed = Mathf.SmoothStep(maxZoomSpeed, maxZoomSpeed / 5, heightRatio) * Time.deltaTime;
-
-            if(scrollSpeed * -scrollInput.y + mainCamera.transform.position.y > maxCameraHeight ||
-                scrollSpeed * -scrollInput.y + mainCamera.transform.position.y < minCameraHeight)
-            {
-                return;
-            }
-
-            mainCamera.transform.Translate(new Vector3(0, -scrollInput.y * scrollSpeed, 0), Space.World);
-        }
-
     }
 }

@@ -98,11 +98,14 @@ namespace MapMeshGenerator
         private GameObject tilePrefab;
         [SerializeField]
         private int sdfTextureSize = 64;
+        [SerializeField]
+        private float mapLimiter = 100f;
 
         Color32[] imagePixels = new Color32[0];
         //Vector2Int imageScale = Vector2Int.zero;
         float maxImageLength = 0;
         MeshGenerationData meshData;
+        private Vector2 extremeZVertices = new Vector2(float.MaxValue, float.MinValue);
 
         public delegate void OnMapLoad(MeshGenerationData data, SaveData saveData);
         public static event OnMapLoad onMapLoad;
@@ -157,9 +160,22 @@ namespace MapMeshGenerator
 
             if (Application.isPlaying)
             {
-                tileContainer.transform.localScale = new Vector3(0.1f, 0.1f, 0.1f);
+                tileContainer.transform.localScale = ResizeMap();
+                //tileContainer.transform.localScale = new Vector3(0.1f, 0.1f, 0.1f);
                 onMapLoad?.Invoke(meshData, loadedSave);
             }
+        }
+
+        private Vector3 ResizeMap()
+        {
+            Vector3 result = Vector3.one;
+
+            float mapHeight = extremeZVertices.y - extremeZVertices.x;
+            float newScale = mapLimiter / mapHeight;
+            result *= newScale;
+            Debug.Log(result);
+
+            return result;
         }
 
         private void GetProvinceData(MeshGenerationData data, SaveData loadedData)
@@ -487,7 +503,9 @@ namespace MapMeshGenerator
 
             for(int i = 0; i < provinceData.EdgeVertices.Length; i++)
             {
-                vertices[i] = new Vector3(vertices2D[i].x, 0, vertices2D[i].y);              
+                vertices[i] = new Vector3(vertices2D[i].x, 0, vertices2D[i].y);
+                extremeZVertices.x = Mathf.Min(extremeZVertices.x, vertices[i].x);
+                extremeZVertices.y = Mathf.Max(extremeZVertices.y, vertices[i].z);
             }
 
             Triangulator tr = new Triangulator(vertices2D);
