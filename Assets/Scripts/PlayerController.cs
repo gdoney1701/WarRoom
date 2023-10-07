@@ -13,11 +13,15 @@ public class PlayerController : MonoBehaviour
     [SerializeField]
     private float minCameraHeight;
     [SerializeField]
-    private float maxZoomSpeed = 20f;
-    [SerializeField]
     private LayerMask selectMask;
     [SerializeField]
     private LayerMask orderMask;
+    [SerializeField]
+    private LayerMask backgroundMask;
+    [SerializeField]
+    private float moveModifier = 0.5f;
+    [SerializeField]
+    private float zoomMultiplier = 4f;
 
     private GameObject[] mapColumns;
     private bool readyToMove = false;
@@ -38,6 +42,7 @@ public class PlayerController : MonoBehaviour
     private void Awake()
     {
         mainCamera = Camera.main;
+        //mousePosition = Input.mousePosition;
         neutralHeight = (maxCameraHeight + minCameraHeight) / 2;
         playerInput.enabled = false;
         mainCamera.transform.localPosition = new Vector3(mainCamera.transform.localPosition.x, neutralHeight, mainCamera.transform.localPosition.z);
@@ -62,37 +67,52 @@ public class PlayerController : MonoBehaviour
 
     public void OnZoom(InputAction.CallbackContext context)
     {
-        scrollInput = context.ReadValue<Vector2>().normalized.y;
-        Debug.Log("Zooming: " + scrollInput);
-        //if (scrollInput.y != 0)
-        //{
-        //    float heightRatio = Mathf.Abs(neutralHeight - mainCamera.transform.position.y) / (maxCameraHeight - neutralHeight);
-        //    float scrollSpeed = Mathf.SmoothStep(maxZoomSpeed, maxZoomSpeed / 5, heightRatio) * Time.deltaTime;
-
-        //    if (scrollSpeed * -scrollInput.y + mainCamera.transform.position.y > maxCameraHeight ||
-        //        scrollSpeed * -scrollInput.y + mainCamera.transform.position.y < minCameraHeight)
-        //    {
-        //        return;
-        //    }
-
-        //    mainCamera.transform.Translate(new Vector3(0, -scrollInput.y * scrollSpeed, 0), Space.World);
-        //}
-
+        scrollInput = context.ReadValue<Vector2>().y;
+        //mousePosition = Input.mousePosition;
     }
+
     private float zoom;
-    private float zoomMultiplier = 4f;
     private float zoomVelocity = 0f;
     private float smoothTime = 0.25f;
+    //private Vector3 mousePosition = Vector3.zero;
 
     private void UpdateZoom()
     {
-        zoom -= scrollInput * zoomMultiplier;
+
+
+        //Debug.Log(string.Format("worldPosTarget: {0}, MousePos {1}, worldPosPoint {2}", worldPosTarget, screenCoordsMousePos, mainCamera.ScreenToWorldPoint(screenCoordsMousePos)));
+        zoom -= scrollInput * zoomMultiplier * Time.deltaTime;
         zoom = Mathf.Clamp(zoom, minCameraHeight, maxCameraHeight);
-        Debug.Log("Target Zoom: " + zoom);
         Vector3 newPosition = mainCamera.transform.localPosition;
         newPosition.y = Mathf.SmoothDamp(newPosition.y, zoom, ref zoomVelocity, smoothTime);
-        Debug.Log("New Position: " + newPosition);
-        mainCamera.transform.localPosition = newPosition;
+
+        //newPosition = Vector3.SmoothDamp(newPosition, new Vector3(worldPosTarget.x, zoom, worldPosTarget.y), ref zoomVelocity, smoothTime);
+        if (!mainCamera.transform.localPosition.Equals(newPosition))
+        {
+            mainCamera.transform.localPosition = newPosition;
+
+            //Vector3 screenCoordsMousePos = new Vector3(mousePosition.x, mousePosition.y, mainCamera.nearClipPlane);
+            //worldPosTarget = mainCamera.ScreenToWorldPoint(screenCoordsMousePos);
+
+            //var ray = mainCamera.ScreenPointToRay(screenCoordsMousePos);
+            //if (Physics.Raycast(ray, out RaycastHit hit, 100f, backgroundMask))
+            //{
+            //    if (Physics.Raycast(mainCamera.transform.position, mainCamera.transform.forward, out RaycastHit cameraHit, backgroundMask))
+            //    {
+            //        Vector2 cameraPos = new Vector2(cameraHit.point.x, cameraHit.point.z);
+            //        Vector2 mousePos = new Vector2(hit.point.x, hit.point.y);
+
+                    
+
+
+            //        Vector2 distance = new Vector2(hit.point.x - cameraHit.point.x, hit.point.z - cameraHit.point.z) * Time.deltaTime;
+            //        Debug.Log(distance);
+            //        MoveTiles(distance);
+
+            //    }
+            //}
+        }
+
 
     }
 
@@ -136,32 +156,35 @@ public class PlayerController : MonoBehaviour
         if (readyToMove)
         {
             Vector2 input = context.ReadValue<Vector2>();
-            //mainCamera.ScreenToWorldPoint(input);
+            input *= mainCamera.transform.localPosition.y / maxCameraHeight;
+            MoveTiles(input);
+        }
+    }
 
-            zOffset += input.y;
-            if (useHorizontalScroll)
+    private void MoveTiles(Vector2 input)
+    {
+        zOffset += input.y;
+        if (useHorizontalScroll)
+        {
+            for (int i = 0; i < mapColumns.Length; i++)
             {
-                for (int i = 0; i < mapColumns.Length; i++)
+                float xOffset = mapColumns[i].transform.localPosition.x + input.x;
+                if (xOffset > maxDistance)
                 {
-                    float xOffset = mapColumns[i].transform.localPosition.x + input.x;
-                    if (xOffset > maxDistance)
-                    {
-                        xOffset -= maxDistance;
-                    }
-                    else if (xOffset < 0)
-                    {
-                        xOffset += maxDistance;
-                    }
-                    mapColumns[i].transform.localPosition = new Vector3(xOffset, 0, zOffset);
-
+                    xOffset -= maxDistance;
                 }
-            }
-            else
-            {
-                float xOffset = mapColumns[0].transform.localPosition.x + input.x;
-                mapColumns[0].transform.localPosition = new Vector3(xOffset, 0, zOffset);
-            }
+                else if (xOffset < 0)
+                {
+                    xOffset += maxDistance;
+                }
+                mapColumns[i].transform.localPosition = new Vector3(xOffset, 0, zOffset);
 
+            }
+        }
+        else
+        {
+            float xOffset = mapColumns[0].transform.localPosition.x + input.x;
+            mapColumns[0].transform.localPosition = new Vector3(xOffset, 0, zOffset);
         }
     }
 

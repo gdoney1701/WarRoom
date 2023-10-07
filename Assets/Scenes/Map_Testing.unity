@@ -2594,13 +2594,17 @@ MonoBehaviour:
   playerInput: {fileID: 1050315764}
   maxCameraHeight: 45
   minCameraHeight: 10
-  maxZoomSpeed: 10
   selectMask:
     serializedVersion: 2
     m_Bits: 192
   orderMask:
     serializedVersion: 2
     m_Bits: 64
+  backgroundMask:
+    serializedVersion: 2
+    m_Bits: 256
+  moveModifier: 0.5
+  zoomMultiplier: 300
 --- !u!114 &1050315764
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -3773,7 +3777,7 @@ GameObject:
   - component: {fileID: 1546067323}
   - component: {fileID: 1546067322}
   - component: {fileID: 1546067321}
-  m_Layer: 0
+  m_Layer: 8
   m_Name: Background
   m_TagString: Untagged
   m_Icon: {fileID: 0}
