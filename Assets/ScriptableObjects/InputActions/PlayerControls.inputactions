@@ -51,15 +51,6 @@
                     "initialStateCheck": false
                 },
                 {
-                    "name": "Mouse_Movement",
-                    "type": "PassThrough",
-                    "id": "3a72a646-c619-42f1-b0b6-fa590ad1114e",
-                    "expectedControlType": "Vector2",
-                    "processors": "",
-                    "interactions": "",
-                    "initialStateCheck": false
-                },
-                {
                     "name": "IssueOrder",
                     "type": "Button",
                     "id": "e489aaa2-e858-40c3-a825-037300a93237",
@@ -166,17 +157,6 @@
                     "processors": "",
                     "groups": "",
                     "action": "Select_Drag",
-                    "isComposite": false,
-                    "isPartOfComposite": false
-                },
-                {
-                    "name": "",
-                    "id": "02dcd2b1-81c4-46ce-8177-a84f8029b7af",
-                    "path": "<Mouse>/delta",
-                    "interactions": "",
-                    "processors": "",
-                    "groups": "",
-                    "action": "Mouse_Movement",
                     "isComposite": false,
                     "isPartOfComposite": false
                 },

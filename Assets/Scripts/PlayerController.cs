@@ -1,13 +1,10 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-using UnityEngine.InputSystem;
 using UnityEngine.EventSystems;
 
 public class PlayerController : MonoBehaviour
 {
-    [SerializeField]
-    private PlayerInput playerInput;
     [SerializeField]
     private float maxCameraHeight;
     [SerializeField]
@@ -42,9 +39,7 @@ public class PlayerController : MonoBehaviour
     private void Awake()
     {
         mainCamera = Camera.main;
-        //mousePosition = Input.mousePosition;
         neutralHeight = (maxCameraHeight + minCameraHeight) / 2;
-        playerInput.enabled = false;
         mainCamera.transform.localPosition = new Vector3(mainCamera.transform.localPosition.x, neutralHeight, mainCamera.transform.localPosition.z);
         zoom = mainCamera.transform.localPosition.y;
     }
@@ -57,36 +52,116 @@ public class PlayerController : MonoBehaviour
         mainCamera = Camera.main;
     }
 
-    private void Update()
+    private void LateUpdate()
     {
-        if (playerInput.enabled)
-        {
-            UpdateZoom();
-        }
+        UpdatePosition();
+        UpdateZoom();
     }
 
-    public void OnZoom(InputAction.CallbackContext context)
+    private void Update()
     {
-        scrollInput = context.ReadValue<Vector2>().y;
-        //mousePosition = Input.mousePosition;
+        if (Input.GetMouseButtonUp(0))
+        {
+            SelectionManager.Instance.DeselectAll();
+            SelectionManager.Instance.DeselectTile();
+
+            RaycastHit hit;
+            if (Physics.Raycast(mainCamera.ScreenPointToRay(Input.mousePosition), out hit, 100f, selectMask))
+            {
+
+                if (hit.collider.TryGetComponent(out MapTile mapTile))
+                {
+                    SelectionManager.Instance.SelectTile(mapTile);
+                }
+                else if (hit.collider.TryGetComponent(out StackManager stackManager) & stackManager.OwnerID == playerFaction)
+                {
+                    SelectionManager.Instance.SelectUnits(stackManager);
+                }
+            }
+            return;
+        }
+        if (Input.GetMouseButtonUp(1))
+        {
+            if (canIssueOrder && SelectionManager.Instance.SelectedUnits.Count > 0
+                && !EventSystem.current.IsPointerOverGameObject())
+            {
+                RaycastHit hit;
+                if (Physics.Raycast(mainCamera.ScreenPointToRay(Input.mousePosition), out hit, 100f, orderMask) &&
+                    hit.collider.TryGetComponent(out MapTile foundTile))
+                {
+                    sendOrder?.Invoke(foundTile);
+                }
+            }
+        }
     }
 
     private float zoom;
     private float zoomVelocity = 0f;
     private float smoothTime = 0.25f;
+    [SerializeField]
+    private float panSpeed = 10f;
     //private Vector3 mousePosition = Vector3.zero;
 
+    private void UpdatePosition()
+    {
+        if (Input.GetMouseButtonDown(2))
+        {
+            panning = true;
+            mousePos = Input.mousePosition;
+            return;
+        }
+        if (Input.GetMouseButtonUp(2))
+        {
+            panning = false;
+            return;
+        }
+        if (panning)
+        {
+            Vector3 pos = mainCamera.ScreenToViewportPoint(Input.mousePosition-mousePos);
+            Debug.Log(string.Format("Mouse Pos {0}", pos));
+            Vector3 move = new Vector3(pos.x, 0, pos.y) *panSpeed * (mainCamera.transform.localPosition.y/maxCameraHeight);
+            MoveTiles(move);
+            mousePos = Input.mousePosition;
+        }
+    }
+
+    private void MoveTiles(Vector3 input)
+    {
+        zOffset += input.z;
+        if (useHorizontalScroll)
+        {
+            for (int i = 0; i < mapColumns.Length; i++)
+            {
+                float xOffset = mapColumns[i].transform.localPosition.x + input.x;
+                if (xOffset > maxDistance)
+                {
+                    xOffset -= maxDistance;
+                }
+                else if (xOffset < 0)
+                {
+                    xOffset += maxDistance;
+                }
+                mapColumns[i].transform.localPosition = new Vector3(xOffset, 0, zOffset);
+            }
+        }
+        else
+        {
+            //Debug.Log(input);
+            mapColumns[0].transform.Translate(input,Space.Self);
+
+            //float xOffset = mapColumns[0].transform.localPosition.x + input.x;
+            //mapColumns[0].transform.localPosition = new Vector3(xOffset, 0, zOffset);
+        }
+    }
     private void UpdateZoom()
     {
-
-
-        //Debug.Log(string.Format("worldPosTarget: {0}, MousePos {1}, worldPosPoint {2}", worldPosTarget, screenCoordsMousePos, mainCamera.ScreenToWorldPoint(screenCoordsMousePos)));
+        scrollInput = Input.GetAxis("Mouse ScrollWheel");
+        
         zoom -= scrollInput * zoomMultiplier * Time.deltaTime;
         zoom = Mathf.Clamp(zoom, minCameraHeight, maxCameraHeight);
         Vector3 newPosition = mainCamera.transform.localPosition;
         newPosition.y = Mathf.SmoothDamp(newPosition.y, zoom, ref zoomVelocity, smoothTime);
 
-        //newPosition = Vector3.SmoothDamp(newPosition, new Vector3(worldPosTarget.x, zoom, worldPosTarget.y), ref zoomVelocity, smoothTime);
         if (!mainCamera.transform.localPosition.Equals(newPosition))
         {
             mainCamera.transform.localPosition = newPosition;
@@ -112,8 +187,6 @@ public class PlayerController : MonoBehaviour
             //    }
             //}
         }
-
-
     }
 
     private void OnDisable()
@@ -141,88 +214,22 @@ public class PlayerController : MonoBehaviour
         useHorizontalScroll = loadedSave.loadedMapData.horizontalLooping;
         maxDistance = data.imageScale.x;
         columnWidth = (int)maxDistance / mapColumns.Length;
-        readyToMove = true;
         zOffset = 0;
     }
 
     void AllowInput(FactionData factionData)
     {
-        playerInput.enabled = true;
+        readyToMove = true;
         playerFaction = factionData.ID;
     }
 
-    public void OnCameraMove(InputAction.CallbackContext context)
+    private Vector3 mousePos = Vector3.zero;
+    private bool panning = false;
+    
+
+    private Vector3 GetRayDistance(Vector2 pos)
     {
-        if (readyToMove)
-        {
-            Vector2 input = context.ReadValue<Vector2>();
-            input *= mainCamera.transform.localPosition.y / maxCameraHeight;
-            MoveTiles(input);
-        }
-    }
-
-    private void MoveTiles(Vector2 input)
-    {
-        zOffset += input.y;
-        if (useHorizontalScroll)
-        {
-            for (int i = 0; i < mapColumns.Length; i++)
-            {
-                float xOffset = mapColumns[i].transform.localPosition.x + input.x;
-                if (xOffset > maxDistance)
-                {
-                    xOffset -= maxDistance;
-                }
-                else if (xOffset < 0)
-                {
-                    xOffset += maxDistance;
-                }
-                mapColumns[i].transform.localPosition = new Vector3(xOffset, 0, zOffset);
-
-            }
-        }
-        else
-        {
-            float xOffset = mapColumns[0].transform.localPosition.x + input.x;
-            mapColumns[0].transform.localPosition = new Vector3(xOffset, 0, zOffset);
-        }
-    }
-
-    public void OnIssueOrder(InputAction.CallbackContext context)
-    {
-        if (canIssueOrder && context.canceled && SelectionManager.Instance.SelectedUnits.Count > 0
-            && !EventSystem.current.IsPointerOverGameObject())
-        {
-            RaycastHit hit;
-            if(Physics.Raycast(mainCamera.ScreenPointToRay(Mouse.current.position.ReadValue()), out hit, 100f, orderMask) &&
-                hit.collider.TryGetComponent(out MapTile foundTile))
-            {
-                sendOrder?.Invoke(foundTile);
-            }
-        }
-    }
-
-
-    public void OnSelect(InputAction.CallbackContext context)
-    {
-        if (context.canceled && !EventSystem.current.IsPointerOverGameObject())
-        {
-            SelectionManager.Instance.DeselectAll();
-            SelectionManager.Instance.DeselectTile();
-
-            RaycastHit hit;
-            if (Physics.Raycast(mainCamera.ScreenPointToRay(Mouse.current.position.ReadValue()), out hit, 100f, selectMask))
-            {
-
-                if (hit.collider.TryGetComponent(out MapTile mapTile))
-                {
-                    SelectionManager.Instance.SelectTile(mapTile);
-                }
-                else if(hit.collider.TryGetComponent(out StackManager stackManager) & stackManager.OwnerID == playerFaction)
-                {
-                    SelectionManager.Instance.SelectUnits(stackManager);
-                }
-            }
-        }
+        float height = mainCamera.transform.localPosition.y / Mathf.Cos(mainCamera.transform.localEulerAngles.x);
+        return mainCamera.ScreenPointToRay(new Vector3(pos.x, pos.y, mainCamera.nearClipPlane)).GetPoint(height);
     }
 }
