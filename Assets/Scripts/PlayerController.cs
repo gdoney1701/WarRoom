@@ -6,9 +6,9 @@ using UnityEngine.EventSystems;
 public class PlayerController : MonoBehaviour
 {
     [SerializeField]
-    private float maxCameraHeight;
+    private float farMapDist;
     [SerializeField]
-    private float minCameraHeight;
+    private float closeMapDist;
     [SerializeField]
     private LayerMask selectMask;
     [SerializeField]
@@ -23,10 +23,10 @@ public class PlayerController : MonoBehaviour
     private GameObject[] mapColumns;
     private bool readyToMove = false;
     private float maxDistance;
-    private float zOffset;
+    //private float zOffset;
     private int columnWidth;
     private Camera mainCamera;
-    private float neutralHeight;
+    private float neutralMapDist;
     private bool canIssueOrder = false;
     private string playerFaction;
     bool useHorizontalScroll = false;
@@ -39,9 +39,9 @@ public class PlayerController : MonoBehaviour
     private void Awake()
     {
         mainCamera = Camera.main;
-        neutralHeight = (maxCameraHeight + minCameraHeight) / 2;
-        mainCamera.transform.localPosition = new Vector3(mainCamera.transform.localPosition.x, neutralHeight, mainCamera.transform.localPosition.z);
-        zoom = mainCamera.transform.localPosition.y;
+        neutralMapDist = (farMapDist + closeMapDist) / 2;
+        tileOffset = new Vector3(0, neutralMapDist, 0);
+        zoom = neutralMapDist;
     }
 
     private void OnEnable()
@@ -51,11 +51,17 @@ public class PlayerController : MonoBehaviour
         TurnManager.updatePhase += UpdateControls;
         mainCamera = Camera.main;
     }
+    public Vector3 tileOffset = Vector3.zero;
 
     private void LateUpdate()
     {
-        UpdatePosition();
+        if (!readyToMove)
+        {
+            return;
+        }
         UpdateZoom();
+        UpdatePosition();
+        MoveTiles();
     }
 
     private void Update()
@@ -95,9 +101,6 @@ public class PlayerController : MonoBehaviour
         }
     }
 
-    private float zoom;
-    private float zoomVelocity = 0f;
-    private float smoothTime = 0.25f;
     [SerializeField]
     private float panSpeed = 10f;
     //private Vector3 mousePosition = Vector3.zero;
@@ -118,21 +121,18 @@ public class PlayerController : MonoBehaviour
         if (panning)
         {
             Vector3 pos = mainCamera.ScreenToViewportPoint(Input.mousePosition-mousePos);
-            Debug.Log(string.Format("Mouse Pos {0}", pos));
-            Vector3 move = new Vector3(pos.x, 0, pos.y) *panSpeed * (mainCamera.transform.localPosition.y/maxCameraHeight);
-            MoveTiles(move);
+            tileOffset += new Vector3(pos.x, 0, pos.y) * panSpeed * (tileOffset.y/farMapDist)/** (mainCamera.transform.localPosition.y/maxCameraHeight)*/;
             mousePos = Input.mousePosition;
         }
     }
 
-    private void MoveTiles(Vector3 input)
+    private void MoveTiles()
     {
-        zOffset += input.z;
         if (useHorizontalScroll)
         {
             for (int i = 0; i < mapColumns.Length; i++)
             {
-                float xOffset = mapColumns[i].transform.localPosition.x + input.x;
+                float xOffset = mapColumns[i].transform.localPosition.x + tileOffset.x;
                 if (xOffset > maxDistance)
                 {
                     xOffset -= maxDistance;
@@ -141,52 +141,37 @@ public class PlayerController : MonoBehaviour
                 {
                     xOffset += maxDistance;
                 }
-                mapColumns[i].transform.localPosition = new Vector3(xOffset, 0, zOffset);
+                mapColumns[i].transform.localPosition = new Vector3(xOffset, tileOffset.y, tileOffset.z);
             }
         }
         else
         {
-            //Debug.Log(input);
-            mapColumns[0].transform.Translate(input,Space.Self);
-
-            //float xOffset = mapColumns[0].transform.localPosition.x + input.x;
-            //mapColumns[0].transform.localPosition = new Vector3(xOffset, 0, zOffset);
+            //mapColumns[0].transform.Translate(tileOffset,Space.Self);
+            mapColumns[0].transform.position = tileOffset;
         }
     }
+    public float zoom;
+    private float zoomVelocity = 0f;
+    private float smoothTime = 0.25f;
+    Ray mouseRay = new Ray();
+
     private void UpdateZoom()
     {
         scrollInput = Input.GetAxis("Mouse ScrollWheel");
-        
-        zoom -= scrollInput * zoomMultiplier * Time.deltaTime;
-        zoom = Mathf.Clamp(zoom, minCameraHeight, maxCameraHeight);
-        Vector3 newPosition = mainCamera.transform.localPosition;
-        newPosition.y = Mathf.SmoothDamp(newPosition.y, zoom, ref zoomVelocity, smoothTime);
+        //if(scrollInput == 0)
+        //{
+        //    mouseRay = mainCamera.ScreenPointToRay(
+        //        new Vector3(Input.mousePosition.x, Input.mousePosition.y, mainCamera.nearClipPlane));
+        //}
 
-        if (!mainCamera.transform.localPosition.Equals(newPosition))
-        {
-            mainCamera.transform.localPosition = newPosition;
+        zoom += scrollInput * zoomMultiplier * Time.deltaTime;
+        zoom = Mathf.Clamp(zoom, farMapDist, closeMapDist);
+        tileOffset.y = Mathf.SmoothDamp(tileOffset.y, zoom, ref zoomVelocity, smoothTime);
 
-            //Vector3 screenCoordsMousePos = new Vector3(mousePosition.x, mousePosition.y, mainCamera.nearClipPlane);
-            //worldPosTarget = mainCamera.ScreenToWorldPoint(screenCoordsMousePos);
-
-            //var ray = mainCamera.ScreenPointToRay(screenCoordsMousePos);
-            //if (Physics.Raycast(ray, out RaycastHit hit, 100f, backgroundMask))
-            //{
-            //    if (Physics.Raycast(mainCamera.transform.position, mainCamera.transform.forward, out RaycastHit cameraHit, backgroundMask))
-            //    {
-            //        Vector2 cameraPos = new Vector2(cameraHit.point.x, cameraHit.point.z);
-            //        Vector2 mousePos = new Vector2(hit.point.x, hit.point.y);
-
-                    
-
-
-            //        Vector2 distance = new Vector2(hit.point.x - cameraHit.point.x, hit.point.z - cameraHit.point.z) * Time.deltaTime;
-            //        Debug.Log(distance);
-            //        MoveTiles(distance);
-
-            //    }
-            //}
-        }
+        //if (!mainCamera.transform.localPosition.Equals(newPosition))
+        //{
+        //    mainCamera.transform.localPosition = newPosition;
+        //}
     }
 
     private void OnDisable()
@@ -214,7 +199,6 @@ public class PlayerController : MonoBehaviour
         useHorizontalScroll = loadedSave.loadedMapData.horizontalLooping;
         maxDistance = data.imageScale.x;
         columnWidth = (int)maxDistance / mapColumns.Length;
-        zOffset = 0;
     }
 
     void AllowInput(FactionData factionData)
