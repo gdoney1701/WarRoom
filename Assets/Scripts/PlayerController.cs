@@ -41,7 +41,7 @@ public class PlayerController : MonoBehaviour
         mainCamera = Camera.main;
         neutralMapDist = (farMapDist + closeMapDist) / 2;
         tileOffset = new Vector3(0, neutralMapDist, 0);
-        zoom = neutralMapDist;
+        zoom = new Vector3(0, neutralMapDist, 0);
     }
 
     private void OnEnable()
@@ -122,6 +122,8 @@ public class PlayerController : MonoBehaviour
         {
             Vector3 pos = mainCamera.ScreenToViewportPoint(Input.mousePosition-mousePos);
             tileOffset += new Vector3(pos.x, 0, pos.y) * panSpeed * (tileOffset.y/farMapDist)/** (mainCamera.transform.localPosition.y/maxCameraHeight)*/;
+            zoom.x = tileOffset.x;
+            zoom.z = tileOffset.z;
             mousePos = Input.mousePosition;
         }
     }
@@ -132,7 +134,7 @@ public class PlayerController : MonoBehaviour
         {
             for (int i = 0; i < mapColumns.Length; i++)
             {
-                float xOffset = mapColumns[i].transform.localPosition.x + tileOffset.x;
+                float xOffset = mapColumns[i].transform.position.x + tileOffset.x;
                 if (xOffset > maxDistance)
                 {
                     xOffset -= maxDistance;
@@ -141,7 +143,7 @@ public class PlayerController : MonoBehaviour
                 {
                     xOffset += maxDistance;
                 }
-                mapColumns[i].transform.localPosition = new Vector3(xOffset, tileOffset.y, tileOffset.z);
+                mapColumns[i].transform.position = new Vector3(xOffset, tileOffset.y, tileOffset.z);
             }
         }
         else
@@ -150,28 +152,39 @@ public class PlayerController : MonoBehaviour
             mapColumns[0].transform.position = tileOffset;
         }
     }
-    public float zoom;
-    private float zoomVelocity = 0f;
+    public Vector3 zoom = Vector3.zero;
+    private Vector3 zoomVelocity = Vector3.zero;
     private float smoothTime = 0.25f;
-    Ray mouseRay = new Ray();
+    Vector3 zoomPosTarget = Vector3.zero;
 
     private void UpdateZoom()
     {
-        scrollInput = Input.GetAxis("Mouse ScrollWheel");
-        //if(scrollInput == 0)
-        //{
-        //    mouseRay = mainCamera.ScreenPointToRay(
-        //        new Vector3(Input.mousePosition.x, Input.mousePosition.y, mainCamera.nearClipPlane));
-        //}
+        float newScroll = Input.GetAxis("Mouse ScrollWheel");
+        if (newScroll > scrollInput)
+        {
+            Ray mouseRay = mainCamera.ScreenPointToRay(
+                new Vector3(Input.mousePosition.x, Input.mousePosition.y, mainCamera.nearClipPlane));
+            Ray centerRay = new Ray(mainCamera.transform.position, mainCamera.transform.forward);
+            zoomPosTarget = mouseRay.GetPoint(farMapDist + zoom.y) - centerRay.GetPoint(farMapDist + zoom.y);
 
-        zoom += scrollInput * zoomMultiplier * Time.deltaTime;
-        zoom = Mathf.Clamp(zoom, farMapDist, closeMapDist);
-        tileOffset.y = Mathf.SmoothDamp(tileOffset.y, zoom, ref zoomVelocity, smoothTime);
+            Debug.DrawRay(centerRay.origin, centerRay.direction, Color.red, 10f);
+            Debug.DrawRay(mouseRay.origin, mouseRay.direction, Color.blue, 10f);
+        }
+        scrollInput = newScroll;
+        float speed = scrollInput * zoomMultiplier * Time.deltaTime;
 
-        //if (!mainCamera.transform.localPosition.Equals(newPosition))
-        //{
-        //    mainCamera.transform.localPosition = newPosition;
-        //}
+        float targetY = Mathf.Clamp(zoom.y + speed, farMapDist, closeMapDist);
+
+        if(!Mathf.Approximately(targetY, zoom.y))
+        {
+            zoom = scrollInput > 0 ? 
+                new Vector3(zoomPosTarget.x, targetY, zoomPosTarget.z) : 
+                new Vector3(zoom.x, targetY, zoom.z);
+        }
+        Vector3 result = Vector3.SmoothDamp(tileOffset, zoom, ref zoomVelocity, smoothTime);
+
+        if (tileOffset != result) tileOffset = result;
+        Debug.Log(string.Format("Target {0}, Zoom {1}, TileOffset{2}, Result{3}", zoomPosTarget, zoom, tileOffset, result));
     }
 
     private void OnDisable()
