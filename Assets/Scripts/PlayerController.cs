@@ -52,13 +52,19 @@ public class PlayerController : MonoBehaviour
 
     private void LateUpdate()
     {
+        Vector3 columnOffset = Vector3.zero;
         if (!readyToMove)
         {
             return;
         }
         UpdateZoomPosition();
-        UpdatePosition();
-        MoveTiles();
+        UpdatePosition(ref columnOffset);
+
+        if (columnOffset != Vector3.zero)
+        {
+            MoveTiles(columnOffset);
+        }
+
     }
 
     private void Update()
@@ -101,7 +107,7 @@ public class PlayerController : MonoBehaviour
     [SerializeField]
     private float panSpeed = 10f;
 
-    private void UpdatePosition()
+    private void UpdatePosition(ref Vector3 offset)
     {
         if (Input.GetMouseButtonDown(2))
         {
@@ -116,8 +122,11 @@ public class PlayerController : MonoBehaviour
         }
         if (panning)
         {
-            Vector3 pos = mainCamera.ScreenToViewportPoint(Input.mousePosition-mousePos);
-            tileOffset += new Vector3(pos.x, 0, pos.y) * panSpeed * (tileOffset.y/farMapDist);
+            Vector3 pos = Vector2.ClampMagnitude(
+                new Vector2((Input.mousePosition.x - mousePos.x) / mainCamera.pixelWidth, 
+                (Input.mousePosition.y - mousePos.y) / mainCamera.pixelHeight), 1f);
+
+            offset += new Vector3(pos.x, 0, pos.y) * panSpeed * (tileOffset.y/farMapDist);
             mousePos = Input.mousePosition;
         }
     }
@@ -127,13 +136,13 @@ public class PlayerController : MonoBehaviour
 
     }
 
-    private void MoveTiles()
+    private void MoveTiles(Vector3 columnOffset)
     {
         if (useHorizontalScroll)
         {
             for (int i = 0; i < mapColumns.Length; i++)
             {
-                float xOffset = mapColumns[i].transform.position.x + tileOffset.x;
+                float xOffset = mapColumns[i].transform.position.x + columnOffset.x;
                 if (xOffset > maxDistance)
                 {
                     xOffset -= maxDistance;
@@ -147,8 +156,7 @@ public class PlayerController : MonoBehaviour
         }
         else
         {
-            //mapColumns[0].transform.Translate(tileOffset,Space.Self);
-            mapColumns[0].transform.position = tileOffset;
+            mapColumns[0].transform.Translate(columnOffset, Space.Self);
         }
     }
     public Vector3 zoom = Vector3.zero;
@@ -178,6 +186,10 @@ public class PlayerController : MonoBehaviour
         mapColumns = data.columnArray;
         useHorizontalScroll = loadedSave.loadedMapData.horizontalLooping;
         maxDistance = data.imageScale.x;
+        foreach(GameObject column in mapColumns)
+        {
+            column.transform.Translate(new Vector3(0, neutralMapDist, 0), Space.Self);
+        }
     }
 
     void AllowInput(FactionData factionData)

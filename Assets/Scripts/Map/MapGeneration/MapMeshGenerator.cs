@@ -631,9 +631,14 @@ namespace MapMeshGenerator
             GameObject[] columnContainer = new GameObject[columnNumber];
             for(int i = 0; i < columnNumber; i++)
             {
+                GameObject columnOffset = new GameObject(string.Format("TileColumn_Offset_{0}", i));
+                columnOffset.transform.SetParent(tileContainer.transform);
+                columnOffset.transform.position = new Vector3(i * columnWidth, 0, 0);
+
                 GameObject newColumn = new GameObject(string.Format("TileColumn_{0}", i));
-                newColumn.transform.SetParent(tileContainer.transform);
-                newColumn.transform.position = new Vector3(i * columnWidth, 0, 0);
+                newColumn.transform.SetParent(columnOffset.transform);
+                newColumn.transform.position = Vector3.zero;
+
                 columnContainer[i] = newColumn;
             }
 
