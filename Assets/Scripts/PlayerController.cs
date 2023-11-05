@@ -23,8 +23,6 @@ public class PlayerController : MonoBehaviour
     private GameObject[] mapColumns;
     private bool readyToMove = false;
     private float maxDistance;
-    //private float zOffset;
-    private int columnWidth;
     private Camera mainCamera;
     private float neutralMapDist;
     private bool canIssueOrder = false;
@@ -41,7 +39,6 @@ public class PlayerController : MonoBehaviour
         mainCamera = Camera.main;
         neutralMapDist = (farMapDist + closeMapDist) / 2;
         tileOffset = new Vector3(0, neutralMapDist, 0);
-        zoom = new Vector3(0, neutralMapDist, 0);
     }
 
     private void OnEnable()
@@ -59,7 +56,7 @@ public class PlayerController : MonoBehaviour
         {
             return;
         }
-        UpdateZoom();
+        UpdateZoomPosition();
         UpdatePosition();
         MoveTiles();
     }
@@ -103,7 +100,6 @@ public class PlayerController : MonoBehaviour
 
     [SerializeField]
     private float panSpeed = 10f;
-    //private Vector3 mousePosition = Vector3.zero;
 
     private void UpdatePosition()
     {
@@ -121,11 +117,14 @@ public class PlayerController : MonoBehaviour
         if (panning)
         {
             Vector3 pos = mainCamera.ScreenToViewportPoint(Input.mousePosition-mousePos);
-            tileOffset += new Vector3(pos.x, 0, pos.y) * panSpeed * (tileOffset.y/farMapDist)/** (mainCamera.transform.localPosition.y/maxCameraHeight)*/;
-            zoom.x = tileOffset.x;
-            zoom.z = tileOffset.z;
+            tileOffset += new Vector3(pos.x, 0, pos.y) * panSpeed * (tileOffset.y/farMapDist);
             mousePos = Input.mousePosition;
         }
+    }
+
+    private void UpdateZoomPosition()
+    {
+
     }
 
     private void MoveTiles()
@@ -153,39 +152,7 @@ public class PlayerController : MonoBehaviour
         }
     }
     public Vector3 zoom = Vector3.zero;
-    private Vector3 zoomVelocity = Vector3.zero;
-    private float smoothTime = 0.25f;
-    Vector3 zoomPosTarget = Vector3.zero;
 
-    private void UpdateZoom()
-    {
-        float newScroll = Input.GetAxis("Mouse ScrollWheel");
-        if (newScroll > scrollInput)
-        {
-            Ray mouseRay = mainCamera.ScreenPointToRay(
-                new Vector3(Input.mousePosition.x, Input.mousePosition.y, mainCamera.nearClipPlane));
-            Ray centerRay = new Ray(mainCamera.transform.position, mainCamera.transform.forward);
-            zoomPosTarget = mouseRay.GetPoint(farMapDist + zoom.y) - centerRay.GetPoint(farMapDist + zoom.y);
-
-            Debug.DrawRay(centerRay.origin, centerRay.direction, Color.red, 10f);
-            Debug.DrawRay(mouseRay.origin, mouseRay.direction, Color.blue, 10f);
-        }
-        scrollInput = newScroll;
-        float speed = scrollInput * zoomMultiplier * Time.deltaTime;
-
-        float targetY = Mathf.Clamp(zoom.y + speed, farMapDist, closeMapDist);
-
-        if(!Mathf.Approximately(targetY, zoom.y))
-        {
-            zoom = scrollInput > 0 ? 
-                new Vector3(zoomPosTarget.x, targetY, zoomPosTarget.z) : 
-                new Vector3(zoom.x, targetY, zoom.z);
-        }
-        Vector3 result = Vector3.SmoothDamp(tileOffset, zoom, ref zoomVelocity, smoothTime);
-
-        if (tileOffset != result) tileOffset = result;
-        Debug.Log(string.Format("Target {0}, Zoom {1}, TileOffset{2}, Result{3}", zoomPosTarget, zoom, tileOffset, result));
-    }
 
     private void OnDisable()
     {
@@ -211,7 +178,6 @@ public class PlayerController : MonoBehaviour
         mapColumns = data.columnArray;
         useHorizontalScroll = loadedSave.loadedMapData.horizontalLooping;
         maxDistance = data.imageScale.x;
-        columnWidth = (int)maxDistance / mapColumns.Length;
     }
 
     void AllowInput(FactionData factionData)
