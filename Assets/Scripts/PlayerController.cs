@@ -17,8 +17,6 @@ public class PlayerController : MonoBehaviour
     private LayerMask backgroundMask;
     [SerializeField]
     private float moveModifier = 0.5f;
-    [SerializeField]
-    private float zoomMultiplier = 4f;
 
     private GameObject[] mapColumns;
     private bool readyToMove = false;
@@ -39,6 +37,7 @@ public class PlayerController : MonoBehaviour
         mainCamera = Camera.main;
         neutralMapDist = (farMapDist + closeMapDist) / 2;
         tileOffset = new Vector3(0, neutralMapDist, 0);
+        zoom = zoomPos = neutralMapDist;
     }
 
     private void OnEnable()
@@ -57,7 +56,7 @@ public class PlayerController : MonoBehaviour
         {
             return;
         }
-        UpdateZoomPosition();
+        UpdateZoomPosition(ref columnOffset);
         UpdatePosition(ref columnOffset);
 
         if (columnOffset != Vector3.zero)
@@ -126,13 +125,42 @@ public class PlayerController : MonoBehaviour
                 new Vector2((Input.mousePosition.x - mousePos.x) / mainCamera.pixelWidth, 
                 (Input.mousePosition.y - mousePos.y) / mainCamera.pixelHeight), 1f);
 
-            offset += new Vector3(pos.x, 0, pos.y) * panSpeed * (tileOffset.y/farMapDist);
+            offset += new Vector3(pos.x, 0, pos.y) * panSpeed * (mapColumns[0].transform.localPosition.y/farMapDist);
             mousePos = Input.mousePosition;
         }
     }
 
-    private void UpdateZoomPosition()
+    private float zoom = 0;
+    private float zoomVelocity = 0f;
+    [SerializeField]
+    private float zoomModifier = 10f;
+    private float smoothTime = 0.25f;
+    private float zoomPos = 0f;
+    private bool isZooming = false;
+
+    private void UpdateZoomPosition(ref Vector3 offset)
     {
+        float scroll = Input.GetAxis("Mouse ScrollWheel");
+        if(scroll != 0)
+        {
+            isZooming = true;
+        }
+        if (!isZooming)
+        {
+            return;
+        }
+        zoom += scroll * zoomModifier;
+        zoom = Mathf.Clamp(zoom, farMapDist, closeMapDist);
+        float newZoomPos = Mathf.SmoothDamp(
+            zoomPos, zoom, ref zoomVelocity, smoothTime);
+        offset.y = newZoomPos - zoomPos;
+        zoomPos = newZoomPos;
+        if(Mathf.Approximately(offset.y, 0f))
+        {
+            offset.y = 0;
+            isZooming = false;
+        }
+        Debug.Log(string.Format("{0}, {1}, {2}", zoom, zoomPos, zoomVelocity));
 
     }
 
@@ -157,9 +185,10 @@ public class PlayerController : MonoBehaviour
         else
         {
             mapColumns[0].transform.Translate(columnOffset, Space.Self);
+            //mapColumns[0].transform.localPosition = new Vector3(0, zoomPos, 0);
         }
     }
-    public Vector3 zoom = Vector3.zero;
+
 
 
     private void OnDisable()
@@ -186,7 +215,7 @@ public class PlayerController : MonoBehaviour
         mapColumns = data.columnArray;
         useHorizontalScroll = loadedSave.loadedMapData.horizontalLooping;
         maxDistance = data.imageScale.x;
-        foreach(GameObject column in mapColumns)
+        foreach (GameObject column in mapColumns)
         {
             column.transform.Translate(new Vector3(0, neutralMapDist, 0), Space.Self);
         }
