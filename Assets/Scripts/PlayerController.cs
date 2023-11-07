@@ -137,13 +137,32 @@ public class PlayerController : MonoBehaviour
     private float smoothTime = 0.25f;
     private float zoomPos = 0f;
     private bool isZooming = false;
+    private bool isZoomingOut = false;
+    private Ray camRay;
+    private Ray centerRay;
 
     private void UpdateZoomPosition(ref Vector3 offset)
     {
         float scroll = Input.GetAxis("Mouse ScrollWheel");
         if(scroll != 0)
         {
+            if(scroll > 0)
+            {
+                if (!isZooming)
+                {
+                    camRay = mainCamera.ScreenPointToRay(new 
+                        Vector3(Input.mousePosition.x, Input.mousePosition.y, mainCamera.nearClipPlane));
+                    centerRay = mainCamera.ViewportPointToRay(new Vector3(0.5f, 0.5f, mainCamera.nearClipPlane));
+                    isZoomingOut = false;
+                }
+            }
+            else
+            {
+                isZoomingOut = true;
+            }
+
             isZooming = true;
+            
         }
         if (!isZooming)
         {
@@ -155,12 +174,22 @@ public class PlayerController : MonoBehaviour
             zoomPos, zoom, ref zoomVelocity, smoothTime);
         offset.y = newZoomPos - zoomPos;
         zoomPos = newZoomPos;
-        if(Mathf.Approximately(offset.y, 0f))
+
+        if(Mathf.Abs(offset.y) < 0.01f)
         {
             offset.y = 0;
             isZooming = false;
+            return;
         }
-        Debug.Log(string.Format("{0}, {1}, {2}", zoom, zoomPos, zoomVelocity));
+        if (isZoomingOut)
+        {
+            return;
+        }
+        float yPos = mapColumns[0].transform.position.y + offset.y;
+        Vector3 targetPos = camRay.GetPoint(yPos);
+        Vector3 centerPos = centerRay.GetPoint(yPos);
+        Vector2 posOffset = Vector2.ClampMagnitude(new Vector2(targetPos.x - centerPos.x, targetPos.z - centerPos.z), offset.y);
+        offset = new Vector3(posOffset.x, offset.y, posOffset.y);
 
     }
 

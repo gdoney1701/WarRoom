@@ -2602,10 +2602,9 @@ MonoBehaviour:
     serializedVersion: 2
     m_Bits: 256
   moveModifier: 0.5
-  zoomMultiplier: 9000
   tileOffset: {x: 0, y: 0, z: 0}
-  panSpeed: 100
-  zoom: 0
+  panSpeed: 50
+  zoomModifier: 50
 --- !u!4 &1050315765
 Transform:
   m_ObjectHideFlags: 0
