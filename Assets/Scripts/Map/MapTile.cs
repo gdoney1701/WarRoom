@@ -1,5 +1,6 @@
 using UnityEngine;
 using TMPro;
+using System.Collections.Generic;
 
 public class MapTile : MonoBehaviour
 {
@@ -12,18 +13,20 @@ public class MapTile : MonoBehaviour
     [SerializeField]
     private TextMeshProUGUI tileTagUI;
     [SerializeField]
+    private TextMeshProUGUI tileLongName;
+    [SerializeField]
     private Transform centerContainer;
     [SerializeField]
     private GameObject pooledTileResource;
     [SerializeField]
     private Transform resourceParent;
-    //[SerializeField]
-    //private LineRenderer borderRenderer;
     [SerializeField]
     private MeshCollider meshCollider;
+    [SerializeField]
+    private Transform stackContainer;
+    [SerializeField]
+    private FactionCoinVisuals coinVisuals;
 
-    private Color32 ownColor;
-    private Color32[] neighborColors;
     private Bounds meshBounds;
 
     public Bounds MeshBounds
@@ -47,6 +50,16 @@ public class MapTile : MonoBehaviour
     {
         get { return centerContainer; }
     }
+    public Transform StackContaienr
+    {
+        get { return stackContainer; }
+    }
+
+    private List<StackManager> localStacks = new List<StackManager>();
+    public List<StackManager> LocalStacks
+    {
+        get { return localStacks; }
+    }
 
 
     public void InitializePrefab(ProvinceData provinceData, Mesh msh, Material mat, Bounds bounds)
@@ -55,8 +68,14 @@ public class MapTile : MonoBehaviour
         float minDiameter = Mathf.Min(bounds.size.x, bounds.size.z);
         MeshBounds = bounds;
 
+        //tileTagUI.fontSize = 10f;
+        tileLongName.text = provinceData.Data.TileName;
+        tileLongName.fontSize = minDiameter / 15f;
+
         tileTagUI.text = provinceData.Data.TileTag;
-        tileTagUI.gameObject.transform.localScale = new Vector3(minDiameter / 10f, minDiameter / 10f, minDiameter / 10f);
+        tileTagUI.rectTransform.Translate(new Vector3(0, -minDiameter / 10f, 0));
+
+        //tileTagUI.gameObject.transform.localScale = new Vector3(minDiameter / 10f, minDiameter / 10f, minDiameter / 10f);
 
         meshFilter.mesh = msh;
         meshRenderer.material = mat;
@@ -80,6 +99,60 @@ public class MapTile : MonoBehaviour
             InitializeResources(Color.red, provinceData.Data.Oil);
         }
 
+    }
+    public void AddLocalStack(StackManager newStack)
+    {
+        if (localStacks.Contains(newStack))
+        {
+            return;
+        }
+        localStacks.Add(newStack);
+    }
+    public void RemoveLocalStack(StackManager oldStack)
+    {
+        if (localStacks.Contains(oldStack))
+        {
+            localStacks.Remove(oldStack);
+        }
+    }
+
+    List<FactionCoinVisuals> factionCoins = new List<FactionCoinVisuals>();
+    public void AddFactionCoins(FactionData factionData)
+    {
+        if(localStacks.Count == 0)
+        {
+            return;
+        }
+        var coinVisual = Instantiate(coinVisuals, stackContainer);
+
+        factionCoins.Add(coinVisual);
+        RepositionFactionCoins();
+
+        coinVisual.ModifyCoinVisuals(factionData, localStacks.ToArray());
+    }
+
+    private void RepositionFactionCoins()
+    {
+        float radius = 5f;
+        switch (factionCoins.Count)
+        {
+            case 0:
+                return;
+
+            case 1:
+                factionCoins[0].transform.localPosition = Vector3.zero;
+                break;
+            case >1:
+                float angle = 360f / factionCoins.Count;
+                for(int i = 0; i < factionCoins.Count; i++)
+                {
+                    Vector3 newPosition = Vector3.zero;
+                    newPosition.x = radius * Mathf.Cos(Mathf.Deg2Rad * angle * i);
+                    newPosition.z = Mathf.Sqrt(Mathf.Pow(radius, 2) - Mathf.Pow(newPosition.x, 2));
+                    factionCoins[0].transform.localPosition = newPosition;
+                }
+                break;
+        }
     }
 
     public void InitializeResources(Color backgroundColor, int index)

@@ -22,7 +22,7 @@ public class BelligerentManager : MonoBehaviour
     void InitializeFactions(MapMeshGenerator.MeshGenerationData data, SaveData loadedSave)
     {
         BelligerentData belligerentData = loadedSave.saveBelligerents;
-
+        AssetBundleManager.LoadAssetBundle("AssetBundles/icons/flags");
         for(int j = 0; j < belligerentData.WarParticipants.Length; j++)
         {
             FactionData currentFaction = belligerentData.WarParticipants[j];
@@ -36,6 +36,8 @@ public class BelligerentManager : MonoBehaviour
 
                 StackManager tempManager = tempStack.GetComponent<StackManager>();
                 tempManager.InitializeStack(currentFaction, i);
+
+                assignedTile.AddLocalStack(tempManager);
             }
 
             for(int i = 0; i < currentFaction.TileControl.Length; i++)
@@ -43,8 +45,11 @@ public class BelligerentManager : MonoBehaviour
                 MapTile occupiedTile = data.mapTiles[currentFaction.TileControl[i].TileTag];
                 Color32 convertedColor = currentFaction.VectorToColor();
                 occupiedTile.SetOccupationVisuals(convertedColor, convertedColor);
+                occupiedTile.AddFactionCoins(currentFaction);
+
             }
         }
+        AssetBundleManager.UnloadAssetBundle("AssetBundles/icons/flags");
     }
 
 

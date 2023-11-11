@@ -37,7 +37,7 @@ public class PopulateButtons : MonoBehaviour
     private void CreateButtons(MapMeshGenerator.MeshGenerationData data, SaveData saveData)
     {
         FactionData[] factionData = saveData.saveBelligerents.WarParticipants;
-        var assetBundle = AssetBundle.LoadFromFile(Path.Combine(Application.streamingAssetsPath, "AssetBundles/icons/flags"));
+        var assetBundle = AssetBundleManager.LoadAssetBundle("AssetBundles/icons/flags");
 
         for (int i = 0; i < factionData.Length; i++)
         {
@@ -51,5 +51,6 @@ public class PopulateButtons : MonoBehaviour
             tempObject.transform.SetParent(buttonLayout);
             tempObject.SetActive(true);
         }
+        AssetBundleManager.UnloadAssetBundle("AssetBundles/icons/flags");
     }
 }
