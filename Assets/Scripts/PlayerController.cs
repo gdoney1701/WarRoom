@@ -15,8 +15,6 @@ public class PlayerController : MonoBehaviour
     private LayerMask orderMask;
     [SerializeField]
     private LayerMask backgroundMask;
-    [SerializeField]
-    private float moveModifier = 0.5f;
 
     private GameObject[] mapColumns;
     private bool readyToMove = false;
@@ -26,18 +24,17 @@ public class PlayerController : MonoBehaviour
     private bool canIssueOrder = false;
     private string playerFaction;
     bool useHorizontalScroll = false;
+    private float columnWidth = 0f;
 
     public delegate void SendOrder(MapTile mapTile);
     public static event SendOrder sendOrder;
-
-    private float scrollInput = 0f;
 
     private void Awake()
     {
         mainCamera = Camera.main;
         neutralMapDist = (farMapDist + closeMapDist) / 2;
         tileOffset = new Vector3(0, neutralMapDist, 0);
-        zoom = zoomPos = neutralMapDist;
+        //mouseWorldPosStart = GetPerspectivePos(new Vector3(Screen.width/2, Screen.height/2, 0));
     }
 
     private void OnEnable()
@@ -46,22 +43,23 @@ public class PlayerController : MonoBehaviour
         PopulateButtons.onGameReady += AllowInput;
         TurnManager.updatePhase += UpdateControls;
         mainCamera = Camera.main;
+        mouseWorldPosStart = GetPerspectivePos();
     }
     public Vector3 tileOffset = Vector3.zero;
 
     private void LateUpdate()
     {
-        Vector3 columnOffset = Vector3.zero;
+        Vector3 tempOffset = tileOffset;
         if (!readyToMove)
         {
             return;
         }
-        UpdateZoomPosition(ref columnOffset);
-        UpdatePosition(ref columnOffset);
+        UpdateZoomPosition(Input.GetAxis("Mouse ScrollWheel"));
+        UpdatePosition();
 
-        if (columnOffset != Vector3.zero)
+        if (tileOffset != tempOffset)
         {
-            MoveTiles(columnOffset);
+            MoveTiles();
         }
 
     }
@@ -106,7 +104,7 @@ public class PlayerController : MonoBehaviour
     [SerializeField]
     private float panSpeed = 10f;
 
-    private void UpdatePosition(ref Vector3 offset)
+    private void UpdatePosition()
     {
         if (Input.GetMouseButtonDown(2))
         {
@@ -125,81 +123,49 @@ public class PlayerController : MonoBehaviour
                 new Vector2((Input.mousePosition.x - mousePos.x) / mainCamera.pixelWidth, 
                 (Input.mousePosition.y - mousePos.y) / mainCamera.pixelHeight), 1f);
 
-            offset += new Vector3(pos.x, 0, pos.y) * panSpeed * (mapColumns[0].transform.localPosition.y/farMapDist);
+            tileOffset += new Vector3(pos.x, 0, pos.y) * panSpeed * (mapColumns[0].transform.localPosition.y/farMapDist);
             mousePos = Input.mousePosition;
         }
     }
 
-    private float zoom = 0;
-    private float zoomVelocity = 0f;
+    private Vector3 mouseWorldPosStart = Vector3.zero;
     [SerializeField]
-    private float zoomModifier = 10f;
-    private float smoothTime = 0.25f;
-    private float zoomPos = 0f;
-    private bool isZooming = false;
-    private bool isZoomingOut = false;
-    private Ray camRay;
-    private Ray centerRay;
-
-    private void UpdateZoomPosition(ref Vector3 offset)
+    private float zoomSpeed = 10f;
+    [SerializeField]
+    private float zoomMin = 0.1f;
+    [SerializeField]
+    private float zoomMax = 10.0f;
+    private void UpdateZoomPosition(float mouseScroll)
     {
-        float scroll = Input.GetAxis("Mouse ScrollWheel");
-        if(scroll != 0)
-        {
-            if(scroll > 0)
-            {
-                if (!isZooming)
-                {
-                    camRay = mainCamera.ScreenPointToRay(new 
-                        Vector3(Input.mousePosition.x, Input.mousePosition.y, mainCamera.nearClipPlane));
-                    centerRay = mainCamera.ViewportPointToRay(new Vector3(0.5f, 0.5f, mainCamera.nearClipPlane));
-                    isZoomingOut = false;
-                }
-            }
-            else
-            {
-                isZoomingOut = true;
-            }
-
-            isZooming = true;
-            
-        }
-        if (!isZooming)
+        if(mouseScroll == 0)
         {
             return;
         }
-        zoom += scroll * zoomModifier;
-        zoom = Mathf.Clamp(zoom, farMapDist, closeMapDist);
-        float newZoomPos = Mathf.SmoothDamp(
-            zoomPos, zoom, ref zoomVelocity, smoothTime);
-        offset.y = newZoomPos - zoomPos;
-        zoomPos = newZoomPos;
 
-        if(Mathf.Abs(offset.y) < 0.01f)
-        {
-            offset.y = 0;
-            isZooming = false;
-            return;
-        }
-        if (isZoomingOut)
-        {
-            return;
-        }
-        float yPos = mapColumns[0].transform.position.y + offset.y;
-        Vector3 targetPos = camRay.GetPoint(yPos);
-        Vector3 centerPos = centerRay.GetPoint(yPos);
-        Vector2 posOffset = Vector2.ClampMagnitude(new Vector2(targetPos.x - centerPos.x, targetPos.z - centerPos.z), offset.y);
-        offset = new Vector3(posOffset.x, offset.y, posOffset.y);
+        mouseWorldPosStart = GetPerspectivePos();
+        mainCamera.transform.position = new Vector3(0, Mathf.Clamp(mainCamera.transform.position.y - mouseScroll * zoomSpeed, zoomMin, zoomMax), 0);
+        Vector3 testCase = GetPerspectivePos();
+        Vector3 mouseWorldPosDiff = mouseWorldPosStart - testCase;
 
+        tileOffset -= new Vector3(mouseWorldPosDiff.x, 0, mouseWorldPosDiff.z) ;
     }
 
-    private void MoveTiles(Vector3 columnOffset)
+    private Vector3 GetPerspectivePos()
+    {
+        Ray ray = mainCamera.ScreenPointToRay(Input.mousePosition);
+        Plane plane = new Plane(mainCamera.transform.forward, 0.0f);
+        float dist;
+        plane.Raycast(ray, out dist);
+        return ray.GetPoint(dist);
+    }
+
+    private void MoveTiles()
     {
         if (useHorizontalScroll)
         {
             for (int i = 0; i < mapColumns.Length; i++)
             {
-                float xOffset = mapColumns[i].transform.position.x + columnOffset.x;
+                float xOffset = tileOffset.x + (columnWidth * i);
                 if (xOffset > maxDistance)
                 {
                     xOffset -= maxDistance;
@@ -213,7 +179,7 @@ public class PlayerController : MonoBehaviour
         }
         else
         {
-            mapColumns[0].transform.Translate(columnOffset, Space.Self);
+            mapColumns[0].transform.position = tileOffset;
             //mapColumns[0].transform.localPosition = new Vector3(0, zoomPos, 0);
         }
     }
@@ -244,6 +210,7 @@ public class PlayerController : MonoBehaviour
         mapColumns = data.columnArray;
         useHorizontalScroll = loadedSave.loadedMapData.horizontalLooping;
         maxDistance = data.imageScale.x;
+        columnWidth = mapColumns.Length > 1 ? mapColumns[1].transform.position.x - mapColumns[0].transform.position.x : 0;
         foreach (GameObject column in mapColumns)
         {
             column.transform.Translate(new Vector3(0, neutralMapDist, 0), Space.Self);
